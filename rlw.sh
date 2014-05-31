@@ -19,12 +19,12 @@
 #  
 #
 # Changes:
-# Oliver Stieber <oliverthered@gmail.com>
-# 2014-05-30 v 1.3.2 Added function and menu entry to upgrade roblox version
+# Jonathan Alfonso <alfonsojon1997@gmail.com>
+# 2014-05-30 v 1.3.2a Fetch from GitHub instead of Dropbox
 #
 #
 #
-export RWLVERSION=1.3.2
+export RWLVERSION=1.3.2a
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINEARCH=win32
 echo 'Roblox Linux Wrapper v'$RWLVERSION
@@ -100,7 +100,7 @@ if [ $1 == install ]; then
 	Exec=xdg-open http://roblox.wikia.com/wiki/Roblox_On_Linux
 	EOF
 	mkdir $HOME/.rlw
-	wget https://dl.dropboxusercontent.com/u/54213557/rlw.sh -O $HOME/.rlw/rlw.sh
+	wget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O $HOME/.rlw/rlw.sh
 	wget http://corp.roblox.com/wp-content/uploads/2012/09/ROBLOX-Circle-Logo1.png -O $HOME/.local/share/icons/roblox.png
 	chmod +x $HOME/.rlw/rlw.sh
 	chmod +x $HOME/.local/share/applications/Roblox.desktop
