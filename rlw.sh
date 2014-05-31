@@ -17,7 +17,14 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
 #  
-export RWLVERSION=1.3.1
+#
+# Changes:
+# Oliver Stieber <oliverthered@gmail.com>
+# 2014-05-30 v 1.3.2 Added function and menu entry to upgrade roblox version
+#
+#
+#
+export RWLVERSION=1.3.2
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINEARCH=win32
 echo 'Roblox Linux Wrapper v'$RWLVERSION
@@ -66,6 +73,13 @@ if [ ! -e $WINEPREFIX ]; then
 	wget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
 	wine /tmp/RobloxPlayerLauncher.exe
 fi
+}
+
+upgraderoblox () {
+	spawndialog info 'Roblox is going to be upgraded \n\nDepending on your internet connection, this may take a few minutes.'
+	winetricks -q vcrun2008 winhttp wininet
+	wget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
+	wine /tmp/RobloxPlayerLauncher.exe
 }
 
 addremoverlw () {
@@ -168,7 +182,7 @@ sel=$(zenity \
 	--title='Roblox Linux Wrapper v'$RWLVERSION \
 	--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 	--width=560 \
-	--height=290 \
+	--height=320 \
 	--cancel-label='Quit' \
 	--list \
 	--text 'What would you like to do?' \
@@ -180,6 +194,7 @@ sel=$(zenity \
 	FALSE 'Roblox Studio' \
 	FALSE 'Log in/Log out' \
 	FALSE 'Add or Remove Roblox Linux Wrapper as a program (Recommended)' \
+	FALSE 'Upgrade Roblox' \
 	FALSE 'Switch Graphics Mode (OpenGL Recommended)' \
 	FALSE 'Reset Roblox to defaults')
 case $sel in
@@ -207,6 +222,8 @@ case $sel in
 		else
 			addremoverlw install; main
 		fi;;
+	'Upgrade Roblox')		
+			upgraderoblox; main;;		
 	'Log in/Log out')
 		zenity \
 		--title='Roblox Linux Wrapper v'$RWLVERSION \
