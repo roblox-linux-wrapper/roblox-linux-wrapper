@@ -20,11 +20,11 @@
 #
 # Changes:
 # Jonathan Alfonso <alfonsojon1997@gmail.com>
-# 2014-05-30 v 1.3.2a Fetch from GitHub instead of Dropbox
+# 2014-05-30 v 1.3.3 Major cleanup
 #
 #
 #
-export RWLVERSION=1.3.2a
+export RWLVERSION=1.3.3
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINEARCH=win32
 echo 'Roblox Linux Wrapper v'$RWLVERSION
@@ -126,7 +126,7 @@ fi
 }
 
 playerwrapper () {
-export GAMEURL=$(\
+export GAMEURL=`\
 zenity \
 --title='Roblox Linux Wrapper v'$RWLVERSION \
 --window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
@@ -134,10 +134,10 @@ zenity \
 --text='Paste the URL for the game here.' \
 --ok-label='Play' \
 --width=450 \
---height=120)
-GAMEID=$(echo $GAMEURL | cut -d "=" -f 2)
+--height=120`
+GAMEID=`echo $GAMEURL | cut -d "=" -f 2`
 if [ -n "$GAMEID" ]; then
-	wine $WINEPREFIX/drive_c/users/$(whoami)/Local\ Settings/Application\ Data/RobloxVersions/version-*/RobloxPlayerBeta.exe --id $GAMEID 2>&1 | \
+	wine $WINEPREFIX/drive_c/users/`whoami`/Local\ Settings/Application\ Data/RobloxVersions/version-*/RobloxPlayerBeta.exe --id $GAMEID 2>&1 | \
 	zenity \
 	--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 	--title='ROBLOX' \
@@ -159,11 +159,11 @@ zenity \
 --window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 --info \
 --text='Roblox Studio may take up to 90 seconds to load.'
-if [ -e wine $WINEPREFIX/drive_c/users/$(whoami)/Local\ Settings/Application\ Data/RobloxVersions/version-*/RobloxStudioBeta.exe ]; then
-	wine $WINEPREFIX/drive_c/users/$(whoami)/Local\ Settings/Application\ Data/RobloxVersions/version-*/RobloxStudioBeta.exe | \
+if [ -e wine $WINEPREFIX/drive_c/users/`whoami`/Local\ Settings/Application\ Data/RobloxVersions/version-*/RobloxStudioBeta.exe ]; then
+	wine $WINEPREFIX/drive_c/users/`whoami`/Local\ Settings/Application\ Data/RobloxVersions/version-*/RobloxStudioBeta.exe | \
 	gamestart
 else
-	wine $WINEPREFIX/drive_c/users/$(whoami)/Local\ Settings/Application\ Data/RobloxVersions/RobloxStudioLauncherBeta.exe | \
+	wine $WINEPREFIX/drive_c/users/`whoami`/Local\ Settings/Application\ Data/RobloxVersions/RobloxStudioLauncherBeta.exe | \
 	zenity \
 	--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 	--title='ROBLOX' \
@@ -178,11 +178,11 @@ fi
 }
 
 main () {
-sel=$(zenity \
+sel=`zenity \
 	--title='Roblox Linux Wrapper v'$RWLVERSION \
 	--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 	--width=560 \
-	--height=320 \
+	--height=256 \
 	--cancel-label='Quit' \
 	--list \
 	--text 'What would you like to do?' \
@@ -190,22 +190,17 @@ sel=$(zenity \
 	--column '' \
 	--column 'Options' \
 	TRUE 'Play Roblox' \
-	FALSE 'Play Roblox (Don'\''t open browser)' \
 	FALSE 'Roblox Studio' \
 	FALSE 'Log in/Log out' \
-	FALSE 'Add or Remove Roblox Linux Wrapper as a program (Recommended)' \
+	FALSE 'Install Roblox Linux Wrapper (Recommended)' \
 	FALSE 'Upgrade Roblox' \
-	FALSE 'Switch Graphics Mode (OpenGL Recommended)' \
-	FALSE 'Reset Roblox to defaults')
+	FALSE 'Reset Roblox to defaults'`
 case $sel in
 	'Play Roblox')
-		xdg-open 'http://www.roblox.com/Games.aspx'
-		playerwrapper; main;;
-	'Play Roblox (Don'\''t open browser)')
 		playerwrapper; main;;
 	'Roblox Studio')
 		studiowrapper; main;;
-	'Add or Remove Roblox Linux Wrapper as a program (Recommended)')
+	'Install Roblox Wrapper (Recommended)')
 		if [ -e $HOME/.local/share/applications/Roblox.desktop ]; then
 			zenity \
 			--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
@@ -233,10 +228,6 @@ case $sel in
 		--info \
 		--text='Roblox Studio will now open. Log in through the studio\nand close it once logged in.'
 		studiowrapper; main;;
-	'Switch Graphics Mode (OpenGL Recommended)')
-		spawndialog info 'Roblox Studio will now open. Open the Tools menu and click Settings. Select Rendering, then click OK on the warning dialog. Select "graphicsMode" and change this option to "OpenGL" or "Direct3D". Restart Roblox Studio.'
-		studiowrapper
-		main;;
 	'Reset Roblox to defaults')
 		rm -rf $WINEPREFIX;
 		depcheck; main;;
