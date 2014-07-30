@@ -176,7 +176,7 @@ main () {
 		--title='Roblox Linux Wrapper v'$RWLVERSION \
 		--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 		--width=560 \
-		--height=256 \
+		--height=272 \
 		--cancel-label='Quit' \
 		--list \
 		--text 'What would you like to do?' \
