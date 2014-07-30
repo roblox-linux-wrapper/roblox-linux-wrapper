@@ -18,8 +18,9 @@
 #  MA 02110-1301, USA.
 #
 #
-export RWLVERSION=1.3.4
+export RWLVERSION=1.3.5
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
+export WINETRICKSDEV=/tmp/winetricks
 export WINEARCH=win32
 echo 'Roblox Linux Wrapper v'$RWLVERSION
 
@@ -30,6 +31,7 @@ spawndialog () {
 		--$1 \
 		--width=450 \
 		--height=120 \
+		--no-wrap \
 		--text="$2"
 }
 
@@ -53,18 +55,12 @@ depcheck () {
 		xdg-open 'http://www.winehq.org/download'
 		exit 127
 	fi
-	if command -v winetricks >/dev/null 2>&1; then
-		echo 'Winetricks installed, continuing'
-	else
-		echo 'Please install Wine from wiki.winehq.org/winetricks'
-		spawndialog error 'Please install Winetricks from wiki.winehq.org/winetricks'
-		xdg-open 'http://wiki.winehq.org/winetricks'
-		exit 127
-	fi
 	if [ ! -e $WINEPREFIX ]; then
 		spawndialog info 'Required dependencies are going to be installed. \n\nDepending on your internet connection, this may take a few minutes.'
-		winetricks -q vcrun2008 winhttp wininet
 		wget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
+		wget http://winetricks.googlecode.com/svn/trunk/src/winetricks -O /tmp/winetricks
+		chmod +x /tmp/winetricks
+		/tmp/winetricks -q winhttp wininet vcrun2012
 		wine /tmp/RobloxPlayerLauncher.exe
 	fi
 }
@@ -138,6 +134,7 @@ playerwrapper () {
 			--text='Starting Roblox Player...' \
 			--width=340 \
 			--height=120 \
+			--no-wrap \
 			--progress \
 			--pulsate \
 			--timeout=5 \
@@ -152,23 +149,17 @@ studiowrapper () {
 		--title='Roblox Linux Wrapper v'$RWLVERSION \
 		--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 		--info \
+		--no-wrap \
 		--text='Roblox Studio may take up to 90 seconds to load.'
-	if [ -e wine $WINEPREFIX/drive_c/users/`whoami`/Local\ Settings/Application\ Data/RobloxVersions/version-*/RobloxStudioBeta.exe ]; then
-		wine $WINEPREFIX/drive_c/users/`whoami`/Local\ Settings/Application\ Data/RobloxVersions/version-*/RobloxStudioBeta.exe | \
-		gamestart
-	else
-		wine $WINEPREFIX/drive_c/users/`whoami`/Local\ Settings/Application\ Data/RobloxVersions/RobloxStudioLauncherBeta.exe | \
-		zenity \
-			--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
-			--title='ROBLOX' \
-			--text='Starting Roblox Studio...' \
-			--width=340 \
-			--height=120 \
-			--progress \
-			--pulsate \
-			--timeout=60 \
-			--no-cancel
-	fi
+	wine $WINEPREFIX/drive_c/users/`whoami`/Local\ Settings/Application\ Data/RobloxVersions/RobloxStudioLauncherBeta.exe | \
+	zenity \
+		--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
+		--title='ROBLOX' \
+		--text='Starting Roblox Studio...' \
+		--width=340 \
+		--progress \
+		--pulsate \
+		--no-cancel
 }
 
 main () {
@@ -200,9 +191,10 @@ main () {
 				--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 				--width=450 \
 				--height=120 \
+				--no-wrap \
 				--title='Roblox Linux Wrapper v'$RWLVERSION \
 				--question \
-				--text='Roblox Linux Wrapper is already installed. Would you like to uninstall it?'
+				--text='Roblox Linux Wrapper is already installed.\nWould you like to uninstall it?'
 			if [ $? == 0 ]; then
 				addremoverlw uninstall; main
 			else
@@ -219,6 +211,7 @@ main () {
 			--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 			--width=450 \
 			--height=120 \
+			--no-wrap \
 			--info \
 			--text='Roblox Studio will now open. Log in through the studio\nand close it once logged in.'
 		studiowrapper; main;;
