@@ -67,8 +67,14 @@ depcheck () {
 
 upgraderoblox () {
 	spawndialog info 'Roblox is going to be upgraded \n\nDepending on your internet connection, this may take a few minutes.'
-	winetricks -q vcrun2008 winhttp wininet
+	/tmp/winetricks -q vcrun2012 winhttp wininet
+	if [ -e /tmp/winetricks ]; then
+		rm -rf /tmp/winetricks
+	fi
 	wget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
+	wget http://winetricks.googlecode.com/svn/trunk/src/winetricks -O /tmp/winetricks
+	chmod +x /tmp/winetricks
+	/tmp/winetricks -q winhttp wininet vcrun2012
 	wine /tmp/RobloxPlayerLauncher.exe
 }
 
