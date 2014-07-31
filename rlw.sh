@@ -18,7 +18,7 @@
 #  MA 02110-1301, USA.
 #
 #
-export RWLVERSION=1.3.5
+export RWLVERSION=1.3.6
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINETRICKSDEV=/tmp/winetricks
 export WINEARCH=win32
@@ -95,7 +95,7 @@ addremoverlw () {
 		EOF
 		mkdir $HOME/.rlw
 		wget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O $HOME/.rlw/rlw.sh
-		wget http://blog.roblox.com/wp-content/uploads/2012/08/ROBLOX-Circle-Logo.png -O $HOME/.local/share/icons/roblox.png
+		wget http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png -O $HOME/.local/share/icons/roblox.png
 		chmod +x $HOME/.rlw/rlw.sh
 		chmod +x $HOME/.local/share/applications/Roblox.desktop
 		xdg-desktop-menu install --novendor $HOME/.local/share/applications/Roblox.desktop
