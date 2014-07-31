@@ -85,7 +85,7 @@ addremoverlw () {
 		Exec=$HOME/.rlw/rlw.sh
 		Actions=ROLWiki;
 		GenericName=Building Game
-		Icon=roblox
+		Icon=roblox.png
 		Categories=Game;
 		Type=Application
 
