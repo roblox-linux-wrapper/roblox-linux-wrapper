@@ -191,24 +191,24 @@ main () {
 		playerwrapper; main;;
 	'Roblox Studio')
 		studiowrapper; main;;
-	'Install Roblox Wrapper (Recommended)')
-		if [ -e $HOME/.local/share/applications/Roblox.desktop ]; then
-			zenity \
-				--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
-				--width=450 \
-				--height=120 \
-				--no-wrap \
-				--title='Roblox Linux Wrapper v'$RWLVERSION \
-				--question \
-				--text='Roblox Linux Wrapper is already installed.\nWould you like to uninstall it?'
-			if [ $? == 0 ]; then
-				addremoverlw uninstall; main
-			else
-				main;
-			fi
-		else
-			addremoverlw install; main
-		fi;;
+#	'Install Roblox Wrapper (Recommended)')
+#		if [ -e $HOME/.local/share/applications/Roblox.desktop ]; then
+#			zenity \
+#				--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
+#				--width=450 \
+#				--height=120 \
+#				--no-wrap \
+#				--title='Roblox Linux Wrapper v'$RWLVERSION \
+#				--question \
+#				--text='Roblox Linux Wrapper is already installed.\nWould you like to uninstall it?'
+#			if [ $? == 0 ]; then
+#				addremoverlw uninstall; main
+#			else
+#				main;
+#			fi
+#		else
+#			addremoverlw install; main
+#		fi;;
 	'Upgrade Roblox')
 		upgraderoblox; main;;
 	'Log in/Log out')
