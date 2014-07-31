@@ -95,7 +95,7 @@ addremoverlw () {
 		EOF
 		mkdir $HOME/.rlw
 		wget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O $HOME/.rlw/rlw.sh
-		wget http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png -O $HOME/.local/share/icons/hicolor/512x512/roblox.png
+		wget http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png -O $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 		chmod +x $HOME/.rlw/rlw.sh
 		chmod +x $HOME/.local/share/applications/Roblox.desktop
 		xdg-desktop-menu install --novendor $HOME/.local/share/applications/Roblox.desktop
@@ -112,9 +112,9 @@ addremoverlw () {
 		if [ -e rm $HOME/.local/share/icons/roblox.png]; then
 			rm -rf $HOME/.local/share/icons/roblox.png
 		fi
-		rm -rf $HOME/.local/share/icons/hicolor/512x512/roblox.png
+		rm -rf $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 		xdg-desktop-menu forceupdate
-		if [ -e $HOME/.rlw ] || [ -e $HOME/.local/share/icons/hicolor/512x512/roblox.png ]; then
+		if [ -e $HOME/.rlw ] || [ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]; then
 			spawndialog error 'Roblox Linux Wrapper is still installed. Please try uninstalling again.'
 		else
 			spawndialog info 'Roblox Linux Wrapper has been uninstalled successfully.'
