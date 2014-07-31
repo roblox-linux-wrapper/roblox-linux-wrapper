@@ -29,8 +29,6 @@ spawndialog () {
 		--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 		--title='Roblox Linux Wrapper v'$RWLVERSION \
 		--$1 \
-		--width=450 \
-		--height=120 \
 		--no-wrap \
 		--text="$2"
 }
@@ -97,15 +95,15 @@ addremoverlw () {
 		EOF
 		mkdir $HOME/.rlw
 		wget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O $HOME/.rlw/rlw.sh
-		wget http://corp.roblox.com/wp-content/uploads/2012/09/ROBLOX-Circle-Logo1.png -O $HOME/.local/share/icons/roblox.png
+		wget http://blog.roblox.com/wp-content/uploads/2012/08/ROBLOX-Circle-Logo.png -O $HOME/.local/share/icons/roblox.png
 		chmod +x $HOME/.rlw/rlw.sh
 		chmod +x $HOME/.local/share/applications/Roblox.desktop
 		xdg-desktop-menu install --novendor $HOME/.local/share/applications/Roblox.desktop
 		xdg-desktop-menu forceupdate
 		if [ -e $HOME/.rlw/rlw.sh ] && [ -e $HOME/.local/share/icons/roblox.png ] && [ -e $HOME/.local/share/applications/Roblox.desktop ]; then
-			spawndialog info 'Roblox Linux Wrapper is installed. Browse your system menu, under the Games section if appliciable.'
+			spawndialog info 'Roblox Linux Wrapper was installed successfully.'
 		else
-			spawndialog error 'Roblox Linux Wrapper did not install successfully. Please ensure you are connected to the internet and try again.'
+			spawndialog error 'Roblox Linux Wrapper did not install successfully.\n Please ensure you are connected to the internet and try again.'
 		fi
 	fi
 	if [ $1 == uninstall ]; then
@@ -138,8 +136,6 @@ playerwrapper () {
 			--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 			--title='ROBLOX' \
 			--text='Starting Roblox Player...' \
-			--width=340 \
-			--height=120 \
 			--no-wrap \
 			--progress \
 			--pulsate \
@@ -162,7 +158,6 @@ studiowrapper () {
 		--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 		--title='ROBLOX' \
 		--text='Starting Roblox Studio...' \
-		--width=340 \
 		--progress \
 		--pulsate \
 		--no-cancel
@@ -191,32 +186,28 @@ main () {
 		playerwrapper; main;;
 	'Roblox Studio')
 		studiowrapper; main;;
-#	'Install Roblox Wrapper (Recommended)')
-#		if [ -e $HOME/.local/share/applications/Roblox.desktop ]; then
-#			zenity \
-#				--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
-#				--width=450 \
-#				--height=120 \
-#				--no-wrap \
-#				--title='Roblox Linux Wrapper v'$RWLVERSION \
-#				--question \
-#				--text='Roblox Linux Wrapper is already installed.\nWould you like to uninstall it?'
-#			if [ $? == 0 ]; then
-#				addremoverlw uninstall; main
-#			else
-#				main;
-#			fi
-#		else
-#			addremoverlw install; main
-#		fi;;
+	'Install Roblox Linux Wrapper (Recommended)')
+		if [ -e $HOME/.local/share/applications/Roblox.desktop ]; then
+			zenity \
+				--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
+				--no-wrap \
+				--title='Roblox Linux Wrapper v'$RWLVERSION \
+				--question \
+				--text='Roblox Linux Wrapper is already installed.\nWould you like to uninstall it?'
+			if [ $? == 0 ]; then
+				addremoverlw uninstall; main
+			else
+				main;
+			fi
+		else
+			addremoverlw install; main
+		fi;;
 	'Upgrade Roblox')
 		upgraderoblox; main;;
 	'Log in/Log out')
 		zenity \
 			--title='Roblox Linux Wrapper v'$RWLVERSION \
 			--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
-			--width=450 \
-			--height=120 \
 			--no-wrap \
 			--info \
 			--text='Roblox Studio will now open. Log in through the studio\nand close it once logged in.'
