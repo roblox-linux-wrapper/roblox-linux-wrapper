@@ -18,19 +18,39 @@
 #  MA 02110-1301, USA.
 #
 #
-export RWLVERSION=1.3.6
+export RWLVERSION=2.0
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINETRICKSDEV=/tmp/winetricks
 export WINEARCH=win32
+export WINEDLLOVERRIDES=winebrowser.exe,winemenubuilder.exe=
+if [ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]; then
+	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
+else
+	download http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
+	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
+fi
 echo 'Roblox Linux Wrapper v'$RWLVERSION
 
 spawndialog () {
 	zenity \
-		--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
+		--window-icon=$RBXICON \
 		--title='Roblox Linux Wrapper v'$RWLVERSION \
 		--$1 \
 		--no-wrap \
 		--text="$2"
+}
+
+download () {
+	wget $1 -O $2 2>&1 | \
+	sed -u 's/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | \
+	zenity \
+		--progress \
+		--window-icon=$RBXICON \
+		--title="Downloading" \
+		--auto-close \
+		--no-cancel \
+		--width=450 \
+		--height=120
 }
 
 depcheck () {
@@ -55,25 +75,41 @@ depcheck () {
 	fi
 	if [ ! -e $WINEPREFIX ]; then
 		spawndialog info 'Required dependencies are going to be installed. \n\nDepending on your internet connection, this may take a few minutes.'
-		wget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
-		wget http://winetricks.googlecode.com/svn/trunk/src/winetricks -O /tmp/winetricks
+		download http://roblox.com/install/setup.ashx /tmp/RobloxPlayerLauncher.exe
+		download http://winetricks.googlecode.com/svn/trunk/src/winetricks /tmp/winetricks
 		chmod +x /tmp/winetricks
-		/tmp/winetricks -q winhttp wininet vcrun2012
-		wine /tmp/RobloxPlayerLauncher.exe
+		/tmp/winetricks -q vcrun2008 vcrun2012 winhttp wininet | zenity \
+			--window-icon=$RBXICON \
+			--title='Running winetricks' \
+			--text='Running winetricks...' \
+			--progress \
+			--pulsate \
+			--no-cancel \
+			--auto-close
+		wine /tmp/RobloxPlayerLauncher.exe | zenity \
+			--window-icon=$RBXICON \
+			--title='Installing Roblox' \
+			--text='Installing Roblox...' \
+			--progress \
+			--pulsate \
+			--no-cancel \
+			--auto-close
+		cd $WINEPREFIX
+		ROBLOXPROXY=`find . -iname 'RobloxProxy.dll'| sed "s/.\/drive_c/C:/" | tr '/' '\\'`
+		wine regsvr32 "$ROBLOXPROXY"
+		download ftp://ftp.mozilla.org/pub/firefox/releases/31.0esr/win32/en-US/Firefox%20Setup%2031.0esr.exe /tmp/Firefox-Setup-31.0esr.exe
+		wine /tmp/Firefox-Setup-31.0esr.exe /SD | zenity \
+			--window-icon=$RBXICON \
+			--title='Installing Mozilla Firefox' \
+			--text='Installing Mozilla Firefox 31.0 ESR...' \
+			--progress \
+			--pulsate \
+			--no-cancel \
+			--auto-close
 	fi
-}
-
-upgraderoblox () {
-	spawndialog info 'Roblox is going to be upgraded \n\nDepending on your internet connection, this may take a few minutes.'
-	/tmp/winetricks -q vcrun2012 winhttp wininet
-	if [ -e /tmp/winetricks ]; then
-		rm -rf /tmp/winetricks
+	if [ -e ~/.local/share/applications/wine/Programs/Roblox ]; then
+		rm -rf ~/.local/share/applications/wine/Programs/Roblox
 	fi
-	wget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
-	wget http://winetricks.googlecode.com/svn/trunk/src/winetricks -O /tmp/winetricks
-	chmod +x /tmp/winetricks
-	/tmp/winetricks -q winhttp wininet vcrun2012
-	wine /tmp/RobloxPlayerLauncher.exe
 }
 
 addremoverlw () {
@@ -94,13 +130,13 @@ addremoverlw () {
 		Exec=xdg-open http://roblox.wikia.com/wiki/Roblox_On_Linux
 		EOF
 		mkdir $HOME/.rlw
-		wget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O $HOME/.rlw/rlw.sh
-		wget http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png -O $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
+		download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh $HOME/.rlw/rlw.sh
+		download http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 		chmod +x $HOME/.rlw/rlw.sh
 		chmod +x $HOME/.local/share/applications/Roblox.desktop
 		xdg-desktop-menu install --novendor $HOME/.local/share/applications/Roblox.desktop
 		xdg-desktop-menu forceupdate
-		if [ -e $HOME/.rlw/rlw.sh ] && [ -e $HOME/.local/share/icons/roblox.png ] && [ -e $HOME/.local/share/applications/Roblox.desktop ]; then
+		if [ -e $HOME/.rlw/rlw.sh ] && [ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ] && [ -e $HOME/.local/share/applications/Roblox.desktop ]; then
 			spawndialog info 'Roblox Linux Wrapper was installed successfully.'
 		else
 			spawndialog error 'Roblox Linux Wrapper did not install successfully.\n Please ensure you are connected to the internet and try again.'
@@ -123,29 +159,33 @@ addremoverlw () {
 }
 
 playerwrapper () {
-	export GAMEURL=`\
-	zenity \
-		--title='Roblox Linux Wrapper v'$RWLVERSION \
-		--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
-		--entry \
-		--text='Paste the URL for the game here.' \
-		--ok-label='Play' \
-		--width=450 \
-		--height=120`
-		GAMEID=`echo $GAMEURL | cut -d "=" -f 2`
-	if [ -n "$GAMEID" ]; then
-		wine $WINEPREFIX/drive_c/users/`whoami`/Local\ Settings/Application\ Data/RobloxVersions/version-*/RobloxPlayerBeta.exe --id $GAMEID 2>&1 | \
+	if [ $1 = legacy ]; then
+		export GAMEURL=`\
 		zenity \
-			--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
-			--title='ROBLOX' \
-			--text='Starting Roblox Player...' \
-			--no-wrap \
-			--progress \
-			--pulsate \
-			--timeout=5 \
-			--no-cancel
+			--title='Roblox Linux Wrapper v'$RWLVERSION \
+			--window-icon=$RBXICON \
+			--entry \
+			--text='Paste the URL for the game here.' \
+			--ok-label='Play' \
+			--width=450 \
+			--height=120`
+			GAMEID=`echo $GAMEURL | cut -d "=" -f 2`
+		if [ -n "$GAMEID" ]; then
+			wine $WINEPREFIX/drive_c/users/`whoami`/Local\ Settings/Application\ Data/RobloxVersions/version-*/RobloxPlayerBeta.exe --id $GAMEID 2>&1 | \
+			zenity \
+				--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
+				--title='ROBLOX' \
+				--text='Starting Roblox Player...' \
+				--no-wrap \
+				--progress \
+				--pulsate \
+				--timeout=5 \
+				--no-cancel
+		else
+			return
+		fi
 	else
-		return
+		wine 'C:\Program Files\Mozilla Firefox\firefox.exe' http://www.roblox.com/Games.aspx
 	fi
 }
 
@@ -168,25 +208,26 @@ studiowrapper () {
 
 main () {
 	sel=`zenity \
-		--title='Roblox Linux Wrapper v'$RWLVERSION \
-		--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
-		--width=560 \
-		--height=272 \
+		--title='Roblox Linux Wrapper v'$RWLVERSION' by alfonsojon' \
+		--window-icon=$RBXICON \
+		--width=480 \
+		--height=236 \
 		--cancel-label='Quit' \
 		--list \
-		--text 'What would you like to do?' \
+		--text 'Select a choice.' \
 		--radiolist \
 		--column '' \
 		--column 'Options' \
 		TRUE 'Play Roblox' \
+		FALSE 'Play Roblox (Legacy Mode)' \
 		FALSE 'Roblox Studio' \
-		FALSE 'Log in/Log out' \
 		FALSE 'Install Roblox Linux Wrapper (Recommended)' \
-		FALSE 'Upgrade Roblox' \
 		FALSE 'Reset Roblox to defaults'`
 	case $sel in
 	'Play Roblox')
 		playerwrapper; main;;
+	'Play Roblox (Legacy Mode)')
+		playerwrapper legacy; main;;
 	'Roblox Studio')
 		studiowrapper; main;;
 	'Install Roblox Linux Wrapper (Recommended)')
@@ -205,16 +246,6 @@ main () {
 		else
 			addremoverlw install; main
 		fi;;
-	'Upgrade Roblox')
-		upgraderoblox; main;;
-	'Log in/Log out')
-		zenity \
-			--title='Roblox Linux Wrapper v'$RWLVERSION \
-			--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
-			--no-wrap \
-			--info \
-			--text='Roblox Studio will now open. Log in through the studio\nand close it once logged in.'
-		studiowrapper; main;;
 	'Reset Roblox to defaults')
 		rm -rf $WINEPREFIX;
 		depcheck; main;;
