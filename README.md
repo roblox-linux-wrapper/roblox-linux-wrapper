@@ -27,7 +27,8 @@ A: This is the old method used to launch games. Paste the game link in and click
 
 
 ## Dependencies
-     - wget wine zenity
+	rlw.sh: shasum wget wine zenity
+	rlw-stub.sh: wget shasum zenity
     
   [1]: https://github.com/alfonsojon/roblox-linux-wrapper/issues
 
