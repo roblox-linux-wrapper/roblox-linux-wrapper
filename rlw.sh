@@ -18,23 +18,27 @@
 #  MA 02110-1301, USA.
 #
 #
-export RWLVERSION=2.0
+export RLWVERSION=2.0.1
+export RLWCHANNEL=STABLE
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINETRICKSDEV=/tmp/winetricks
 export WINEARCH=win32
 export WINEDLLOVERRIDES=winebrowser.exe,winemenubuilder.exe=
+
+echo 'Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL
+
 if [ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]; then
 	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 else
 	download http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 fi
-echo 'Roblox Linux Wrapper v'$RWLVERSION
+echo 'Roblox Linux Wrapper v'$RLWVERSION
 
 spawndialog () {
 	zenity \
 		--window-icon=$RBXICON \
-		--title='Roblox Linux Wrapper v'$RWLVERSION \
+		--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL \
 		--$1 \
 		--no-wrap \
 		--text="$2"
@@ -46,7 +50,7 @@ download () {
 	zenity \
 		--progress \
 		--window-icon=$RBXICON \
-		--title="Downloading" \
+		--title='Downloading' \
 		--auto-close \
 		--no-cancel \
 		--width=450 \
@@ -55,20 +59,29 @@ download () {
 
 depcheck () {
 	if command -v zenity >/dev/null 2>&1; then
-		echo 'Zenity installed, continuing'
+		echo 'zenity installed, continuing'
 	else
-		echo 'Please install zenity via your system'\''s package manager.'
+		echo "Please install zenity via your system's package manager."
+		exit 127
+	fi
+	if command -v shasum >/dev/null 2>&1; then
+		echo 'shasum installed, continuing'
+	else
+		echo "Please install shasum via your system's package manager."
+		spawndialog error "Please install shasum via your system's package manager"
 		exit 127
 	fi
 	if command -v wget >/dev/null 2>&1; then
 		echo 'wget installed, continuing'
 	else
-		echo 'Please install wget via your system'\''s package manager.'
+		echo "Please install wget via your system's package manager."
+		spawndialog error "Please install wget via your system's package manager."
 		exit 127
 	fi
 	if command -v wine >/dev/null 2>&1; then
 		echo 'Wine installed, continuing'
 	else
+		echo 'Please install Wine from www.winehq.org/download'
 		spawndialog error 'Please install Wine from www.winehq.org/download'
 		xdg-open 'http://www.winehq.org/download'
 		exit 127
@@ -81,7 +94,7 @@ depcheck () {
 		/tmp/winetricks -q vcrun2008 vcrun2012 winhttp wininet | zenity \
 			--window-icon=$RBXICON \
 			--title='Running winetricks' \
-			--text='Running winetricks...' \
+			--text='Running winetricks ...' \
 			--progress \
 			--pulsate \
 			--no-cancel \
@@ -89,7 +102,7 @@ depcheck () {
 		wine /tmp/RobloxPlayerLauncher.exe | zenity \
 			--window-icon=$RBXICON \
 			--title='Installing Roblox' \
-			--text='Installing Roblox...' \
+			--text='Installing Roblox ...' \
 			--progress \
 			--pulsate \
 			--no-cancel \
@@ -101,42 +114,47 @@ depcheck () {
 		wine /tmp/Firefox-Setup-31.0esr.exe /SD | zenity \
 			--window-icon=$RBXICON \
 			--title='Installing Mozilla Firefox' \
-			--text='Installing Mozilla Firefox 31.0 ESR...' \
+			--text='Installing Mozilla Firefox 31.0 ESR ...' \
 			--progress \
 			--pulsate \
 			--no-cancel \
 			--auto-close
 	fi
-	if [ -e ~/.local/share/applications/wine/Programs/Roblox ]; then
-		rm -rf ~/.local/share/applications/wine/Programs/Roblox
+	if [ -e $HOME/.local/share/applications/wine/Programs/Roblox ]; then
+		rm -rf $HOME/.local/share/applications/wine/Programs/Roblox
 	fi
 }
 
 addremoverlw () {
 	if [ $1 == install ]; then
 		cat <<-EOF > $HOME/.local/share/applications/Roblox.desktop
-		[Desktop Entry]
-		Comment=Play Roblox on Linux
+		[[Desktop Entry]]
+		Comment=Play Roblox
 		Name=Roblox Linux Wrapper
-		Exec=$HOME/.rlw/rlw.sh
-		Actions=ROLWiki;
+		Exec=$HOME/.rlw/rlw-stub.sh
+		Actions=RFAGroup;ROLWiki;
 		GenericName=Building Game
 		Icon=roblox.png
 		Categories=Game;
 		Type=Application
 
-		[Desktop Action ROLWiki]
-		Name=Roblox on Linux Wiki
+		[[Desktop Action ROLWiki]]
+		Name='Roblox on Linux Wiki'
 		Exec=xdg-open http://roblox.wikia.com/wiki/Roblox_On_Linux
+
+		[[Desktop Action RFAGroup]]
+		Name='Roblox for All'
+		Exec=xdg-open http://www.roblox.com/Groups/group.aspx?gid=292611
 		EOF
 		mkdir $HOME/.rlw
 		download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh $HOME/.rlw/rlw.sh
-		download http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
+		download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw-stub.sh $HOME/.rlw/rlw-stub.sh
 		chmod +x $HOME/.rlw/rlw.sh
+		chmod +X $HOME/.rlw/rlw-stub.sh
 		chmod +x $HOME/.local/share/applications/Roblox.desktop
 		xdg-desktop-menu install --novendor $HOME/.local/share/applications/Roblox.desktop
 		xdg-desktop-menu forceupdate
-		if [ -e $HOME/.rlw/rlw.sh ] && [ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ] && [ -e $HOME/.local/share/applications/Roblox.desktop ]; then
+		if [[ -e $HOME/.rlw/rlw-stub.sh ]] && [[ -e $HOME/.rlw/rlw.sh ]] && [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]] && [[ -e $HOME/.local/share/applications/Roblox.desktop ]]; then
 			spawndialog info 'Roblox Linux Wrapper was installed successfully.'
 		else
 			spawndialog error 'Roblox Linux Wrapper did not install successfully.\n Please ensure you are connected to the internet and try again.'
@@ -145,12 +163,12 @@ addremoverlw () {
 	if [ $1 == uninstall ]; then
 		xdg-desktop-menu uninstall $HOME/.local/share/applications/Roblox.desktop
 		rm -rf $HOME/.rlw
-		if [ -e rm $HOME/.local/share/icons/roblox.png]; then
+		if [[ -e $HOME/.local/share/icons/roblox.png ]]; then
 			rm -rf $HOME/.local/share/icons/roblox.png
 		fi
 		rm -rf $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 		xdg-desktop-menu forceupdate
-		if [ -e $HOME/.rlw ] || [ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]; then
+		if [[ -d $HOME/.rlw ]] || [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
 			spawndialog error 'Roblox Linux Wrapper is still installed. Please try uninstalling again.'
 		else
 			spawndialog info 'Roblox Linux Wrapper has been uninstalled successfully.'
@@ -162,7 +180,7 @@ playerwrapper () {
 	if [ $1 = legacy ]; then
 		export GAMEURL=`\
 		zenity \
-			--title='Roblox Linux Wrapper v'$RWLVERSION \
+			--title="Roblox Linux Wrapper v$RLWVERSION-$RLWCHANNEL" \
 			--window-icon=$RBXICON \
 			--entry \
 			--text='Paste the URL for the game here.' \
@@ -175,7 +193,7 @@ playerwrapper () {
 			zenity \
 				--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 				--title='ROBLOX' \
-				--text='Starting Roblox Player...' \
+				--text='Starting Roblox Player ...' \
 				--no-wrap \
 				--progress \
 				--pulsate \
@@ -191,7 +209,7 @@ playerwrapper () {
 
 studiowrapper () {
 	zenity \
-		--title='Roblox Linux Wrapper v'$RWLVERSION \
+		--title='Roblox Linux Wrapper v'$RLWVERSION \
 		--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 		--info \
 		--no-wrap \
@@ -200,7 +218,7 @@ studiowrapper () {
 	zenity \
 		--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 		--title='ROBLOX' \
-		--text='Starting Roblox Studio...' \
+		--text='Starting Roblox Studio ...' \
 		--progress \
 		--pulsate \
 		--no-cancel
@@ -208,7 +226,7 @@ studiowrapper () {
 
 main () {
 	sel=`zenity \
-		--title='Roblox Linux Wrapper v'$RWLVERSION' by alfonsojon' \
+		--title="Roblox Linux Wrapper v$RLWVERSION-$RLWCHANNEL by alfonsojon" \
 		--window-icon=$RBXICON \
 		--width=480 \
 		--height=236 \
@@ -235,7 +253,7 @@ main () {
 			zenity \
 				--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 				--no-wrap \
-				--title='Roblox Linux Wrapper v'$RWLVERSION \
+				--title='Roblox Linux Wrapper v'$RLWVERSION \
 				--question \
 				--text='Roblox Linux Wrapper is already installed.\nWould you like to uninstall it?'
 			if [ $? == 0 ]; then
