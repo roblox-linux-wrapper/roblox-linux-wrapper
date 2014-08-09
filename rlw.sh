@@ -236,30 +236,31 @@ main () {
 		Exec=$HOME/.rlw/rlw-stub.sh
 		Actions=RFAGroup;ROLWiki;
 		GenericName=Building Game
-		Icon=roblox.png
+		Icon=roblox
 		Categories=Game;
 		Type=Application
 
 		[Desktop Action ROLWiki]
 		Name='Roblox on Linux Wiki'
-		Exec=xdg-open http://roblox.wikia.com/wiki/Roblox_On_Linux
+		Exec=xdg-open 'http://roblox.wikia.com/wiki/Roblox_On_Linux'
 
 		[Desktop Action RFAGroup]
 		Name='Roblox for All'
-		Exec=xdg-open http://www.roblox.com/Groups/group.aspx?gid=292611
+		Exec=xdg-open 'http://www.roblox.com/Groups/group.aspx?gid=292611'
 		EOF
 		mkdir $HOME/.rlw
 		download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh $HOME/.rlw/rlw.sh
 		download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw-stub.sh $HOME/.rlw/rlw-stub.sh
+		download http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png $HOME/.local/share/icons/roblox.png
 		chmod +x $HOME/.rlw/rlw.sh
 		chmod +X $HOME/.rlw/rlw-stub.sh
 		chmod +x $HOME/.local/share/applications/Roblox.desktop
 		xdg-desktop-menu install --novendor $HOME/.local/share/applications/Roblox.desktop
 		xdg-desktop-menu forceupdate
-		if [[ -f $HOME/.rlw/rlw-stub.sh && -f $HOME/.rlw/rlw.sh && -f $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png && -f $HOME/.local/share/applications/Roblox.desktop ]]; then
+		if [[ -f $HOME/.rlw/rlw-stub.sh && -f $HOME/.rlw/rlw.sh && -f $HOME/.local/share/icons/roblox.png && -f $HOME/.local/share/applications/Roblox.desktop ]]; then
 			spawndialog info 'Roblox Linux Wrapper was installed successfully.'
 		else
-			spawndialog error 'Roblox Linux Wrapper did not install successfully.\n Please ensure you are connected to the internet and try again.'
+			spawndialog error 'Roblox Linux Wrapper did not install successfully.\nPlease ensure you are connected to the internet and try again.'
 		fi
 		main;;
 	'Uninstall Roblox Linux Wrapper')
