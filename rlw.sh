@@ -230,7 +230,7 @@ main () {
 		studiowrapper; main;;
 	'Install Roblox Linux Wrapper (Recommended)')
 		cat <<-EOF > $HOME/.local/share/applications/Roblox.desktop
-		[[Desktop Entry]]
+		[Desktop Entry]
 		Comment=Play Roblox
 		Name=Roblox Linux Wrapper
 		Exec=$HOME/.rlw/rlw-stub.sh
@@ -240,11 +240,11 @@ main () {
 		Categories=Game;
 		Type=Application
 
-		[[Desktop Action ROLWiki]]
+		[Desktop Action ROLWiki]
 		Name='Roblox on Linux Wiki'
 		Exec=xdg-open http://roblox.wikia.com/wiki/Roblox_On_Linux
 
-		[[Desktop Action RFAGroup]]
+		[Desktop Action RFAGroup]
 		Name='Roblox for All'
 		Exec=xdg-open http://www.roblox.com/Groups/group.aspx?gid=292611
 		EOF
@@ -256,7 +256,7 @@ main () {
 		chmod +x $HOME/.local/share/applications/Roblox.desktop
 		xdg-desktop-menu install --novendor $HOME/.local/share/applications/Roblox.desktop
 		xdg-desktop-menu forceupdate
-		if [[ -e $HOME/.rlw/rlw-stub.sh ]] && [[ -e $HOME/.rlw/rlw.sh ]] && [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]] && [[ -e $HOME/.local/share/applications/Roblox.desktop ]]; then
+		if [[ -f $HOME/.rlw/rlw-stub.sh && -f $HOME/.rlw/rlw.sh && -f $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png && -f $HOME/.local/share/applications/Roblox.desktop ]]; then
 			spawndialog info 'Roblox Linux Wrapper was installed successfully.'
 		else
 			spawndialog error 'Roblox Linux Wrapper did not install successfully.\n Please ensure you are connected to the internet and try again.'
