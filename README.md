@@ -3,10 +3,10 @@
 ## Information
 This script is not created nor supported officially by Roblox. It is unofficial and may be unstable. Use at your own risk.
 
-### Usage
+#### Usage
 To install Roblox on your Linux computer, download this script, mark it as executable, and run it. The script will automatically generate a wine prefix with Roblox installed, along with the Microsoft Windows build of Mozilla Firefox for launching games. If you would like to install the Roblox Linux Wrapper to your system, select the install option and it will place the launcher in your system's application menu.
 
-### Questions and Answers
+#### Questions and Answers
 Q: How can I install this?
 A: See the usage section.
 
@@ -32,6 +32,6 @@ A: This is the old method used to launch games. Paste the game link in and click
     
   [1]: https://github.com/alfonsojon/roblox-linux-wrapper/issues
 
-## Spare change?
+### Spare change?
 If you like my work, feel free to buy me a coffee.
 [![PayPal - The safer, easier way to pay online!](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4LPXB3QJWVFQ6)
