@@ -78,23 +78,6 @@ if [[ `shasum $HOME/.rlw/rlw.sh | cut -d' ' -f1` != `shasum $HOME/.rlw/rlw.sh.up
 	fi
 fi
 
-
-#if [[ -ne $HOME/.rlw/update.ignored ]]; then
-#elif [[ `shasum $HOME/.rlw/rlw.sh.update` != `cat $HOME/.rlw/update.ignored` ]]; then
-#	
-#	
-#
-#if [[ `shasum $HOME/.rlw/rlw.sh.update` != `cat $HOME/.rlw/update.ignored` ]]; then
-#	if [[ `shasum $HOME/.rlw/rlw.sh` != `shasum $HOME/.rlw/rlw.sh.update` ]]; then
-#		spawndialog question "An update to Roblox Linux Wrapper is available.\nWould you like to update?"
-#		if [[ $? != "0" ]]; then
-#			shasum $HOME/.rlw/rlw.sh.update > $HOME/.rlw/update.ignored
-#		else
-#			rm -rf $HOME/.rlw/rlw.sh
-#			cp	$HOME/.rlw/rlw.sh.update $HOME/.rlw/rlw.sh
-#		fi
-#	fi
-#fi
 echo 'Loading rlw.sh ...'
 echo ''
 chmod +x $HOME/.rlw/rlw.sh
