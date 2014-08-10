@@ -4,7 +4,7 @@
 This script is not created nor supported officially by Roblox. It is unofficial and may be unstable. Use at your own risk.
 
 #### Usage
-To install Roblox on your Linux computer, download this script, mark it as executable, and run it. The script will automatically generate a wine prefix with Roblox installed, along with the Microsoft Windows build of Mozilla Firefox for launching games. If you would like to install the Roblox Linux Wrapper to your system, select the install option and it will place the launcher in your system's application menu.
+To install Roblox on your Linux computer, download rlw.sh, mark it as executable, and run it. The script will automatically generate a wine prefix with Roblox installed, along with the Microsoft Windows build of Mozilla Firefox for launching games. If you would like to install the Roblox Linux Wrapper to your system, select the install option and it will place the launcher in your system's application menu. Once installed, the launcher will automatically update whenever an update is available, so this is a highly recommended option.
 
 #### Questions and Answers
 Q: How can I install this?
