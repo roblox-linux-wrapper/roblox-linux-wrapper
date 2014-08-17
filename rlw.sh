@@ -18,7 +18,7 @@
 #  MA 02110-1301, USA.
 #
 #
-export RLWVERSION=2.0.2
+export RLWVERSION=2.0.3
 export RLWCHANNEL=STABLE
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINETRICKSDEV=/tmp/winetricks
@@ -71,32 +71,19 @@ else
 fi
 
 depcheck () {
-	if command -v zenity >/dev/null 2>&1; then
-		echo 'zenity installed, continuing'
+	MSG="via your system's package manager."
+
+	if command -v $1 >/dev/null 2>&1; then
+		echo '$1 installed, continuing'
+
 	else
-		echo "Please install zenity via your system's package manager."
-		exit 127
-	fi
-	if command -v shasum >/dev/null 2>&1; then
-		echo 'shasum installed, continuing'
-	else
-		echo "Please install shasum via your system's package manager."
-		spawndialog error "Please install shasum via your system's package manager"
-		exit 127
-	fi
-	if command -v wget >/dev/null 2>&1; then
-		echo 'wget installed, continuing'
-	else
-		echo "Please install wget via your system's package manager."
-		spawndialog error "Please install wget via your system's package manager."
-		exit 127
-	fi
-	if command -v wine >/dev/null 2>&1; then
-		echo 'Wine installed, continuing'
-	else
-		echo 'Please install Wine from www.winehq.org/download'
-		spawndialog error 'Please install Wine from www.winehq.org/download'
-		xdg-open 'http://www.winehq.org/download'
+		echo "Please install $1 $MSG"
+		if [[ $1 -ne "zenity" ]]; then
+			spawndialog error "Please install $1 $MSG"
+		fi
+		if [[ $1 = "wine" ]]; then
+			MSG="from http://www.winehq.org/"
+		fi
 		exit 127
 	fi
 	if [ ! -e $WINEPREFIX ]; then
@@ -289,4 +276,5 @@ main () {
 }
 
 # Run dependency check & launch main function
-depcheck; main
+depcheck zenity; depcheck wget; depcheck shasum; depcheck wine; depcheck cabextract
+main
