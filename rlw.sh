@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 #  Copyright 2014 Jonathan Alfonso <alfonsojon1997@gmail.com>
 #
@@ -18,8 +18,8 @@
 #  MA 02110-1301, USA.
 #
 #
-export RLWVERSION=2.0.3
-export RLWCHANNEL=STABLE
+export RLWVERSION=20140910
+export RLWCHANNEL=RELEASE
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINETRICKSDEV=/tmp/winetricks
 export WINEARCH=win32
