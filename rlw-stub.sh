@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 download () {
 	wget $1 -O $2 2>&1 | \
 	sed -u 's/.* \([[0-9]]\+%\)\ \+\([[0-9.]]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | \
@@ -81,4 +81,4 @@ fi
 echo 'Loading rlw.sh ...'
 echo ''
 chmod +x $HOME/.rlw/rlw.sh
-$HOME/.rlw/rlw.sh
+bash $HOME/.rlw/rlw.sh
