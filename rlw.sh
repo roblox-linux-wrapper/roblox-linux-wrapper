@@ -18,7 +18,7 @@
 #  MA 02110-1301, USA.
 #
 #
-export RLWVERSION=20140910
+export RLWVERSION=20140930
 export RLWCHANNEL=RELEASE
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINETRICKSDEV=/tmp/winetricks
@@ -108,13 +108,15 @@ depcheck () {
 			--no-cancel \
 			--auto-close
 		cd $WINEPREFIX
-		ROBLOXPROXY=`find . -iname 'RobloxProxy.dll'| sed "s/.\/drive_c/C:/" | tr '/' '\\'`
-		wine regsvr32 "$ROBLOXPROXY"
-		download ftp://ftp.mozilla.org/pub/firefox/releases/31.0esr/win32/en-US/Firefox%20Setup%2031.0esr.exe /tmp/Firefox-Setup-31.0esr.exe
+		ROBLOXPROXY=`find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
+		NPROBLOXPROXY=`find . -iname 'NPRobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
+		wine regsvr32 /i "$ROBLOXPROXY"
+		wine regsvr32 /i "$NPROBLOXPROXY"
+		download http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.1.1esr/win32/en-US/Firefox%20Setup%2031.1.1esr.exe /tmp/Firefox-Setup-esr.exe
 		wine /tmp/Firefox-Setup-31.0esr.exe /SD | zenity \
 			--window-icon=$RBXICON \
 			--title='Installing Mozilla Firefox' \
-			--text='Installing Mozilla Firefox 31.0 ESR ...' \
+			--text='Installing Mozilla Firefox ESR ...' \
 			--progress \
 			--pulsate \
 			--no-cancel \
@@ -234,7 +236,7 @@ main () {
 		[Desktop Action RFAGroup]
 		Name='Roblox for All'
 		Exec=xdg-open 'http://www.roblox.com/Groups/group.aspx?gid=292611'
-		EOF
+    EOF
 		mkdir $HOME/.rlw
 		download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh $HOME/.rlw/rlw.sh
 		download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw-stub.sh $HOME/.rlw/rlw-stub.sh
@@ -247,7 +249,7 @@ main () {
 		if [[ -f $HOME/.rlw/rlw-stub.sh && -f $HOME/.rlw/rlw.sh && -f $HOME/.local/share/icons/roblox.png && -f $HOME/.local/share/applications/Roblox.desktop ]]; then
 			spawndialog info 'Roblox Linux Wrapper was installed successfully.'
 		else
-			spawndialog error 'Roblox Linux Wrapper did not install successfully.\nPlease ensure you are connected to the internet and try again.'
+			spawndialog error 'Roblox Linux Wrapper did not install successfully.'
 		fi
 		main;;
 	'Uninstall Roblox Linux Wrapper')
