@@ -18,7 +18,7 @@
 #  MA 02110-1301, USA.
 #
 #
-export RLWVERSION=20140930
+export RLWVERSION=20141002
 export RLWCHANNEL=RELEASE
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINETRICKSDEV=/tmp/winetricks
@@ -236,7 +236,7 @@ main () {
 		[Desktop Action RFAGroup]
 		Name='Roblox for All'
 		Exec=xdg-open 'http://www.roblox.com/Groups/group.aspx?gid=292611'
-    EOF
+		EOF
 		mkdir $HOME/.rlw
 		download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh $HOME/.rlw/rlw.sh
 		download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw-stub.sh $HOME/.rlw/rlw-stub.sh
