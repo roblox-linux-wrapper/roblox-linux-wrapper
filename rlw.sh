@@ -18,8 +18,10 @@
 #  MA 02110-1301, USA.
 #
 #
-export RLWVERSION=20141002
+export RLWVERSION=20141007
 export RLWCHANNEL=RELEASE
+export WINE=/opt/wine-compholio/bin/wine
+export WINESERVERBIN=/opt/wine-compholio/wineserver
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINETRICKSDEV=/tmp/winetricks
 export WINEARCH=win32
@@ -71,18 +73,15 @@ else
 fi
 
 depcheck () {
-	MSG="via your system's package manager."
-
 	if command -v $1 >/dev/null 2>&1; then
-		echo '$1 installed, continuing'
-
+		echo "$1 installed, continuing"
 	else
-		echo "Please install $1 $MSG"
-		if [[ $1 -ne "zenity" ]]; then
-			spawndialog error "Please install $1 $MSG"
+		echo "Please install $1."
+		if [[ $1 != "zenity" ]]; then
+			spawndialog error "Please install $1"
 		fi
-		if [[ $1 = "wine" ]]; then
-			MSG="from http://www.winehq.org/"
+		if [[ "$WINE" == "/opt/wine-compholio/bin/wine" ]]; then
+			xdg-open "https://github.com/wine-compholio/wine-staging/wiki/Installation" &
 		fi
 		exit 127
 	fi
@@ -99,7 +98,7 @@ depcheck () {
 			--pulsate \
 			--no-cancel \
 			--auto-close
-		wine /tmp/RobloxPlayerLauncher.exe | zenity \
+		$WINE /tmp/RobloxPlayerLauncher.exe | zenity \
 			--window-icon=$RBXICON \
 			--title='Installing Roblox' \
 			--text='Installing Roblox ...' \
@@ -110,10 +109,10 @@ depcheck () {
 		cd $WINEPREFIX
 		ROBLOXPROXY=`find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
 		NPROBLOXPROXY=`find . -iname 'NPRobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
-		wine regsvr32 /i "$ROBLOXPROXY"
-		wine regsvr32 /i "$NPROBLOXPROXY"
+		$WINE regsvr32 /i "$ROBLOXPROXY"
+		$WINE regsvr32 /i "$NPROBLOXPROXY"
 		download http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.1.1esr/win32/en-US/Firefox%20Setup%2031.1.1esr.exe /tmp/Firefox-Setup-esr.exe
-		wine /tmp/Firefox-Setup-31.0esr.exe /SD | zenity \
+		$WINE /tmp/Firefox-Setup-esr.exe /SD | zenity \
 			--window-icon=$RBXICON \
 			--title='Installing Mozilla Firefox' \
 			--text='Installing Mozilla Firefox ESR ...' \
@@ -138,7 +137,7 @@ playerwrapper () {
 			--height=122`
 			GAMEID=`echo $GAMEURL | cut -d "=" -f 2`
 		if [[ -n "$GAMEID" ]]; then
-			wine "`find $WINEPREFIX -name RobloxPlayerBeta.exe`" --id $GAMEID | \
+			$WINE "`find $WINEPREFIX -name RobloxPlayerBeta.exe`" --id $GAMEID | \
 			zenity \
 				--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 				--title='ROBLOX' \
@@ -154,14 +153,14 @@ playerwrapper () {
 			return
 		fi
 	else
-		wine 'C:\Program Files\Mozilla Firefox\firefox.exe' http://www.roblox.com/Games.aspx
+		$WINE 'C:\Program Files\Mozilla Firefox\firefox.exe' http://www.roblox.com/Games.aspx
 		removeicons
 	fi
 }
 
 studiowrapper () {
 	if [[ "`find $WINEPREFIX -name RobloxStudioBeta.exe`" = '' ]]; then
-		wine "`find $WINEPREFIX -name RobloxStudioLauncherBeta.exe`" | zenity \
+		$WINE "`find $WINEPREFIX -name RobloxStudioLauncherBeta.exe`" | zenity \
 			--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 			--title='ROBLOX' \
 			--text='Installing ROBLOX Studio ...' \
@@ -171,7 +170,7 @@ studiowrapper () {
 			--no-cancel \
 			--width=362 \
 			--height=122
-		wineserver -k
+		$WINESERVERBIN -k
 		removeicons
 	fi
 	wine "`find $WINEPREFIX -name RobloxStudioBeta.exe`" | zenity \
@@ -278,5 +277,5 @@ main () {
 }
 
 # Run dependency check & launch main function
-depcheck zenity; depcheck wget; depcheck shasum; depcheck wine; depcheck cabextract
+depcheck zenity; depcheck wget; depcheck shasum; depcheck cabextract; depcheck $WINE
 main
