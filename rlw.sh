@@ -18,7 +18,7 @@
 #  MA 02110-1301, USA.
 #
 #
-export RLWVERSION=20141007
+export RLWVERSION=20141009
 export RLWCHANNEL=RELEASE
 export WINE=/opt/wine-compholio/bin/wine
 export WINESERVERBIN=/opt/wine-compholio/wineserver
@@ -173,7 +173,7 @@ studiowrapper () {
 		$WINESERVERBIN -k
 		removeicons
 	fi
-	wine "`find $WINEPREFIX -name RobloxStudioBeta.exe`" | zenity \
+	wine "`find $WINEPREFIX -name RobloxStudioLauncherBeta.exe`" | zenity \
 		--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
 		--title='ROBLOX' \
 		--text='Starting ROBLOX Studio ...' \
