@@ -15,7 +15,8 @@ To install Roblox on your Linux computer, download rlw.sh, mark it as executable
 Diagram: Roblox Linux Wrapper > Wine > Firefox.exe > RobloxPlayer.exe
 
 * Q: Is there a one-line command I can run?
-  * A: Yes, run this command. `bash <(wget -q https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O -)`
+  * A: Yes, run the following command:
+  * `bash <(wget -q https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O -)`
 
 * Q: How can I install this?
   * A: See the usage section.
