@@ -10,30 +10,30 @@ To install Roblox on your Linux computer, download rlw.sh, mark it as executable
 
 #### Questions and Answers
 *Q: How does it work?
-*A: Roblox Linux Wrapper is a shell script which installs the Microsoft Windows versions of Roblox and Mozilla Firefox within a folder that Wine generated. (see winehq.org for more info). After Roblox has been set up, it allows you to play Roblox by loading Mozilla Firefox in Wine, then launching the Windows version of Roblox.
+  *A: Roblox Linux Wrapper is a shell script which installs the Microsoft Windows versions of Roblox and Mozilla Firefox within a folder that Wine generated. (see winehq.org for more info). After Roblox has been set up, it allows you to play Roblox by loading Mozilla Firefox in Wine, then launching the Windows version of Roblox.
 
 Diagram: Roblox Linux Wrapper > Wine > Firefox.exe > RobloxPlayer.exe
 
 * Q: Is there a one-line command I can run?
-* A: Yes, run this command. `bash <(wget -q https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O -)`
+  * A: Yes, run this command. `bash <(wget -q https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O -)`
 
 * Q: How can I install this?
-* A: See the usage section.
+  * A: See the usage section.
 
 * Q: It opens in a text editor, what do I do?
-* A: Run it in a terminal by dragging rlw.sh into the terminal and hit enter.
+  * A: Run it in a terminal by dragging rlw.sh into the terminal and hit enter.
 
 * Q: It says "permission denied", what do I do?
-* A: Make sure to mark it as executable (open terminal, type "chmod +x ", drag in rlw.sh, hit enter
+  * A: Make sure to mark it as executable (open terminal, type "chmod +x ", drag in rlw.sh, hit enter
 
 * Q: It tells me there is a syntax error, or I'm having another problem.
-* A: Download it again and retry. If the same thing occurs again, [open a new issue here][1]. If you report a bug, please be as informative as possible.
+  * A: Download it again and retry. If the same thing occurs again, [open a new issue here][1]. If you report a bug, please be as informative as possible.
 
 * Q: Roblox isn't behaving like it should.
-* A: Select the "Reset Roblox to defaults" option and press Ok.
+  * A: Select the "Reset Roblox to defaults" option and press Ok.
 
 * Q: What is the "Play Roblox (Legacy Mode)" option?
-* A: This is the old method used to launch games. Paste the game link in and click "Play" to launch the game.
+  * A: This is the old method used to launch games. Paste the game link in and click "Play" to launch the game.
 
 
 ## Dependencies
