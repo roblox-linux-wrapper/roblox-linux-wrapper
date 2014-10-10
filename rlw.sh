@@ -18,7 +18,7 @@
 #  MA 02110-1301, USA.
 #
 #
-export RLWVERSION=20141009
+export RLWVERSION=20141010
 export RLWCHANNEL=RELEASE
 export WINE=/opt/wine-compholio/bin/wine
 export WINESERVERBIN=/opt/wine-compholio/wineserver
@@ -196,7 +196,7 @@ main () {
 		--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL' by alfonsojon' \
 		--window-icon=$RBXICON \
 		--width=480 \
-		--height=238 \
+		--height=260 \
 		--cancel-label='Quit' \
 		--list \
 		--text 'Select a choice.' \
