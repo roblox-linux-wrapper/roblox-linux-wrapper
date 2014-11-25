@@ -33,7 +33,7 @@ export WINESERVERBIN=`which wineserver`
 
 
 export RLWVERSION=20141124
-export RLWCHANNEL=SNAPSHOT
+export RLWCHANNEL=RELEASE
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINETRICKSDEV=/tmp/winetricks
 export WINEARCH=win32
