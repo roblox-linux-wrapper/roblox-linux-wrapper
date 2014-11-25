@@ -6,8 +6,6 @@ This script is not created nor supported officially by Roblox. It is unofficial 
 #### Usage
 Note: See Questions and Answers, "*Q: Is there a one-line command I can run?*". It makes installation much quicker and simple.
 
-IMPORTANT: Wine currently has a bug that causes Roblox Player to crash instantly. [Use wine-compholio to work around this bug][2]!
-
 To install Roblox on your Linux computer, download rlw.sh, mark it as executable, and run it. To download it, click RLW.sh, right-click "Raw", and save it. The script will automatically generate a wine prefix with Roblox installed, along with the Microsoft Windows build of Mozilla Firefox for launching games. If you would like to install the Roblox Linux Wrapper to your system, select the install option and it will place the launcher in your system's application menu. Once installed, the launcher will automatically update whenever an update is available, so this is a highly recommended option.
 
 #### Questions and Answers
@@ -41,11 +39,10 @@ Diagram: Roblox Linux Wrapper > Wine > Firefox.exe > RobloxPlayer.exe
 
 ## Dependencies
 
-    rlw.sh: cabextract shasum wget wine-compholio zenity
+    rlw.sh: cabextract shasum wget wine zenity
     rlw-stub.sh: wget shasum zenity
     
   [1]: https://github.com/alfonsojon/roblox-linux-wrapper/issues
-  [2]: https://github.com/wine-compholio/wine-staging/wiki/Installation
 
 ### Spare change?
 If you like my work, feel free to buy me a coffee.
