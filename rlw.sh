@@ -18,10 +18,22 @@
 #  MA 02110-1301, USA.
 #
 #
-export RLWVERSION=20141010
-export RLWCHANNEL=RELEASE
-export WINE=/opt/wine-compholio/bin/wine
-export WINESERVERBIN=/opt/wine-compholio/wineserver
+
+# Uncomment these lines to use stock Wine (default)
+export WINE=`which wine`
+export WINESERVERBIN=`which wineserver`
+
+# Uncomment these lines to use Wine Compholio
+#export WINE=/opt/wine-compholio/bin/wine
+#export WINESERVERBIN=/opt/wine-compholio/wineserver
+
+###
+# Don't touch stuff below this point!!!
+###
+
+
+export RLWVERSION=20141124
+export RLWCHANNEL=SNAPSHOT
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINETRICKSDEV=/tmp/winetricks
 export WINEARCH=win32
@@ -85,12 +97,12 @@ depcheck () {
 		fi
 		exit 127
 	fi
-	if [ ! -e $WINEPREFIX ]; then
+	if [[ ! -e $WINEPREFIX ]]; then
 		spawndialog info 'Required dependencies are going to be installed. \n\nDepending on your internet connection, this may take a few minutes.'
 		download http://roblox.com/install/setup.ashx /tmp/RobloxPlayerLauncher.exe
 		download http://winetricks.googlecode.com/svn/trunk/src/winetricks /tmp/winetricks
 		chmod +x /tmp/winetricks
-		/tmp/winetricks -q vcrun2008 vcrun2012 winhttp wininet | zenity \
+		/tmp/winetricks -q ddr=gdi vcrun2012 vcrun2013 winhttp wininet | zenity \
 			--window-icon=$RBXICON \
 			--title='Running winetricks' \
 			--text='Running winetricks ...' \
@@ -108,9 +120,7 @@ depcheck () {
 			--auto-close
 		cd $WINEPREFIX
 		ROBLOXPROXY=`find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
-		NPROBLOXPROXY=`find . -iname 'NPRobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
 		$WINE regsvr32 /i "$ROBLOXPROXY"
-		$WINE regsvr32 /i "$NPROBLOXPROXY"
 		download http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.1.1esr/win32/en-US/Firefox%20Setup%2031.1.1esr.exe /tmp/Firefox-Setup-esr.exe
 		$WINE /tmp/Firefox-Setup-esr.exe /SD | zenity \
 			--window-icon=$RBXICON \
@@ -158,34 +168,6 @@ playerwrapper () {
 	fi
 }
 
-studiowrapper () {
-	if [[ "`find $WINEPREFIX -name RobloxStudioBeta.exe`" = '' ]]; then
-		$WINE "`find $WINEPREFIX -name RobloxStudioLauncherBeta.exe`" | zenity \
-			--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
-			--title='ROBLOX' \
-			--text='Installing ROBLOX Studio ...' \
-			--progress \
-			--pulsate \
-			--auto-close \
-			--no-cancel \
-			--width=362 \
-			--height=122
-		$WINESERVERBIN -k
-		removeicons
-	fi
-	wine "`find $WINEPREFIX -name RobloxStudioLauncherBeta.exe`" | zenity \
-		--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
-		--title='ROBLOX' \
-		--text='Starting ROBLOX Studio ...' \
-		--progress \
-		--pulsate \
-		--auto-close \
-		--no-cancel \
-		--width=362 \
-		--height=122
-	removeicons
-}
-
 main () {
 	if [[ -d "$HOME/.rlw" ]]; then
 		export RLW_INSTALL_OPT='Uninstall Roblox Linux Wrapper'
@@ -215,7 +197,8 @@ main () {
 	'Play Roblox (Legacy Mode)')
 		playerwrapper legacy; main;;
 	'Roblox Studio')
-		studiowrapper; main;;
+		find $WINEPREFIX -name RobloxStudioLauncherBeta.exe -exec wine {} \;
+		removeicons; main;;
 	'Install Roblox Linux Wrapper (Recommended)')
 		cat <<-EOF > $HOME/.local/share/applications/Roblox.desktop
 		[Desktop Entry]
