@@ -10,9 +10,7 @@ To install Roblox on your Linux computer, download rlw.sh, mark it as executable
 
 #### Questions and Answers
 *Q: How does it work?
-  *A: Roblox Linux Wrapper is a shell script which installs the Microsoft Windows versions of Roblox and Mozilla Firefox within a folder that Wine generated. (see winehq.org for more info). After Roblox has been set up, it allows you to play Roblox by loading Mozilla Firefox in Wine, then launching the Windows version of Roblox.
-
-Diagram: Roblox Linux Wrapper > Wine > Firefox.exe > RobloxPlayer.exe
+  *A: Roblox Linux Wrapper is a shell script which installs the Microsoft Windows versions of Roblox and Mozilla Firefox within a folder that Wine generated. (see winehq.org for more info). After Roblox has been set up, it allows you to play Roblox by loading Mozilla Firefox in Wine, then launching the Windows version of Roblox. No code from Roblox is actually used, so this all is legal and does not contain proprietary Roblox code.
 
 * Q: Is there a one-line command I can run?
   * A: Yes, run the following command:
