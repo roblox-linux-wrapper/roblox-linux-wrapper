@@ -102,22 +102,8 @@ depcheck () {
 		download http://roblox.com/install/setup.ashx /tmp/RobloxPlayerLauncher.exe
 		download http://winetricks.googlecode.com/svn/trunk/src/winetricks /tmp/winetricks
 		chmod +x /tmp/winetricks
-		/tmp/winetricks -q ddr=gdi vcrun2012 vcrun2013 winhttp wininet | zenity \
-			--window-icon=$RBXICON \
-			--title='Running winetricks' \
-			--text='Running winetricks ...' \
-			--progress \
-			--pulsate \
-			--no-cancel \
-			--auto-close
-		$WINE /tmp/RobloxPlayerLauncher.exe | zenity \
-			--window-icon=$RBXICON \
-			--title='Installing Roblox' \
-			--text='Installing Roblox ...' \
-			--progress \
-			--pulsate \
-			--no-cancel \
-			--auto-close
+		/tmp/winetricks -q ddr=gdi vcrun2012 vcrun2013 winhttp wininet
+		$WINE /tmp/RobloxPlayerLauncher.exe
 		cd $WINEPREFIX
 		ROBLOXPROXY=`find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
 		$WINE regsvr32 /i "$ROBLOXPROXY"
@@ -197,7 +183,11 @@ main () {
 	'Play Roblox (Legacy Mode)')
 		playerwrapper legacy; main;;
 	'Roblox Studio')
-		find $WINEPREFIX -name RobloxStudioLauncherBeta.exe -exec wine {} -ide \;
+		if [[ `find $WINEPREFIX/drive_c/users/$USER/Local\ Settings/Application\ Data/RobloxVersions/version-* -name RobloxStudioLauncherBeta.exe` == '' ]]; then
+			$WINE $WINEPREFIX/drive_c/users/$USER/Local\ Settings/Application\ Data/RobloxVersions/RobloxStudioLauncherBeta.exe -ide
+			$WINESERVER -k
+		fi
+		$WINE $WINEPREFIX/drive_c/users/$USER/Local\ Settings/Application\ Data/RobloxVersions/version-*/RobloxStudioBeta.exe
 		removeicons; main;;
 	'Install Roblox Linux Wrapper (Recommended)')
 		cat <<-EOF > $HOME/.local/share/applications/Roblox.desktop
