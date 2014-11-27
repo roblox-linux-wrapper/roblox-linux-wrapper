@@ -11,6 +11,7 @@ import subprocess
 
 import wget
 
+
 """
 winePath = None
 for directory in os.get_exec_path():
@@ -61,7 +62,7 @@ print(WINE, '\n', WINESERVER)
 
 
 RLWVERSION = "20141127b"
-RLWCHANNEL = "RELEASE"
+RLWCHANNEL = "PRERELEASE"
 WINEPREFIX = "$HOME/.local/share/wineprefixes/Roblox"
 WINETRICKSDEV = "/tmp/winetricks"
 WINEARCH = "win32"
