@@ -32,7 +32,7 @@ export WINESERVERBIN=`which wineserver`
 ###
 
 
-export RLWVERSION=20141124
+export RLWVERSION=20141127
 export RLWCHANNEL=RELEASE
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINETRICKSDEV=/tmp/winetricks
@@ -197,7 +197,7 @@ main () {
 	'Play Roblox (Legacy Mode)')
 		playerwrapper legacy; main;;
 	'Roblox Studio')
-		find $WINEPREFIX -name RobloxStudioLauncherBeta.exe -exec wine {} \;
+		find $WINEPREFIX -name RobloxStudioLauncherBeta.exe -exec wine {} -ide \;
 		removeicons; main;;
 	'Install Roblox Linux Wrapper (Recommended)')
 		cat <<-EOF > $HOME/.local/share/applications/Roblox.desktop
