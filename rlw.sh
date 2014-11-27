@@ -31,8 +31,7 @@ export WINESERVERBIN=`which wineserver`
 # Don't touch stuff below this point!!!
 ###
 
-
-export RLWVERSION=20141127
+export RLWVERSION=20141127b
 export RLWCHANNEL=RELEASE
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINETRICKSDEV=/tmp/winetricks
@@ -185,7 +184,7 @@ main () {
 	'Roblox Studio')
 		if [[ `find $WINEPREFIX/drive_c/users/$USER/Local\ Settings/Application\ Data/RobloxVersions/version-* -name RobloxStudioLauncherBeta.exe` == '' ]]; then
 			$WINE $WINEPREFIX/drive_c/users/$USER/Local\ Settings/Application\ Data/RobloxVersions/RobloxStudioLauncherBeta.exe -ide
-			$WINESERVER -k
+			$WINESERVERBIN -k
 		fi
 		$WINE $WINEPREFIX/drive_c/users/$USER/Local\ Settings/Application\ Data/RobloxVersions/version-*/RobloxStudioBeta.exe
 		removeicons; main;;
