@@ -87,7 +87,9 @@ p = subprocess.call(["/tmp/winetricks",
 
 q = subprocess.call([WINE, "/tmp/RobloxPlayerLauncher.exe"])
 
-# from glob import glob
-# paths = glob('set01/*/*.png')
+from glob import glob
+paths = glob('RobloxProxy.dll')
+
+print(paths)
 
 # ROBLOXPROXY = subprocess.call(["find", ])
