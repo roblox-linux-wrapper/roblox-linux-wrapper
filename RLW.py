@@ -5,24 +5,12 @@ File: RLW
 Author: Ian
 Creation Date: 11/27/2014
 """
+from __future__ import print_function
 __author__ = 'Ian'
 import os
 import subprocess
 
 import wget
-
-
-"""
-winePath = None
-for directory in os.get_exec_path():
-    testWinePath = os.path.join(directory, "wine")
-    if os.path.exists(testWinePath) and os.access(testWinePath, os.R_OK | os.X_OK):
-        winePath = testWinePath
-        break
-
-print(winePath)
-"""
-
 
 def which(program):
     """
@@ -63,16 +51,27 @@ print(WINE, '\n', WINESERVER)
 
 RLWVERSION = "20141127b"
 RLWCHANNEL = "PRERELEASE"
-WINEPREFIX = "$HOME/.local/share/wineprefixes/Roblox"
+WINEPREFIX = os.getenv("HOME") + "/.local/share/wineprefixes/Roblox"
+
+WINEARCH = "win32"
+
 WINETRICKSDEV = "/tmp/winetricks"
 WINEARCH = "win32"
 WINEDLLOVERRIDES = "winebrowser.exe,winemenubuilder.exe="
 
 print('Roblox Linux Wrapper v' + RLWVERSION + '-' + RLWCHANNEL)
-print("Required dependencies are going to be installed. \n\nDepending on your internet connection, this may take a few minutes.")
+print("Required dependencies are going to be installed. \n\nDepending on your internet connection, this may take a few minutes.\n")
 
-wget.download("http://roblox.com/install/setup.ashx", out="/tmp/RobloxPlayerLauncher.exe")
-wget.download("http://winetricks.googlecode.com/svn/trunk/src/winetricks", out="/tmp/winetricks")
+try:
+    wget.download("http://roblox.com/install/setup.ashx", out="/tmp/RobloxPlayerLauncher.exe")
+    print("\n")
+except ValueError:
+    pass
+try:
+    wget.download("http://winetricks.googlecode.com/svn/trunk/src/winetricks", out="/tmp/winetricks")
+    print("\n")
+except ValueError:
+    pass
 
 os.chmod('/tmp/winetricks', os.stat('/tmp/winetricks').st_mode | 0o0111)
 
@@ -87,9 +86,35 @@ p = subprocess.call(["/tmp/winetricks",
 
 q = subprocess.call([WINE, "/tmp/RobloxPlayerLauncher.exe"])
 
-from glob import glob
-paths = glob('RobloxProxy.dll')
+rootdir = os.getenv("HOME") + "/.wine/drive_c/users/ian/"
 
-print(paths)
+for dirName, subdirList, fileList in os.walk(rootdir):
+    if "RobloxProxy.dll" in fileList:
+        ROBLOXPROXY = dirName + "/RobloxProxy.dll"
+        WINEPREFIX = dirName
 
-# ROBLOXPROXY = subprocess.call(["find", ])
+q = subprocess.call([WINE, "regsvr32",
+                    "/i",
+                    ROBLOXPROXY
+                    ])
+
+try:
+    wget.download("http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.1.1esr/win32/en-US/Firefox%20Setup%2031.1.1esr.exe", out = "/tmp/Firefox-Setup-esr.exe")
+    print("\n")
+except ValueError:
+    pass
+
+subprocess.call([WINE, "/tmp/Firefox-Setup-esr.exe",
+                "/SD"
+               ])
+
+subprocess.call([WINE, WINEPREFIX + "/RobloxPlayerBeta.exe",
+                "--id 10393493"])
+
+
+
+
+
+
+
+

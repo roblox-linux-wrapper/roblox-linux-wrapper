@@ -24,8 +24,8 @@ export WINE=`which wine`
 export WINESERVERBIN=`which wineserver`
 
 # Uncomment these lines to use Wine Compholio
-#export WINE=/opt/wine-compholio/bin/wine
-#export WINESERVERBIN=/opt/wine-compholio/wineserver
+export WINE=/opt/wine-compholio/bin/wine
+export WINESERVERBIN=/opt/wine-compholio/wineserver
 
 ###
 # Don't touch stuff below this point!!!
