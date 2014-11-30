@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#!/usr/bin/python
+# !/usr/bin/python
 """
 Project: roblox-linux-wrapper
 File: RLW
@@ -7,16 +7,21 @@ Author: Ian
 Creation Date: 11/27/2014
 """
 from __future__ import print_function
-
-__author__ = 'Ian'
-__version__ = "20141127b"
 import os
 import errno
 import subprocess
+import sys
+import time
+
+import requests
+
+from inputPass import getnum
 from which import which
 from Errors import NoWine, Unsupported, DownloadError
 
-import requests
+
+__author__ = 'Ian'
+__version__ = "20141127b"
 
 WINE = which("wine")
 WINESERVER = which("wineserver")
@@ -52,16 +57,26 @@ def wget(file, out):
     :param file: File to download
     :param out: Output Location
     """
-    r = requests.get(file, stream=True)
+    r = requests.get(file, stream = True)
 
     if not r.ok:
         raise DownloadError
 
-    size = int(r.headers['Content-Length'].strip())
-
     with open(out, 'wb') as fd:
-        for chunk in r.iter_content(1024):
-            fd.write(chunk)
+        start = time.clock()
+        total_length = int(r.headers.get('content-length'))
+        dl = 0
+        if total_length is None:
+            fd.write(r.content)
+        else:
+            for chunk in r.iter_content(1024):
+                dl += len(chunk)
+                fd.write(chunk)
+                done = int((50 * dl) / total_length)
+                sys.stdout.write("\r[%s%s] %s / %s" % ('=' * done, ' ' * (50 - done), (dl // 1024), (total_length // 1024)))
+                sys.stdout.flush()
+    print("\n")
+    print(time.clock() - start)
 
 
 def checkDeps():
@@ -140,3 +155,6 @@ def main():
         "Required dependencies are going to be installed. \n\nDepending on your internet connection, this may take a few minutes.\n")
     checkDeps()
     Install()
+    choice = getnum(choices=6)
+    if choice == 1:
+        pass
