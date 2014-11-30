@@ -6,64 +6,41 @@ Author: Ian
 Creation Date: 11/27/2014
 """
 from __future__ import print_function
+
 __author__ = 'Ian'
+__version__ = "20141127b"
 import os
 import subprocess
+from which import which
+from Errors import NoWine
 
 import wget
 
 
-def which(program):
+def checkDep():
     """
-    Functions similar to the which command on linux
+    Check Dependencies
 
-    :param program: path or file name
     """
-
-    def is_exe(ffpath):
-        """
-        Checks if exe?
-
-        :param ffpath: path
-        """
-        return os.path.isfile(ffpath) and os.access(ffpath, os.X_OK)
-
-    fpath, fname = os.path.split(program)
-    if fpath:
-        if is_exe(program):
-            return program
-    else:
-        for path in os.environ["PATH"].split(os.pathsep):
-            path = path.strip('"')
-            exe_file = os.path.join(path, program)
-            if is_exe(exe_file):
-                return exe_file
-
-    return None
+    WINE = which("wine")
+    WINESERVER = which("wineserver")
+    # Uncomment these lines to use Wine Compholio
+    # WINE = "/opt/wine-compholio/bin/wine"
+    # WINESERVERBIN = "/opt/wine-compholio/wineserver"
+    if not WINE:
+        raise NoWine
+    RLWVERSION = __version__
+    RLWCHANNEL = "PRERELEASE"
+    WINEPREFIX = os.getenv("HOME") + "/.local/share/wineprefixes/Roblox"
+    WINEARCH = "win32"
+    WINETRICKSDEV = "/tmp/winetricks"
+    WINEDLLOVERRIDES = "winebrowser.exe,winemenubuilder.exe="
 
 
-WINE = which("wine")
-WINESERVER = which("wineserver")
-
-print(WINE, '\n', WINESERVER)
-
-# Uncomment these lines to use Wine Compholio
-# WINE = "/opt/wine-compholio/bin/wine"
-# WINESERVERBIN = "/opt/wine-compholio/wineserver"
-
-
-RLWVERSION = "20141127b"
-RLWCHANNEL = "PRERELEASE"
-WINEPREFIX = os.getenv("HOME") + "/.local/share/wineprefixes/Roblox"
-
-WINEARCH = "win32"
-
-WINETRICKSDEV = "/tmp/winetricks"
-WINEDLLOVERRIDES = "winebrowser.exe,winemenubuilder.exe="
-
-print('Roblox Linux Wrapper v' + RLWVERSION + '-' + RLWCHANNEL)
-print(
-    "Required dependencies are going to be installed. \n\nDepending on your internet connection, this may take a few minutes.\n")
+def main():
+    print('Roblox Linux Wrapper v' + RLWVERSION + '-' + RLWCHANNEL)
+    print(
+        "Required dependencies are going to be installed. \n\nDepending on your internet connection, this may take a few minutes.\n")
 
 try:
     wget.download("http://roblox.com/install/setup.ashx", out = "/tmp/RobloxPlayerLauncher.exe")
@@ -81,6 +58,9 @@ os.chmod('/tmp/winetricks', os.stat('/tmp/winetricks').st_mode | 0o0111)
 subprocess.call(["/tmp/winetricks",
                  "-q",
                  "ddr=gdi",
+                 "vcrun2008",
+                 "mshtml",
+                 "mshttp",
                  "vcrun2012",
                  "vcrun2013",
                  "winhttp",
