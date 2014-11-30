@@ -143,6 +143,8 @@ def checkDeps(Force = False):
         "http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.1.1esr/win32/en-US/Firefox%20Setup%2031.1.1esr.exe",
         out = "/tmp/Firefox-Setup-esr.exe")
 
+    Install()
+
 
 def Install():
     """
@@ -186,16 +188,16 @@ def main():
 
     """
     print('Roblox Linux Wrapper v' + RLWVERSION + '-' + RLWCHANNEL)
+    installed = os.path.isdir(os.getenv("HOME") + "/.rlw")
     # choice = getnum(choices=7)
     print("""
           1. Play Roblox
           2. Play Roblox (Legacy)
           3. Roblox Studio
-          4. Install Roblox Linux Wrapper (Recommended)
-          5. Uninstall Roblox Linux Wrapper
-          6. Reset Roblox to defaults
-          7. Uninstall Roblox
-          8. Exit"""
+          4. {0}
+          5. Reset Roblox to defaults
+          6. Uninstall Roblox
+          7. Exit""".format(installed and "Uninstall Roblox Linux Wrapper" or "Install Roblox Linux Wrapper (Recommended)")
     )
     choice = raw_input("> ")
     if choice == 1:
@@ -206,7 +208,7 @@ def main():
             if "RobloxPlayerBeta.exe" in fileList:
                 PLAYER = dirName + "/RobloxPlayerBeta.exe"
         x = raw_input("GameID: ")
-        callWine(PLAYER, "--id " + str(x))
+        callWine(PLAYER, "--id", str(x))
     if choice == 3:
         for dirName, subdirList, fileList in os.walk(WINEPREFIX):
             if "RobloxStudioLauncherBeta.exe" in fileList:
@@ -215,7 +217,7 @@ def main():
         for dirName, subdirList, fileList in os.walk(WINEPREFIX):
             if "RobloxStudioBeta.exe" in fileList:
                 callWine(dirName + "/RobloxStudioBeta.exe")
-    if choice == 4:
+    if choice == 4 and not installed:
         di = os.getenv("HOME") + "/.local/share/applications/"
         with open(di + "Roblox.desktop", "w") as f:
             f.write("""
@@ -254,7 +256,7 @@ def main():
                          os.getenv("HOME") + "/.local/share/applications/Roblox.desktop"
         ])
         subprocess.call(["xdg-desktop-menu", "forceupdate"])
-    if choice == 5:
+    if choice == 4 and installed:
         subprocess.call(["xdg-desktop-menu",
                          "uninstall",
                          os.getenv("HOME") + "/.local/share/applications/Roblox.desktop"
@@ -262,10 +264,16 @@ def main():
         shutil.rmtree(os.getenv("HOME") + "/.rlw")
         os.remove(os.getenv("HOME") + "/.local/share/icons/roblox.png")
         subprocess.call(["xdg-desktop-menu", "forceupdate"])
-    if choice == 8:
+    if choice == 5:
+        shutil.rmtree(WINEPREFIX)
+        checkDeps(Force=True)
+        main()
+    if choice == 6:
+        subprocess.call([WINESERVER, "-k"])
+        shutil.rmtree(WINEPREFIX)
+    if choice == 7:
         sys.exit()
 
 
 checkDeps()
-Install()
 main()
