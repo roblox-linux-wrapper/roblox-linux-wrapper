@@ -13,6 +13,7 @@ import subprocess
 import sys
 import time
 import platform
+import shutil
 
 import requests
 
@@ -24,9 +25,10 @@ if platform.system() == "Windows":
     raise Unsupported
 
 if sys.version_info < (3, 0):
+    # noinspection PyShadowingBuiltins
     raw_input = input
 
-if not (sys.version >= (2, 7)):
+if not (sys.version_info >= (2, 7)):
     raise OutdatedPython
 
 if (2, 7) <= sys.version_info <= (3, 0):
@@ -49,6 +51,19 @@ WINETRICKSDEV = "/tmp/winetricks"
 WINEDLLOVERRIDES = "winebrowser.exe,winemenubuilder.exe="
 
 
+def callWine(*args):
+    """
+    Simplify Calling Wine
+
+    :param args: Arguments
+    """
+    arg = [WINE]
+    for a in args:
+        arg.append(a)
+    with open(os.devnull, "w") as fnull:
+        subprocess.call(arg, stdout = fnull, stderr = fnull)
+
+
 def srm(filename):
     """
     Silently Remove a file
@@ -62,6 +77,7 @@ def srm(filename):
             raise
 
 
+# noinspection PyUnresolvedReferences,PyShadowingBuiltins
 def wget(file, out):
     """
     Download a file
@@ -133,8 +149,6 @@ def Install():
     Install RLW
 
     """
-    global WINEPREFIX
-    # noinspection PyUnusedLocal
     with open(os.devnull, "w") as fnull:
         subprocess.call(["/tmp/winetricks",
                          "-q",
@@ -149,7 +163,7 @@ def Install():
                          "wmp9",
                         ], stdout = fnull, stderr = fnull)
 
-        subprocess.call([WINE, "/tmp/RobloxPlayerLauncher.exe"], stdout = fnull, stderr = fnull)
+        callWine("/tmp/RobloxPlayerLauncher.exe")
 
         ROBLOXPROXY = None
 
@@ -161,24 +175,9 @@ def Install():
         if ROBLOXPROXY is None:
             raise FatalError
 
-        subprocess.call([WINE, "regsvr32",
-                         "/i",
-                         ROBLOXPROXY
-                        ], stdout = fnull, stderr = fnull)
+        callWine("regsvr32", "/i", ROBLOXPROXY)
 
-        subprocess.call([WINE, "/tmp/Firefox-Setup-esr.exe",
-                         "/SD"
-                        ], stdout = fnull, stderr = fnull)
-
-
-def callWine(*args):
-    """
-    Simplify Calling Wine
-
-    :param args: Arguments
-    """
-    with open(os.devnull, "w") as fnull:
-        subprocess.call([WINE, args], stdout = fnull, stderr = fnull)
+        callWine("/tmp/Firefox-Setup-esr.exe", "/SD")
 
 
 def main():
@@ -198,29 +197,75 @@ def main():
           7. Uninstall Roblox
           8. Exit"""
     )
-    choice = raw_input()
+    choice = raw_input("> ")
     if choice == 1:
         callWine("C:\Program Files\Mozilla Firefox\\firefox.exe", "http://www.roblox.com/Games.aspx")
-        # subprocess.call([WINE, "C:\Program Files\Mozilla Firefox\\firefox.exe",
-        #                 "http://www.roblox.com/Games.aspx"])
     if choice == 2:
         PLAYER = None
         for dirName, subdirList, fileList in os.walk(WINEPREFIX):
             if "RobloxPlayerBeta.exe" in fileList:
                 PLAYER = dirName + "/RobloxPlayerBeta.exe"
         x = raw_input("GameID: ")
+        callWine(PLAYER, "--id " + str(x))
+    if choice == 3:
+        for dirName, subdirList, fileList in os.walk(WINEPREFIX):
+            if "RobloxStudioLauncherBeta.exe" in fileList:
+                callWine(dirName + "/RobloxStudioLauncherBeta.exe", "-ide")
+                subprocess.call([WINESERVER, "-k"])
+        for dirName, subdirList, fileList in os.walk(WINEPREFIX):
+            if "RobloxStudioBeta.exe" in fileList:
+                callWine(dirName + "/RobloxStudioBeta.exe")
+    if choice == 4:
+        di = os.getenv("HOME") + "/.local/share/applications/"
+        with open(di + "Roblox.desktop", "w") as f:
+            f.write("""
+            [Desktop Entry]
+            Comment=Play Roblox
+            Name=Roblox Linux Wrapper
+            Exec=$HOME/.rlw/RLW.py
+            Actions=RFAGroup;ROLWiki;
+            GenericName=Building Game
+            Icon=roblox
+            Categories=Game;
+            Type=Application
 
-        subprocess.call([WINE, PLAYER,
-                         "--id " + str(x),
+            [Desktop Action ROLWiki]
+            Name='Roblox on Linux Wiki'
+            Exec=xdg-open 'http://roblox.wikia.com/wiki/Roblox_On_Linux'
+
+            [Desktop Action RFAGroup]
+            Name='Roblox for All'
+            Exec=xdg-open 'http://www.roblox.com/Groups/group.aspx?gid=292611'""")
+            f.close()
+        try:
+            os.mkdir(os.getenv("HOME") + "/.rlw")
+        except OSError as e:
+            if e.errno == 17:
+                pass
+        # TODO: Download link to latest version of this python script, once uploaded.
+        wget("http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png",
+             out = os.getenv("HOME") + "/.local/share/icons/roblox.png")
+        os.chmod(os.getenv("HOME") + "/.rlw", os.stat(os.getenv("HOME") + "/.rlw").st_mode | 0o0111)
+        os.chmod(os.getenv("HOME") + "/.local/share/applications/Roblox.desktop",
+                 os.stat(os.getenv("HOME") + "/.local/share/applications/Roblox.desktop").st_mode | 0o0111)
+        subprocess.call(["xdg-desktop-menu",
+                         "install",
+                         "--novendor",
+                         os.getenv("HOME") + "/.local/share/applications/Roblox.desktop"
         ])
+        subprocess.call(["xdg-desktop-menu", "forceupdate"])
+    if choice == 5:
+        subprocess.call(["xdg-desktop-menu",
+                         "uninstall",
+                         os.getenv("HOME") + "/.local/share/applications/Roblox.desktop"
+                         ])
+        shutil.rmtree(os.getenv("HOME") + "/.rlw")
+        os.remove(os.getenv("HOME") + "/.local/share/icons/roblox.png")
+        subprocess.call(["xdg-desktop-menu", "forceupdate"])
     if choice == 8:
         sys.exit()
 
 
-try:
-    checkDeps()
-    Install()
-    main()
-finally:
-    main()
-
+checkDeps()
+Install()
+main()
