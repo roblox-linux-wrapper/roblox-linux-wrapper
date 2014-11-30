@@ -186,7 +186,7 @@ def fallback_getpass(prompt = 'Password: ', stream = None):
                   stacklevel = 2)
     if not stream:
         stream = sys.stderr
-    print("Warning: Password input may be echoed.", file = stream)
+    # print("Warning: Password input may be echoed.", file = stream)
     return _raw_input(prompt, stream)
 
 
@@ -235,3 +235,4 @@ except (ImportError, AttributeError):
         getnum = getNum
 else:
     getpass = unix_getpass
+    getnum = getNum

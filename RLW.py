@@ -12,12 +12,25 @@ import errno
 import subprocess
 import sys
 import time
+import platform
 
 import requests
 
-from inputPass import getnum
 from which import which
-from Errors import NoWine, Unsupported, DownloadError
+from Errors import NoWine, Unsupported, DownloadError, FatalError, OutdatedPython
+
+
+if platform.system() == "Windows":
+    raise Unsupported
+
+if sys.version_info < (3, 0):
+    raw_input = input
+
+if not (sys.version >= (2, 7)):
+    raise OutdatedPython
+
+if (2, 7) <= sys.version_info <= (3, 0):
+    pass
 
 
 __author__ = 'Ian'
@@ -27,7 +40,7 @@ WINE = which("wine")
 WINESERVER = which("wineserver")
 # Uncomment these lines to use Wine Compholio
 # WINE = "/opt/wine-compholio/bin/wine"
-# WINESERVERBIN = "/opt/wine-compholio/wineserver"
+# WINESERVER = "/opt/wine-compholio/wineserver"
 
 RLWVERSION = __version__
 RLWCHANNEL = "PRERELEASE"
@@ -73,17 +86,21 @@ def wget(file, out):
                 dl += len(chunk)
                 fd.write(chunk)
                 done = int((50 * dl) / total_length)
-                sys.stdout.write("\r[%s%s] %s / %s" % ('=' * done, ' ' * (50 - done), (dl // 1024), (total_length // 1024)))
+                sys.stdout.write(
+                    "\r[%s%s] %s / %s" % ('=' * done, ' ' * (50 - done), (dl // 1024), (total_length // 1024)))
                 sys.stdout.flush()
     print("\n")
     print(time.clock() - start)
 
 
-def checkDeps():
+def checkDeps(Force = False):
     """
     Check Dependencies
 
+    :param Force: Whether to force Dependency download
     """
+    print(
+        "Required dependencies are going to be installed. \n\nDepending on your internet connection, this may take a few minutes.\n")
     if not WINE:
         raise NoWine
     if not WINESERVER:
@@ -91,10 +108,14 @@ def checkDeps():
     os.environ["WINEPREFIX"] = WINEPREFIX
     os.environ["WINEARCH"] = WINEARCH
     os.environ["WINEDLLOVERRIDES"] = WINEDLLOVERRIDES
-    import platform
+    os.environ["WINE"] = WINE
+    os.environ["WINESERVERBIN"] = WINESERVER
+    os.environ["WINETRICKSDEV"] = WINETRICKSDEV
 
-    if platform.system() == "Windows":
-        raise Unsupported
+    if os.path.isfile(WINETRICKSDEV) and os.path.isfile("/tmp/RobloxPlayerLauncher.exe") and \
+            os.path.isfile("/tmp/Firefox-Setup-esr.exe") and not Force:
+        return
+
     srm(WINETRICKSDEV)
     wget("http://winetricks.googlecode.com/svn/trunk/src/winetricks", out = "/tmp/winetricks")
     os.chmod('/tmp/winetricks', os.stat('/tmp/winetricks').st_mode | 0o0111)
@@ -114,35 +135,51 @@ def Install():
 
     """
     global WINEPREFIX
-    subprocess.call(["/tmp/winetricks",
-                     "-q",
-                     "ddr=gdi",
-                     "vcrun2008",
-                     "mshtml",
-                     "mshttp",
-                     "vcrun2012",
-                     "vcrun2013",
-                     "winhttp",
-                     "wininet",
-    ])
-    subprocess.call([WINE, "/tmp/RobloxPlayerLauncher.exe"])
+    # noinspection PyUnusedLocal
+    with open(os.devnull, "w") as fnull:
+        subprocess.call(["/tmp/winetricks",
+                         "-q",
+                         "ddr=gdi",
+                         "vcrun2008",
+                         # "mshtml",
+                         # "mshttp",
+                         "vcrun2012",
+                         "vcrun2013",
+                         "winhttp",
+                         "wininet",
+                         "wmp9",
+                        ], stdout = fnull, stderr = fnull)
 
-    rootdir = WINEPREFIX  # rootdir = os.getenv("HOME") + "/.wine/drive_c/users/ian/"
-    for dirName, subdirList, fileList in os.walk(rootdir):
-        if "RobloxProxy.dll" in fileList:
-            ROBLOXPROXY = dirName + "/RobloxProxy.dll"
+        subprocess.call([WINE, "/tmp/RobloxPlayerLauncher.exe"], stdout = fnull, stderr = fnull)
 
-    subprocess.call([WINE, "regsvr32",
-                     "/i",
-                     ROBLOXPROXY
-    ])
+        ROBLOXPROXY = None
 
-    subprocess.call([WINE, "/tmp/Firefox-Setup-esr.exe",
-                     "/SD"
-    ])
+        rootdir = WINEPREFIX
+        for dirName, subdirList, fileList in os.walk(rootdir):
+            if "RobloxProxy.dll" in fileList:
+                ROBLOXPROXY = dirName + "/RobloxProxy.dll"
 
-    subprocess.call([WINE, WINEPREFIX + "/RobloxPlayerBeta.exe",
-                     "--id 10393493"])
+        if ROBLOXPROXY is None:
+            raise FatalError
+
+        subprocess.call([WINE, "regsvr32",
+                         "/i",
+                         ROBLOXPROXY
+        ], stdout = fnull, stderr = fnull)
+
+        subprocess.call([WINE, "/tmp/Firefox-Setup-esr.exe",
+                         "/SD"
+        ], stdout = fnull, stderr = fnull)
+
+
+def callWine(*args):
+    """
+    Simplify Calling Wine
+
+    :param args: Arguments
+    """
+    with open(os.devnull, "w") as fnull:
+        subprocess.call([WINE, args], stdout = fnull, stderr = fnull)
 
 
 def main():
@@ -151,10 +188,39 @@ def main():
 
     """
     print('Roblox Linux Wrapper v' + RLWVERSION + '-' + RLWCHANNEL)
-    print(
-        "Required dependencies are going to be installed. \n\nDepending on your internet connection, this may take a few minutes.\n")
+    # choice = getnum(choices=7)
+    print("""
+          1. Play Roblox
+          2. Play Roblox (Legacy)
+          3. Roblox Studio
+          4. Install Roblox Linux Wrapper (Recommended)
+          5. Uninstall Roblox Linux Wrapper
+          6. Reset Roblox to defaults
+          7. Uninstall Roblox
+          8. Exit"""
+    )
+    choice = raw_input()
+    if choice == 1:
+        subprocess.call([WINE, "C:\Program Files\Mozilla Firefox\\firefox.exe",
+                         "http://www.roblox.com/Games.aspx"])
+    if choice == 2:
+        PLAYER = None
+        for dirName, subdirList, fileList in os.walk(WINEPREFIX):
+            if "RobloxPlayerBeta.exe" in fileList:
+                PLAYER = dirName + "/RobloxPlayerBeta.exe"
+        x = raw_input("GameID: ")
+
+        subprocess.call([WINE, PLAYER,
+                         "--id " + str(x),
+        ])
+    if choice == 8:
+        sys.exit()
+
+
+try:
     checkDeps()
     Install()
-    choice = getnum(choices=6)
-    if choice == 1:
-        pass
+    main()
+finally:
+    main()
+

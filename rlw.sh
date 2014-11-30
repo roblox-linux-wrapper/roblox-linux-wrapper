@@ -104,7 +104,6 @@ depcheck () {
 		/tmp/winetricks -q ddr=gdi vcrun2012 vcrun2013 winhttp wininet
 		$WINE /tmp/RobloxPlayerLauncher.exe
 		cd $WINEPREFIX
-		ROBLOXPROXY=`find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
 		$WINE regsvr32 /i "$ROBLOXPROXY"
 		download http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.1.1esr/win32/en-US/Firefox%20Setup%2031.1.1esr.exe /tmp/Firefox-Setup-esr.exe
 		$WINE /tmp/Firefox-Setup-esr.exe /SD | zenity \
