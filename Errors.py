@@ -23,7 +23,21 @@ class NoWine(RLW_Error):
 
     """
     def __str__(self):
-        return "Wine needs to be installed to run this program"
+        return "Wine needs to be installed to run this program."
 
 
-raise NoWine
+class Unsupported(RLW_Error):
+    """
+    Unsupported Operating System
+
+    """
+    def __str__(self):
+        return "Unsupported Operating System."
+
+class DownloadError(RLW_Error):
+    """
+    Error Downloading Required File
+
+    """
+    def __str__(self):
+        return "Error Downloading Required File."
