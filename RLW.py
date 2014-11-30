@@ -32,7 +32,6 @@ if not (sys.version >= (2, 7)):
 if (2, 7) <= sys.version_info <= (3, 0):
     pass
 
-
 __author__ = 'Ian'
 __version__ = "20141127b"
 
@@ -165,11 +164,11 @@ def Install():
         subprocess.call([WINE, "regsvr32",
                          "/i",
                          ROBLOXPROXY
-        ], stdout = fnull, stderr = fnull)
+                        ], stdout = fnull, stderr = fnull)
 
         subprocess.call([WINE, "/tmp/Firefox-Setup-esr.exe",
                          "/SD"
-        ], stdout = fnull, stderr = fnull)
+                        ], stdout = fnull, stderr = fnull)
 
 
 def callWine(*args):
@@ -201,8 +200,9 @@ def main():
     )
     choice = raw_input()
     if choice == 1:
-        subprocess.call([WINE, "C:\Program Files\Mozilla Firefox\\firefox.exe",
-                         "http://www.roblox.com/Games.aspx"])
+        callWine("C:\Program Files\Mozilla Firefox\\firefox.exe", "http://www.roblox.com/Games.aspx")
+        # subprocess.call([WINE, "C:\Program Files\Mozilla Firefox\\firefox.exe",
+        #                 "http://www.roblox.com/Games.aspx"])
     if choice == 2:
         PLAYER = None
         for dirName, subdirList, fileList in os.walk(WINEPREFIX):
