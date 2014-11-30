@@ -34,6 +34,7 @@ class Unsupported(RLW_Error):
     def __str__(self):
         return "Unsupported Operating System."
 
+
 class DownloadError(RLW_Error):
     """
     Error Downloading Required File
