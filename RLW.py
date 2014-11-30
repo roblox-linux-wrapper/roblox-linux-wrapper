@@ -6,7 +6,6 @@ Author: Ian
 Creation Date: 11/27/2014
 """
 from __future__ import print_function
-
 __author__ = 'Ian'
 import os
 import subprocess
@@ -116,11 +115,3 @@ subprocess.call([WINE, "/tmp/Firefox-Setup-esr.exe",
 
 subprocess.call([WINE, WINEPREFIX + "/RobloxPlayerBeta.exe",
                  "--id 10393493"])
-
-
-
-
-
-
-
-
