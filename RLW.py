@@ -201,9 +201,10 @@ def main():
           2. Play Roblox (Legacy)
           3. Roblox Studio
           4. {0}
-          5. Reset Roblox to defaults
+          5. Reset Roblox to defaults/Reinstall ROBLOX
           6. Uninstall Roblox
-          7. Exit""".format(installed and "Uninstall Roblox Linux Wrapper" or "Install Roblox Linux Wrapper (Recommended)")
+          7. Exit""".format(
+        installed and "Uninstall Roblox Linux Wrapper" or "Install Roblox Linux Wrapper (Recommended)")
     )
     choice = raw_input("> ")
     if choice == 1:
@@ -268,22 +269,37 @@ def main():
         subprocess.call(["xdg-desktop-menu",
                          "uninstall",
                          os.getenv("HOME") + "/.local/share/applications/Roblox.desktop"
-                         ])
+        ])
         shutil.rmtree(os.getenv("HOME") + "/.rlw")
         os.remove(os.getenv("HOME") + "/.local/share/icons/roblox.png")
         subprocess.call(["xdg-desktop-menu", "forceupdate"])
         print("Roblox Linux Wrapper has been uninstalled successfully.")
     if choice == 5:
-        shutil.rmtree(WINEPREFIX)
-        checkDeps(Force=True)
+        try:
+            shutil.rmtree(WINEPREFIX)
+        except OSError as e:
+            if e.errno == 2:
+                pass
+        checkDeps(Force = True)
         main()
     if choice == 6:
         subprocess.call([WINESERVER, "-k"])
-        shutil.rmtree(WINEPREFIX)
+        try:
+            shutil.rmtree(WINEPREFIX)
+        except OSError as e:
+            if e.errno == 2:
+                pass
+        print("Uninstalled ROBLOX")
     if choice == 7:
         sys.exit()
+    os.system("clear")
     main()
 
-
-checkDeps()
-main()
+try:
+    os.system("clear")
+    checkDeps()
+    main()
+except KeyboardInterrupt:
+    print("\r")
+    print("Exiting RLW")
+    pass
