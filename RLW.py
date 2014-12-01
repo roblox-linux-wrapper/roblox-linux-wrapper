@@ -16,6 +16,7 @@ import platform
 import shutil
 
 try:
+    # noinspection PyUnresolvedReferences
     import requests
 except ImportError:
     raise noRequests
