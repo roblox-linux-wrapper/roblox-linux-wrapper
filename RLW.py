@@ -114,8 +114,7 @@ def checkDeps(Force = False):
 
     :param Force: Whether to force Dependency download
     """
-    print(
-        "Required dependencies are going to be installed. \n\nDepending on your internet connection, this may take a few minutes.\n")
+    print("Checking for required dependencies")
     if not WINE:
         raise NoWine
     if not WINESERVER:
@@ -130,6 +129,11 @@ def checkDeps(Force = False):
     if os.path.isfile(WINETRICKSDEV) and os.path.isfile("/tmp/RobloxPlayerLauncher.exe") and \
             os.path.isfile("/tmp/Firefox-Setup-esr.exe") and not Force:
         return
+    print("""
+    Required dependencies are going to be installed.
+
+    Depending on your internet connection, this may take a few minutes.
+    """)
 
     srm(WINETRICKSDEV)
     wget("http://winetricks.googlecode.com/svn/trunk/src/winetricks", out = "/tmp/winetricks")
@@ -151,6 +155,9 @@ def Install():
     Install RLW
 
     """
+    print("""
+    Installing Dependencies, please wait.
+    """)
     with open(os.devnull, "w") as fnull:
         subprocess.call(["/tmp/winetricks",
                          "-q",
@@ -189,7 +196,6 @@ def main():
     """
     print('Roblox Linux Wrapper v' + RLWVERSION + '-' + RLWCHANNEL)
     installed = os.path.isdir(os.getenv("HOME") + "/.rlw")
-    # choice = getnum(choices=7)
     print("""
           1. Play Roblox
           2. Play Roblox (Legacy)
@@ -241,6 +247,7 @@ def main():
             f.close()
         try:
             os.mkdir(os.getenv("HOME") + "/.rlw")
+            shutil.copy(__file__, os.getenv("HOME") + "/.rlw/RLW.py")
         except OSError as e:
             if e.errno == 17:
                 pass
@@ -256,6 +263,7 @@ def main():
                          os.getenv("HOME") + "/.local/share/applications/Roblox.desktop"
         ])
         subprocess.call(["xdg-desktop-menu", "forceupdate"])
+        print("Roblox Linux Wrapper was installed successfully.")
     if choice == 4 and installed:
         subprocess.call(["xdg-desktop-menu",
                          "uninstall",
@@ -264,6 +272,7 @@ def main():
         shutil.rmtree(os.getenv("HOME") + "/.rlw")
         os.remove(os.getenv("HOME") + "/.local/share/icons/roblox.png")
         subprocess.call(["xdg-desktop-menu", "forceupdate"])
+        print("Roblox Linux Wrapper has been uninstalled successfully.")
     if choice == 5:
         shutil.rmtree(WINEPREFIX)
         checkDeps(Force=True)
@@ -273,6 +282,7 @@ def main():
         shutil.rmtree(WINEPREFIX)
     if choice == 7:
         sys.exit()
+    main()
 
 
 checkDeps()
