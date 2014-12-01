@@ -60,3 +60,12 @@ class OutdatedPython(RLW_Error):
     """
     def __str__(self):
         return "Your version of python is outdated and can not be used"
+
+
+class noRequests(RLW_Error):
+    """
+    No Requests
+
+    """
+    def __str__(self):
+        return "Python package Requests is required. Install with pip"

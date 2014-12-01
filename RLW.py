@@ -15,10 +15,13 @@ import time
 import platform
 import shutil
 
-import requests
+try:
+    import requests
+except ImportError:
+    raise noRequests
 
 from which import which
-from Errors import NoWine, Unsupported, DownloadError, FatalError, OutdatedPython
+from Errors import NoWine, Unsupported, DownloadError, FatalError, OutdatedPython, noRequests
 
 
 if platform.system() == "Windows":
@@ -294,6 +297,7 @@ def main():
         sys.exit()
     os.system("clear")
     main()
+
 
 try:
     os.system("clear")
