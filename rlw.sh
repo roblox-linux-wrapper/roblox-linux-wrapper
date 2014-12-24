@@ -31,7 +31,7 @@ export WINESERVERBIN=`which wineserver`
 # Don't touch stuff below this point!!!
 ###
 
-export RLWVERSION=20141127b
+export RLWVERSION=20141223
 export RLWCHANNEL=RELEASE
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINETRICKSDEV=/tmp/winetricks
@@ -101,7 +101,7 @@ depcheck () {
 		download http://roblox.com/install/setup.ashx /tmp/RobloxPlayerLauncher.exe
 		download http://winetricks.googlecode.com/svn/trunk/src/winetricks /tmp/winetricks
 		chmod +x /tmp/winetricks
-		/tmp/winetricks -q ddr=gdi vcrun2012 vcrun2013 winhttp wininet
+		/tmp/winetricks -q ddr=gdi flash vcrun2008 vcrun2012 vcrun2013 winhttp wininet
 		$WINE /tmp/RobloxPlayerLauncher.exe
 		cd $WINEPREFIX
 		ROBLOXPROXY=`find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
