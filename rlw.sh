@@ -46,8 +46,8 @@ removeicons () {
 		rm -rf $HOME/Desktop/ROBLOX\ Player.lnk
 	fi
 	if [[ -e $HOME/Desktop/ROBLOX\ Studio*.desktop ]] || [[ -e $HOME/Desktop/ROBLOX\ Studio*.lnk ]]; then
-		rm -rf $HOME/Desktop/ROBLOX\ Studio*.desktop
-		rm -rf $HOME/Desktop/ROBLOX\ Studio*.lnk
+		rm -rf $HOME/Desktop/ROBLOX\ Studio.desktop
+		rm -rf $HOME/Desktop/ROBLOX\ Studio.lnk
 	fi
 	if [[ -e $HOME/.local/share/applications/wine/Programs/Roblox ]]; then
 		rm -rf $HOME/.local/share/applications/wine/Programs/Roblox
