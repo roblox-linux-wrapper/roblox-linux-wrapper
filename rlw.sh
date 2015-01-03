@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-#  Copyright 2014 Jonathan Alfonso <alfonsojon1997@gmail.com>
+#  Copyright 2015 Jonathan Alfonso <alfonsojon1997@gmail.com>
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ export WINESERVERBIN=`which wineserver`
 # Don't touch stuff below this point!!!
 ###
 
-export RLWVERSION=20141223
+export RLWVERSION=20150103
 export RLWCHANNEL=RELEASE
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINETRICKSDEV=/tmp/winetricks
@@ -83,7 +83,7 @@ else
 	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 fi
 
-depcheck () {
+roblox-install () {
 	if command -v $1 >/dev/null 2>&1; then
 		echo "$1 installed, continuing"
 	else
@@ -97,24 +97,63 @@ depcheck () {
 		exit 127
 	fi
 	if [[ ! -e $WINEPREFIX ]]; then
-		spawndialog info 'Required dependencies are going to be installed. \n\nDepending on your internet connection, this may take a few minutes.'
-		download http://roblox.com/install/setup.ashx /tmp/RobloxPlayerLauncher.exe
-		download http://winetricks.googlecode.com/svn/trunk/src/winetricks /tmp/winetricks
-		chmod +x /tmp/winetricks
-		/tmp/winetricks -q ddr=gdi flash vcrun2008 vcrun2012 vcrun2013 winhttp wininet
-		$WINE /tmp/RobloxPlayerLauncher.exe
-		cd $WINEPREFIX
-		ROBLOXPROXY=`find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
-		$WINE regsvr32 /i "$ROBLOXPROXY"
-		download http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.1.1esr/win32/en-US/Firefox%20Setup%2031.1.1esr.exe /tmp/Firefox-Setup-esr.exe
-		$WINE /tmp/Firefox-Setup-esr.exe /SD | zenity \
-			--window-icon=$RBXICON \
-			--title='Installing Mozilla Firefox' \
-			--text='Installing Mozilla Firefox ESR ...' \
-			--progress \
-			--pulsate \
-			--no-cancel \
-			--auto-close
+		spawndialog question 'Roblox is not installed on your computer.\n Would you like to install Roblox?'
+		if [[ $? == "0" ]]; then
+			spawndialog info 'Required software will be installed. \n\nDepending upon your internet connection, this may take a few minutes.'
+			download http://roblox.com/install/setup.ashx /tmp/RobloxPlayerLauncher.exe
+			download http://winetricks.googlecode.com/svn/trunk/src/winetricks /tmp/winetricks
+			chmod +x /tmp/winetricks
+			/tmp/winetricks -q ddr=gdi flash vcrun2008 vcrun2012 vcrun2013 winhttp wininet
+			$WINE /tmp/RobloxPlayerLauncher.exe
+			cd $WINEPREFIX
+			ROBLOXPROXY=`find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
+			$WINE regsvr32 /i "$ROBLOXPROXY"
+			download http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.1.1esr/win32/en-US/Firefox%20Setup%2031.1.1esr.exe /tmp/Firefox-Setup-esr.exe
+			$WINE /tmp/Firefox-Setup-esr.exe /SD | zenity \
+				--window-icon=$RBXICON \
+				--title='Installing Mozilla Firefox' \
+				--text='Installing Mozilla Firefox ESR ...' \
+				--progress \
+				--pulsate \
+				--no-cancel \
+				--auto-close
+			cat <<-EOF > $HOME/.local/share/applications/Roblox.desktop
+			[Desktop Entry]
+			Comment=Play Roblox
+			Name=Roblox Linux Wrapper
+			Exec=$HOME/.rlw/rlw-stub.sh
+			Actions=RFAGroup;ROLWiki;
+			GenericName=Building Game
+			Icon=roblox
+			Categories=Game;
+			Type=Application
+
+			[Desktop Action ROLWiki]
+			Name='Roblox on Linux Wiki'
+			Exec=xdg-open 'http://roblox.wikia.com/wiki/Roblox_On_Linux'
+
+			[Desktop Action RFAGroup]
+			Name='Roblox for All'
+			Exec=xdg-open 'http://www.roblox.com/Groups/group.aspx?gid=292611'
+			EOF
+			mkdir $HOME/.rlw
+			download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh $HOME/.rlw/rlw.sh
+			download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw-stub.sh $HOME/.rlw/rlw-stub.sh
+			download http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png $HOME/.local/share/icons/roblox.png
+			chmod +x $HOME/.rlw/rlw.sh
+			chmod +x $HOME/.rlw/rlw-stub.sh
+			chmod +x $HOME/.local/share/applications/Roblox.desktop
+			xdg-desktop-menu install --novendor $HOME/.local/share/applications/Roblox.desktop
+			xdg-desktop-menu forceupdate
+			if [[ -f $HOME/.rlw/rlw-stub.sh && -f $HOME/.rlw/rlw.sh && -f $HOME/.local/share/icons/roblox.png && -f $HOME/.local/share/applications/Roblox.desktop ]]; then
+				spawndialog info 'Installation has completed. You can now launch Roblox \nvia your system program launcher.'
+			else
+				spawndialog error 'Roblox Linux Wrapper did not install successfully.'
+			fi
+			exit
+		else
+			exit
+		fi
 		removeicons
 	fi
 }
@@ -154,16 +193,11 @@ playerwrapper () {
 }
 
 main () {
-	if [[ -d "$HOME/.rlw" ]]; then
-		export RLW_INSTALL_OPT='Uninstall Roblox Linux Wrapper'
-	else
-		export RLW_INSTALL_OPT='Install Roblox Linux Wrapper (Recommended)'
-	fi
 	sel=`zenity \
 		--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL' by alfonsojon' \
 		--window-icon=$RBXICON \
 		--width=480 \
-		--height=260 \
+		--height=240 \
 		--cancel-label='Quit' \
 		--list \
 		--text 'Select a choice.' \
@@ -173,7 +207,6 @@ main () {
 		TRUE 'Play Roblox' \
 		FALSE 'Play Roblox (Legacy Mode)' \
 		FALSE 'Roblox Studio' \
-		FALSE "$RLW_INSTALL_OPT" \
 		FALSE 'Reset Roblox to defaults' \
 		FALSE 'Uninstall Roblox' `
 	case $sel in
@@ -188,66 +221,34 @@ main () {
 		fi
 		$WINE $WINEPREFIX/drive_c/users/$USER/Local\ Settings/Application\ Data/RobloxVersions/version-*/RobloxStudioBeta.exe
 		removeicons; main;;
-	'Install Roblox Linux Wrapper (Recommended)')
-		cat <<-EOF > $HOME/.local/share/applications/Roblox.desktop
-		[Desktop Entry]
-		Comment=Play Roblox
-		Name=Roblox Linux Wrapper
-		Exec=$HOME/.rlw/rlw-stub.sh
-		Actions=RFAGroup;ROLWiki;
-		GenericName=Building Game
-		Icon=roblox
-		Categories=Game;
-		Type=Application
-
-		[Desktop Action ROLWiki]
-		Name='Roblox on Linux Wiki'
-		Exec=xdg-open 'http://roblox.wikia.com/wiki/Roblox_On_Linux'
-
-		[Desktop Action RFAGroup]
-		Name='Roblox for All'
-		Exec=xdg-open 'http://www.roblox.com/Groups/group.aspx?gid=292611'
-		EOF
-		mkdir $HOME/.rlw
-		download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh $HOME/.rlw/rlw.sh
-		download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw-stub.sh $HOME/.rlw/rlw-stub.sh
-		download http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png $HOME/.local/share/icons/roblox.png
-		chmod +x $HOME/.rlw/rlw.sh
-		chmod +x $HOME/.rlw/rlw-stub.sh
-		chmod +x $HOME/.local/share/applications/Roblox.desktop
-		xdg-desktop-menu install --novendor $HOME/.local/share/applications/Roblox.desktop
-		xdg-desktop-menu forceupdate
-		if [[ -f $HOME/.rlw/rlw-stub.sh && -f $HOME/.rlw/rlw.sh && -f $HOME/.local/share/icons/roblox.png && -f $HOME/.local/share/applications/Roblox.desktop ]]; then
-			spawndialog info 'Roblox Linux Wrapper was installed successfully.'
-		else
-			spawndialog error 'Roblox Linux Wrapper did not install successfully.'
-		fi
-		main;;
-	'Uninstall Roblox Linux Wrapper')
-		xdg-desktop-menu uninstall $HOME/.local/share/applications/Roblox.desktop
-		rm -rf $HOME/.rlw
-		if [[ -e $HOME/.local/share/icons/roblox.png ]]; then
-			rm -rf $HOME/.local/share/icons/roblox.png
-		fi
-		rm -rf $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
-		xdg-desktop-menu forceupdate
-		if [[ -d $HOME/.rlw ]] || [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
-			spawndialog error 'Roblox Linux Wrapper is still installed. Please try uninstalling again.'
-		else
-			spawndialog info 'Roblox Linux Wrapper has been uninstalled successfully.'
-		fi
-		main;;
 	'Reset Roblox to defaults')
 		rm -rf $WINEPREFIX;
-		depcheck; main;;
+		roblox-install; main;;
 	'Uninstall Roblox')
-		if [[ -e $WINEPREFIX ]]; then
-			wineserver -k; rm -rf $WINEPREFIX; removeicons; spawndialog info 'Roblox has been uninstalled successfully.'
-		fi
-		exit;;
+		spawndialog question 'Are you sure you would like to uninstall?'
+		if [[ $? == "0" ]]; then
+			xdg-desktop-menu uninstall $HOME/.local/share/applications/Roblox.desktop
+			rm -rf $HOME/.rlw
+			if [[ -e $HOME/.local/share/icons/roblox.png ]]; then
+				rm -rf $HOME/.local/share/icons/roblox.png
+			fi
+			rm -rf $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
+			xdg-desktop-menu forceupdate
+			if [[ -d $HOME/.rlw ]] || [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
+				spawndialog error 'Roblox is still installed. Please try uninstalling again.'
+			else
+				spawndialog info 'Roblox has been uninstalled successfully.'
+			fi
+			if [[ -e $WINEPREFIX ]]; then
+				wineserver -k; rm -rf $WINEPREFIX; removeicons; spawndialog info 'Roblox has been uninstalled successfully.'
+			fi
+			exit
+		else
+			main
+		fi;;
 	esac
 }
 
 # Run dependency check & launch main function
-depcheck zenity; depcheck wget; depcheck shasum; depcheck cabextract; depcheck $WINE
+roblox-install zenity; roblox-install wget; roblox-install shasum; roblox-install cabextract; roblox-install $WINE
 main
