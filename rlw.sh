@@ -91,7 +91,7 @@ roblox-install () {
 			ROBLOXPROXY=`find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
 			$WINE regsvr32 /i "$ROBLOXPROXY"
 			download http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.3.0esr/win32/en-US/Firefox%20Setup%2031.3.0esr.exe /tmp/Firefox-Setup-esr.exe
-			$WINE /tmp/Firefox-Setup-esr.exe /SD | zenity \
+			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" $WINE /tmp/Firefox-Setup-esr.exe /SD | zenity \
 				--window-icon=$RBXICON \
 				--title='Installing Mozilla Firefox' \
 				--text='Installing Mozilla Firefox ESR ...' \
@@ -172,17 +172,8 @@ playerwrapper () {
 }
 
 main () {
-	if [[ -e $HOME/Desktop/ROBLOX\ Player.desktop ]] || [[ -e $HOME/Desktop/ROBLOX\ Player.lnk ]]; then
-		rm -rf $HOME/Desktop/ROBLOX\ Player.desktop
-		rm -rf $HOME/Desktop/ROBLOX\ Player.lnk
-	fi
-	if [[ -e $HOME/Desktop/ROBLOX\ Studio.desktop ]] || [[ -e $HOME/Desktop/ROBLOX\ Studio.lnk ]]; then
-		rm -rf $HOME/Desktop/ROBLOX\ Studio.desktop
-		rm -rf $HOME/Desktop/ROBLOX\ Studio.lnk
-	fi
-	if [[ -e $HOME/.local/share/applications/wine/Programs/Roblox ]]; then
-		rm -rf $HOME/.local/share/applications/wine/Programs/Roblox
-	fi
+	rm -rf $HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk
+	rm -rf $HOME/.local/share/applications/wine/Programs/Roblox
 	sel=`zenity \
 		--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL' by alfonsojon' \
 		--window-icon=$RBXICON \
