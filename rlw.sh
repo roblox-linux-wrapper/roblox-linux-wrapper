@@ -20,18 +20,18 @@
 #
 
 # Uncomment these lines to use stock Wine (default)
-export WINE=`which wine`
-export WINESERVERBIN=`which wineserver`
+#export WINE=`which wine`
+#export WINESERVERBIN=`which wineserver`
 
 # Uncomment these lines to use Wine Compholio
-#export WINE=/opt/wine-compholio/bin/wine
-#export WINESERVERBIN=/opt/wine-compholio/wineserver
+export WINE=/opt/wine-compholio/bin/wine
+export WINESERVERBIN=/opt/wine-compholio/wineserver
 
 ###
 # Don't touch stuff below this point!!!
 ###
 
-export RLWVERSION=20150103
+export RLWVERSION=20150108
 export RLWCHANNEL=RELEASE
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINETRICKSDEV=/tmp/winetricks
@@ -103,12 +103,12 @@ roblox-install () {
 			download http://roblox.com/install/setup.ashx /tmp/RobloxPlayerLauncher.exe
 			download http://winetricks.googlecode.com/svn/trunk/src/winetricks /tmp/winetricks
 			chmod +x /tmp/winetricks
-			/tmp/winetricks -q ddr=gdi flash vcrun2008 vcrun2012 vcrun2013 winhttp wininet
+			/tmp/winetricks -q ddr=gdi flash vcrun2008 vcrun2012 vcrun2013 winhttp
 			$WINE /tmp/RobloxPlayerLauncher.exe
 			cd $WINEPREFIX
 			ROBLOXPROXY=`find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
 			$WINE regsvr32 /i "$ROBLOXPROXY"
-			download http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.1.1esr/win32/en-US/Firefox%20Setup%2031.1.1esr.exe /tmp/Firefox-Setup-esr.exe
+			download http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.3.0esr/win32/en-US/Firefox%20Setup%2031.3.0esr.exe /tmp/Firefox-Setup-esr.exe
 			$WINE /tmp/Firefox-Setup-esr.exe /SD | zenity \
 				--window-icon=$RBXICON \
 				--title='Installing Mozilla Firefox' \
@@ -234,13 +234,13 @@ main () {
 			fi
 			rm -rf $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 			xdg-desktop-menu forceupdate
-			if [[ -d $HOME/.rlw ]] || [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
+			wineserver -k
+			rm -rf $WINEPREFIX
+			removeicons
+			if [[ -d $HOME/.rlw ]] || [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]] || [[ -d $WINEPREFIX ]]; then
 				spawndialog error 'Roblox is still installed. Please try uninstalling again.'
 			else
 				spawndialog info 'Roblox has been uninstalled successfully.'
-			fi
-			if [[ -e $WINEPREFIX ]]; then
-				wineserver -k; rm -rf $WINEPREFIX; removeicons; spawndialog info 'Roblox has been uninstalled successfully.'
 			fi
 			exit
 		else
