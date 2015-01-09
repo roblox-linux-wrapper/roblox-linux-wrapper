@@ -31,7 +31,7 @@ export WINESERVERBIN=`which wineserver`
 # Don't touch stuff below this point!!!
 ###
 
-export RLWVERSION=20150103
+export RLWVERSION=20150108
 export RLWCHANNEL=RELEASE
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINETRICKSDEV=/tmp/winetricks
@@ -108,7 +108,7 @@ roblox-install () {
 			cd $WINEPREFIX
 			ROBLOXPROXY=`find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
 			$WINE regsvr32 /i "$ROBLOXPROXY"
-			download http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.1.1esr/win32/en-US/Firefox%20Setup%2031.1.1esr.exe /tmp/Firefox-Setup-esr.exe
+			download https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.3.0esr/win32/en-US/Firefox%20Setup%2031.3.0esr.exe /tmp/Firefox-Setup-esr.exe
 			$WINE /tmp/Firefox-Setup-esr.exe /SD | zenity \
 				--window-icon=$RBXICON \
 				--title='Installing Mozilla Firefox' \
