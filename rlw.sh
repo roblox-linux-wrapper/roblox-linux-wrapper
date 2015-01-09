@@ -25,34 +25,18 @@
 
 # Uncomment these lines to use Wine Compholio
 export WINE=/opt/wine-compholio/bin/wine
-export WINESERVERBIN=/opt/wine-compholio/wineserver
+export WINESERVERBIN=/opt/wine-compholio/bin/wineserver
 
 ###
 # Don't touch stuff below this point!!!
 ###
 
-export RLWVERSION=20150108
+export RLWVERSION=20150109
 export RLWCHANNEL=RELEASE
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
-export WINETRICKSDEV=/tmp/winetricks
 export WINEARCH=win32
-export WINEDLLOVERRIDES=winebrowser.exe,winemenubuilder.exe=
 
 echo 'Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL
-
-removeicons () {
-	if [[ -e $HOME/Desktop/ROBLOX\ Player.desktop ]] || [[ -e $HOME/Desktop/ROBLOX\ Player.lnk ]]; then
-		rm -rf $HOME/Desktop/ROBLOX\ Player.desktop
-		rm -rf $HOME/Desktop/ROBLOX\ Player.lnk
-	fi
-	if [[ -e $HOME/Desktop/ROBLOX\ Studio*.desktop ]] || [[ -e $HOME/Desktop/ROBLOX\ Studio*.lnk ]]; then
-		rm -rf $HOME/Desktop/ROBLOX\ Studio.desktop
-		rm -rf $HOME/Desktop/ROBLOX\ Studio.lnk
-	fi
-	if [[ -e $HOME/.local/share/applications/wine/Programs/Roblox ]]; then
-		rm -rf $HOME/.local/share/applications/wine/Programs/Roblox
-	fi
-}
 
 spawndialog () {
 	zenity \
@@ -101,10 +85,8 @@ roblox-install () {
 		if [[ $? == "0" ]]; then
 			spawndialog info 'Required software will be installed. \n\nDepending upon your internet connection, this may take a few minutes.'
 			download http://roblox.com/install/setup.ashx /tmp/RobloxPlayerLauncher.exe
-			download http://winetricks.googlecode.com/svn/trunk/src/winetricks /tmp/winetricks
-			chmod +x /tmp/winetricks
-			/tmp/winetricks -q ddr=gdi flash vcrun2008 vcrun2012 vcrun2013 winhttp
-			$WINE /tmp/RobloxPlayerLauncher.exe
+			winetricks ddr=gdi
+			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" $WINE /tmp/RobloxPlayerLauncher.exe
 			cd $WINEPREFIX
 			ROBLOXPROXY=`find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
 			$WINE regsvr32 /i "$ROBLOXPROXY"
@@ -154,7 +136,6 @@ roblox-install () {
 		else
 			exit
 		fi
-		removeicons
 	fi
 }
 
@@ -182,17 +163,26 @@ playerwrapper () {
 				--no-cancel \
 				--width=362 \
 				--height=122
-			removeicons
 		else
 			return
 		fi
 	else
 		$WINE 'C:\Program Files\Mozilla Firefox\firefox.exe' http://www.roblox.com/Games.aspx
-		removeicons
 	fi
 }
 
 main () {
+	if [[ -e $HOME/Desktop/ROBLOX\ Player.desktop ]] || [[ -e $HOME/Desktop/ROBLOX\ Player.lnk ]]; then
+		rm -rf $HOME/Desktop/ROBLOX\ Player.desktop
+		rm -rf $HOME/Desktop/ROBLOX\ Player.lnk
+	fi
+	if [[ -e $HOME/Desktop/ROBLOX\ Studio.desktop ]] || [[ -e $HOME/Desktop/ROBLOX\ Studio.lnk ]]; then
+		rm -rf $HOME/Desktop/ROBLOX\ Studio.desktop
+		rm -rf $HOME/Desktop/ROBLOX\ Studio.lnk
+	fi
+	if [[ -e $HOME/.local/share/applications/wine/Programs/Roblox ]]; then
+		rm -rf $HOME/.local/share/applications/wine/Programs/Roblox
+	fi
 	sel=`zenity \
 		--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL' by alfonsojon' \
 		--window-icon=$RBXICON \
@@ -219,8 +209,8 @@ main () {
 			$WINE $WINEPREFIX/drive_c/users/$USER/Local\ Settings/Application\ Data/RobloxVersions/RobloxStudioLauncherBeta.exe -ide
 			$WINESERVERBIN -k
 		fi
-		$WINE $WINEPREFIX/drive_c/users/$USER/Local\ Settings/Application\ Data/RobloxVersions/version-*/RobloxStudioBeta.exe
-		removeicons; main;;
+		WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b" $WINE $WINEPREFIX/drive_c/users/$USER/Local\ Settings/Application\ Data/RobloxVersions/version-*/RobloxStudioBeta.exe
+		main;;
 	'Reset Roblox to defaults')
 		rm -rf $WINEPREFIX;
 		roblox-install; main;;
@@ -236,7 +226,6 @@ main () {
 			xdg-desktop-menu forceupdate
 			wineserver -k
 			rm -rf $WINEPREFIX
-			removeicons
 			if [[ -d $HOME/.rlw ]] || [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]] || [[ -d $WINEPREFIX ]]; then
 				spawndialog error 'Roblox is still installed. Please try uninstalling again.'
 			else
