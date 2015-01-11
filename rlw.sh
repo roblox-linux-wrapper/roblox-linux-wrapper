@@ -31,11 +31,13 @@ export WINESERVERBIN=/opt/wine-compholio/bin/wineserver
 # Don't touch stuff below this point!!!
 ###
 
-export RLWVERSION=20150109
+export RLWVERSION=20150110
 export RLWCHANNEL=RELEASE
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINEARCH=win32
-
+if [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
+	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
+fi
 echo 'Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL
 
 spawndialog () {
@@ -59,13 +61,6 @@ download () {
 		--width=450 \
 		--height=120
 }
-
-if [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
-	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
-else
-	download http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
-	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
-fi
 
 roblox-install () {
 	if command -v $1 >/dev/null 2>&1; then
@@ -172,6 +167,10 @@ playerwrapper () {
 }
 
 main () {
+	if [[ -ne $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
+		download http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
+		export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
+	fi
 	rm -rf $HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk
 	rm -rf $HOME/.local/share/applications/wine/Programs/Roblox
 	sel=`zenity \
@@ -215,7 +214,7 @@ main () {
 			fi
 			rm -rf $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 			xdg-desktop-menu forceupdate
-			wineserver -k
+			$WINESERVER -k
 			rm -rf $WINEPREFIX
 			if [[ -d $HOME/.rlw ]] || [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]] || [[ -d $WINEPREFIX ]]; then
 				spawndialog error 'Roblox is still installed. Please try uninstalling again.'
