@@ -31,7 +31,7 @@ export WINESERVERBIN=/opt/wine-compholio/bin/wineserver
 # Don't touch stuff below this point!!!
 ###
 
-export RLWVERSION=20150110
+export RLWVERSION=20150112
 export RLWCHANNEL=RELEASE
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINEARCH=win32
@@ -167,7 +167,7 @@ playerwrapper () {
 }
 
 main () {
-	if [[ -ne $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
+	if [[ ! -f $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
 		download http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 		export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 	fi
