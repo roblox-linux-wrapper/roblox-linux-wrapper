@@ -79,7 +79,7 @@ roblox-install () {
 			spawndialog error "Please install $1"
 		fi
 		if [[ "$WINE" == "/opt/wine-compholio/bin/wine" ]] || [[ "$WINE" == "/opt/wine-staging/bin/wine" ]]; then
-			xdg-open "https://github.com/wine-compholio/wine-staging/wiki/Installation" &
+			xdg-open "http://www.wine-staging.com/install.html" &
 		fi
 		exit 127
 	fi
