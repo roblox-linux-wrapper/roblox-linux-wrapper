@@ -20,26 +20,27 @@
 #
 
 # Uncomment these lines to use stock Wine (default)
-#export WINE=`which wine`
-#export WINESERVERBIN=`which wineserver`
+export WINE=`which wine`
+export WINESERVERBIN=`which wineserver`
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
-if [[ -f /opt/wine-compholio/bin/wine ]]; then
-	export WINE=/opt/wine-compholio/bin/wine
-	export WINESERVERBIN=/opt/wine-compholio/bin/wineserver
-elif [[ -f /opt/wine-staging/bin/wine ]]; then
-	export WINE=/opt/wine-staging/bin/wine
-	export WINESERVERBIN=/opt/wine-staging/bin/wineserver
-else
-	echo "wine-staging not found, program will not operate properly!"
-	echo "Exiting."
-	exit 1
-fi
+#if [[ -f /opt/wine-compholio/bin/wine ]]; then
+#	export WINE=/opt/wine-compholio/bin/wine
+#	export WINESERVERBIN=/opt/wine-compholio/bin/wineserver
+#elif [[ -f /opt/wine-staging/bin/wine ]]; then
+#	export WINE=/opt/wine-staging/bin/wine
+#	export WINESERVERBIN=/opt/wine-staging/bin/wineserver
+#else
+#	echo "wine-staging not found, program will not operate properly!"
+#	echo "Exiting."
+#	exit 1
+#fi
+
 ###
 # Don't touch stuff below this point!!!
 ###
 
-export RLWVERSION=20150112a
+export RLWVERSION=20150121
 export RLWCHANNEL=RELEASE
 export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINEARCH=win32
