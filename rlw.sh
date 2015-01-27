@@ -19,6 +19,12 @@
 #
 #
 
+# Check that everything is here
+if [[ -ne `which zenity` && `which wget` ]]; then
+	echo "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."
+	exit 1
+fi
+
 # Uncomment these lines to use stock Wine (default)
 export WINE=`which wine`
 export WINESERVERBIN=`which wineserver`
@@ -34,8 +40,7 @@ export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox-wine
 #	export WINESERVERBIN=/opt/wine-staging/bin/wineserver
 #	export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox-wine-staging
 #else
-#	echo "wine-staging not found, program will not operate properly!"
-#	echo "Exiting."
+#	echo "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."
 #	exit 1
 #fi
 
@@ -46,6 +51,8 @@ if [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
 	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 fi
 echo 'Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL
+
+
 
 spawndialog () {
 	zenity \
@@ -70,22 +77,9 @@ download () {
 }
 
 roblox-install () {
-	if command -v $1 >/dev/null 2>&1; then
-		echo "$1 installed, continuing"
-	else
-		echo "Please install $1."
-		if [[ $1 != "zenity" ]]; then
-			spawndialog error "Please install $1"
-		fi
-		if [[ "$WINE" == "/opt/wine-compholio/bin/wine" ]] || [[ "$WINE" == "/opt/wine-staging/bin/wine" ]]; then
-			xdg-open "http://www.wine-staging.com/install.html" &
-		fi
-		exit 127
-	fi
 	if [[ ! -e $WINEPREFIX ]]; then
-		spawndialog question 'Roblox is not installed on your computer.\n Would you like to install Roblox?'
+		spawndialog question 'A working Roblox wineprefix was not found. Would you like to install one?'
 		if [[ $? == "0" ]]; then
-			spawndialog info 'Required software will be installed. \n\nDepending upon your internet connection, this may take a few minutes.'
 			download http://roblox.com/install/setup.ashx /tmp/RobloxPlayerLauncher.exe
 			winetricks ddr=gdi
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" $WINE /tmp/RobloxPlayerLauncher.exe
@@ -101,42 +95,50 @@ roblox-install () {
 				--pulsate \
 				--no-cancel \
 				--auto-close
+		else
+			exit 1
+		fi
+	fi
+}
+
+wrapper-install () {
+	if [[ -d $HOME/.rlw && -f $HOME/.local/share/applications/Roblox.desktop ]]; then
+		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
+		if [[ $? == "0" ]]; then
 			cat <<-EOF > $HOME/.local/share/applications/Roblox.desktop
-			[Desktop Entry]
-			Comment=Play Roblox
-			Name=Roblox Linux Wrapper
-			Exec=$HOME/.rlw/rlw-stub.sh
-			Actions=RFAGroup;ROLWiki;
-			GenericName=Building Game
-			Icon=roblox
-			Categories=Game;
-			Type=Application
+				[Desktop Entry]
+				Comment=Play Roblox
+				Name=Roblox Linux Wrapper
+				Exec=$HOME/.rlw/rlw-stub.sh
+				Actions=RFAGroup;ROLWiki;
+				GenericName=Building Game
+				Icon=roblox
+				Categories=Game;
+				Type=Application
 
-			[Desktop Action ROLWiki]
-			Name='Roblox on Linux Wiki'
-			Exec=xdg-open 'http://roblox.wikia.com/wiki/Roblox_On_Linux'
+				[Desktop Action ROLWiki]
+				Name='Roblox on Linux Wiki'
+				Exec=xdg-open 'http://roblox.wikia.com/wiki/Roblox_On_Linux'
 
-			[Desktop Action RFAGroup]
-			Name='Roblox for All'
-			Exec=xdg-open 'http://www.roblox.com/Groups/group.aspx?gid=292611'
-			EOF
+				[Desktop Action RFAGroup]
+				Name='Roblox for All'
+				Exec=xdg-open 'http://www.roblox.com/Groups/group.aspx?gid=292611'
+	                EOF
 			mkdir $HOME/.rlw
 			download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh $HOME/.rlw/rlw.sh
 			download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw-stub.sh $HOME/.rlw/rlw-stub.sh
-			download http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png $HOME/.local/share/icons/roblox.png
+			download http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png $HOME/.local/share/icons/ro$
 			chmod +x $HOME/.rlw/rlw.sh
 			chmod +x $HOME/.rlw/rlw-stub.sh
 			chmod +x $HOME/.local/share/applications/Roblox.desktop
 			xdg-desktop-menu install --novendor $HOME/.local/share/applications/Roblox.desktop
 			xdg-desktop-menu forceupdate
 			if [[ -f $HOME/.rlw/rlw-stub.sh && -f $HOME/.rlw/rlw.sh && -f $HOME/.local/share/icons/roblox.png && -f $HOME/.local/share/applications/Roblox.desktop ]]; then
-				spawndialog info 'Installation has completed. You can now launch Roblox \nvia your system program launcher.'
+				echo "wrapper installed properly, continuing"
 			else
 				spawndialog error 'Roblox Linux Wrapper did not install successfully.'
+				exit 1
 			fi
-			exit
-		else
-			exit
 		fi
 	fi
 }
@@ -236,5 +238,4 @@ main () {
 }
 
 # Run dependency check & launch main function
-roblox-install zenity; roblox-install wget; roblox-install shasum; roblox-install cabextract; roblox-install $WINE
-main
+wrapper-install && roblox-install && main
