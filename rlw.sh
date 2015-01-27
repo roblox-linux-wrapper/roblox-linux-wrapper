@@ -22,27 +22,25 @@
 # Uncomment these lines to use stock Wine (default)
 export WINE=`which wine`
 export WINESERVERBIN=`which wineserver`
+export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox-wine
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
 #if [[ -f /opt/wine-compholio/bin/wine ]]; then
 #	export WINE=/opt/wine-compholio/bin/wine
 #	export WINESERVERBIN=/opt/wine-compholio/bin/wineserver
+#	export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox-wine-compholio
 #elif [[ -f /opt/wine-staging/bin/wine ]]; then
 #	export WINE=/opt/wine-staging/bin/wine
 #	export WINESERVERBIN=/opt/wine-staging/bin/wineserver
+#	export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox-wine-staging
 #else
 #	echo "wine-staging not found, program will not operate properly!"
 #	echo "Exiting."
 #	exit 1
 #fi
 
-###
-# Don't touch stuff below this point!!!
-###
-
-export RLWVERSION=20150121
+export RLWVERSION=20150127
 export RLWCHANNEL=RELEASE
-export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox
 export WINEARCH=win32
 if [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
 	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
@@ -94,7 +92,7 @@ roblox-install () {
 			cd $WINEPREFIX
 			ROBLOXPROXY=`find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
 			$WINE regsvr32 /i "$ROBLOXPROXY"
-			download http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.3.0esr/win32/en-US/Firefox%20Setup%2031.3.0esr.exe /tmp/Firefox-Setup-esr.exe
+			download http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe /tmp/Firefox-Setup-esr.exe
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" $WINE /tmp/Firefox-Setup-esr.exe /SD | zenity \
 				--window-icon=$RBXICON \
 				--title='Installing Mozilla Firefox' \
