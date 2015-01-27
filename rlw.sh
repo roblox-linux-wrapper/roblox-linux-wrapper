@@ -26,25 +26,25 @@ if [[ -ne `which zenity` && `which wget` ]]; then
 fi
 
 # Uncomment these lines to use stock Wine (default)
-export WINE=`which wine`
-export WINESERVERBIN=`which wineserver`
-export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox-wine
+#export WINE=`which wine`
+#export WINESERVERBIN=`which wineserver`
+#export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox-wine
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
-#if [[ -f /opt/wine-compholio/bin/wine ]]; then
-#	export WINE=/opt/wine-compholio/bin/wine
-#	export WINESERVERBIN=/opt/wine-compholio/bin/wineserver
-#	export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox-wine-compholio
-#elif [[ -f /opt/wine-staging/bin/wine ]]; then
-#	export WINE=/opt/wine-staging/bin/wine
-#	export WINESERVERBIN=/opt/wine-staging/bin/wineserver
-#	export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox-wine-staging
-#else
-#	echo "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."
-#	exit 1
-#fi
+if [[ -f /opt/wine-compholio/bin/wine ]]; then
+	export WINE=/opt/wine-compholio/bin/wine
+	export WINESERVERBIN=/opt/wine-compholio/bin/wineserver
+	export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox-wine-compholio
+elif [[ -f /opt/wine-staging/bin/wine ]]; then
+	export WINE=/opt/wine-staging/bin/wine
+	export WINESERVERBIN=/opt/wine-staging/bin/wineserver
+	export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox-wine-staging
+else
+	echo "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."
+	exit 1
+fi
 
-export RLWVERSION=20150127
+export RLWVERSION=20150127-staging
 export RLWCHANNEL=RELEASE
 export WINEARCH=win32
 if [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
