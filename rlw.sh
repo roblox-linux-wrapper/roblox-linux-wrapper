@@ -152,6 +152,8 @@ wrapper-install () {
 }
 
 playerwrapper () {
+	ROBLOXPROXY=`find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
+	$WINE regsvr32 /i "$ROBLOXPROXY"
 	if [[ $1 = legacy ]]; then
 		export GAMEURL=`\
 		zenity \
