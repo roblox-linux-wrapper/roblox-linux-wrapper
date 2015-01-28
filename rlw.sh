@@ -167,17 +167,8 @@ playerwrapper () {
 			--height=122`
 			GAMEID=`echo $GAMEURL | cut -d "=" -f 2`
 		if [[ -n "$GAMEID" ]]; then
-			$WINE "`find $WINEPREFIX -name RobloxPlayerBeta.exe`" --id $GAMEID | \
-			zenity \
-				--window-icon=$WINEPREFIX/ROBLOX-Circle-Logo1.png \
-				--title='ROBLOX' \
-				--text='Starting ROBLOX Player...' \
-				--progress \
-				--pulsate \
-				--auto-close \
-				--no-cancel \
-				--width=362 \
-				--height=122
+			$WINE "`find $WINEPREFIX -name RobloxPlayerBeta.exe`" --id $GAMEID
+			$WINESERVERBIN --wait
 		else
 			return
 		fi
