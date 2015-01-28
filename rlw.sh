@@ -30,7 +30,7 @@ elif [[ ! -e `which wget` && `which wine` ]]; then
 fi
 
 # Define some variables and the spawndialog function
-export RLWVERSION=20150127b-staging
+export RLWVERSION=20150127c-staging
 export RLWCHANNEL=RELEASE
 export WINEARCH=win32
 if [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
