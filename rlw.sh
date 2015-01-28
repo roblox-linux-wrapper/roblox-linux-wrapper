@@ -20,10 +20,32 @@
 #
 
 # Check that everything is here
-if [[ -ne `which zenity` && `which wget` ]]; then
+if [[ ! -e `which zenity` ]]; then
 	echo "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."
 	exit 1
+elif [[ ! -e `which wget` && `which wine` ]]; then
+	echo "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."
+	spawndialog error "Missing dependencies! Make sure zenity, \nwget, wine, and wine-staging are installed."
+	exit 1
 fi
+
+# Define some variables and the spawndialog function
+export RLWVERSION=20150127b-staging
+export RLWCHANNEL=RELEASE
+export WINEARCH=win32
+if [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
+	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
+fi
+echo 'Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL
+
+spawndialog () {
+	zenity \
+		--window-icon=$RBXICON \
+		--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL \
+		--$1 \
+		--no-wrap \
+		--text="$2"
+}
 
 # Uncomment these lines to use stock Wine (default)
 #export WINE=`which wine`
@@ -41,27 +63,13 @@ elif [[ -f /opt/wine-staging/bin/wine ]]; then
 	export WINEPREFIX=$HOME/.local/share/wineprefixes/Roblox-wine-staging
 else
 	echo "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."
+	spawndialog error "Missing dependencies! Make sure wine-staging is installed."
+	spawndialog question "Would you like to open the wine-staging installation instructions?"
+	if [[ $? == "0" ]]; then
+		xdg-open "https://github.com/wine-compholio/wine-staging/wiki/Installation"
+	fi
 	exit 1
 fi
-
-export RLWVERSION=20150127-staging
-export RLWCHANNEL=RELEASE
-export WINEARCH=win32
-if [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
-	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
-fi
-echo 'Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL
-
-
-
-spawndialog () {
-	zenity \
-		--window-icon=$RBXICON \
-		--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL \
-		--$1 \
-		--no-wrap \
-		--text="$2"
-}
 
 download () {
 	wget $1 -O $2 2>&1 | \
