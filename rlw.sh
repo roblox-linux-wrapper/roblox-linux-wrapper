@@ -131,7 +131,7 @@ wrapper-install () {
 				[Desktop Action RFAGroup]
 				Name='Roblox for All'
 				Exec=xdg-open 'http://www.roblox.com/Groups/group.aspx?gid=292611'
-	                EOF
+			EOF
 			mkdir $HOME/.rlw
 			download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh $HOME/.rlw/rlw.sh
 			download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw-stub.sh $HOME/.rlw/rlw-stub.sh
