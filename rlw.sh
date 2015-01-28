@@ -110,7 +110,7 @@ roblox-install () {
 }
 
 wrapper-install () {
-	if [[ -d $HOME/.rlw && -f $HOME/.local/share/applications/Roblox.desktop ]]; then
+	if [[ ! -d $HOME/.rlw && -f $HOME/.local/share/applications/Roblox.desktop ]]; then
 		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
 		if [[ $? == "0" ]]; then
 			cat <<-EOF > $HOME/.local/share/applications/Roblox.desktop
