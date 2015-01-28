@@ -89,12 +89,12 @@ roblox-install () {
 		spawndialog question 'A working Roblox wineprefix was not found. Would you like to install one?'
 		if [[ $? == "0" ]]; then
 			download http://roblox.com/install/setup.ashx /tmp/RobloxPlayerLauncher.exe
+			download http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe /tmp/Firefox-Setup-esr.exe
 			winetricks ddr=gdi
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" $WINE /tmp/RobloxPlayerLauncher.exe
 			cd $WINEPREFIX
 			ROBLOXPROXY=`find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\'`
 			$WINE regsvr32 /i "$ROBLOXPROXY"
-			download http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe /tmp/Firefox-Setup-esr.exe
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" $WINE /tmp/Firefox-Setup-esr.exe /SD | zenity \
 				--window-icon=$RBXICON \
 				--title='Installing Mozilla Firefox' \
@@ -103,6 +103,7 @@ roblox-install () {
 				--pulsate \
 				--no-cancel \
 				--auto-close
+			$WINESERVERBIN --wait
 		else
 			exit 1
 		fi
@@ -110,7 +111,7 @@ roblox-install () {
 }
 
 wrapper-install () {
-	if [[ ! -d $HOME/.rlw && -f $HOME/.local/share/applications/Roblox.desktop ]]; then
+	if [[ ! -d $HOME/.rlw ]] || [[ ! -f $HOME/.local/share/applications/Roblox.desktop ]]; then
 		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
 		if [[ $? == "0" ]]; then
 			cat <<-EOF > $HOME/.local/share/applications/Roblox.desktop
@@ -135,7 +136,7 @@ wrapper-install () {
 			mkdir $HOME/.rlw
 			download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh $HOME/.rlw/rlw.sh
 			download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw-stub.sh $HOME/.rlw/rlw-stub.sh
-			download http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png $HOME/.local/share/icons/ro$
+			download http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png $HOME/.local/share/icons/roblox.png
 			chmod +x $HOME/.rlw/rlw.sh
 			chmod +x $HOME/.rlw/rlw-stub.sh
 			chmod +x $HOME/.local/share/applications/Roblox.desktop
@@ -219,6 +220,7 @@ main () {
 			$WINESERVERBIN -k
 		fi
 		WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b" $WINE $WINEPREFIX/drive_c/users/$USER/Local\ Settings/Application\ Data/RobloxVersions/version-*/RobloxStudioBeta.exe
+		$WINESERVERBIN --wait
 		main;;
 	'Reset Roblox to defaults')
 		rm -rf $WINEPREFIX;
@@ -233,7 +235,7 @@ main () {
 			fi
 			rm -rf $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 			xdg-desktop-menu forceupdate
-			$WINESERVER -k
+			$WINESERVERBIN --kill
 			rm -rf $WINEPREFIX
 			if [[ -d $HOME/.rlw ]] || [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]] || [[ -d $WINEPREFIX ]]; then
 				spawndialog error 'Roblox is still installed. Please try uninstalling again.'
