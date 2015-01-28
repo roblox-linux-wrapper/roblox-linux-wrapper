@@ -114,23 +114,23 @@ wrapper-install () {
 		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
 		if [[ $? == "0" ]]; then
 			cat <<-EOF > $HOME/.local/share/applications/Roblox.desktop
-				[Desktop Entry]
-				Comment=Play Roblox
-				Name=Roblox Linux Wrapper
-				Exec=$HOME/.rlw/rlw-stub.sh
-				Actions=RFAGroup;ROLWiki;
-				GenericName=Building Game
-				Icon=roblox
-				Categories=Game;
-				Type=Application
+			[Desktop Entry]
+			Comment=Play Roblox
+			Name=Roblox Linux Wrapper
+			Exec=$HOME/.rlw/rlw-stub.sh
+			Actions=RFAGroup;ROLWiki;
+			GenericName=Building Game
+			Icon=roblox
+			Categories=Game;
+			Type=Application
 
-				[Desktop Action ROLWiki]
-				Name='Roblox on Linux Wiki'
-				Exec=xdg-open 'http://roblox.wikia.com/wiki/Roblox_On_Linux'
+			[Desktop Action ROLWiki]
+			Name='Roblox on Linux Wiki'
+			Exec=xdg-open 'http://roblox.wikia.com/wiki/Roblox_On_Linux'
 
-				[Desktop Action RFAGroup]
-				Name='Roblox for All'
-				Exec=xdg-open 'http://www.roblox.com/Groups/group.aspx?gid=292611'
+			[Desktop Action RFAGroup]
+			Name='Roblox for All'
+			Exec=xdg-open 'http://www.roblox.com/Groups/group.aspx?gid=292611'
 			EOF
 			mkdir $HOME/.rlw
 			download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh $HOME/.rlw/rlw.sh
