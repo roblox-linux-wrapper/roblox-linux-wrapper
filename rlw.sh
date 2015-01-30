@@ -30,7 +30,7 @@ elif [[ ! -e `which wget` && `which wine` ]]; then
 fi
 
 # Define some variables and the spawndialog function
-export RLWVERSION=20150127c-staging
+export RLWVERSION=20150130-staging
 export RLWCHANNEL=RELEASE
 export WINEARCH=win32
 if [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
@@ -88,6 +88,8 @@ roblox-install () {
 	if [[ ! -e $WINEPREFIX ]]; then
 		spawndialog question 'A working Roblox wineprefix was not found. Would you like to install one?'
 		if [[ $? == "0" ]]; then
+			# Make sure our directories really exist
+			mkdir -p $WINEPREFIX
 			download http://roblox.com/install/setup.ashx /tmp/RobloxPlayerLauncher.exe
 			download http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe /tmp/Firefox-Setup-esr.exe
 			winetricks ddr=gdi
@@ -133,7 +135,7 @@ wrapper-install () {
 			Name='Roblox for All'
 			Exec=xdg-open 'http://www.roblox.com/Groups/group.aspx?gid=292611'
 			EOF
-			mkdir $HOME/.rlw
+			mkdir -p $HOME/.rlw
 			download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh $HOME/.rlw/rlw.sh
 			download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw-stub.sh $HOME/.rlw/rlw-stub.sh
 			download http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png $HOME/.local/share/icons/roblox.png
@@ -148,6 +150,8 @@ wrapper-install () {
 				spawndialog error 'Roblox Linux Wrapper did not install successfully.'
 				exit 1
 			fi
+		else
+			exit 1
 		fi
 	fi
 }
@@ -179,6 +183,7 @@ playerwrapper () {
 
 main () {
 	if [[ ! -f $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
+		mkdir -p $HOME/.local/share/icons/hicolor/512x512/apps
 		download http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 		export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 	fi
