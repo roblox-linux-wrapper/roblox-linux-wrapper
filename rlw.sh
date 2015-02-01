@@ -80,7 +80,7 @@ rwineserver () {
 	$WINESERVERBIN "$@"; [[ $? = "0" ]] || { spawndialog error "wineserver closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
 }
 rwget () {
-	wget "$1" -O "$2" 2>&1 | sed -u 's/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | zenity --progress --window-icon="$RBXICON" --title='Downloading' --auto-close --no-cancel --width=450 --height=120; [[ $? = "0" ]] || { spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"; exit $?; }
+	wget "$@" 2>&1 | sed -u 's/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | zenity --progress --window-icon="$RBXICON" --title='Downloading' --auto-close --no-cancel --width=450 --height=120; [[ $? = "0" ]] || { spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"; exit $?; }
 }
 rwinetricks () {
 	$(which winetricks) "$@"
