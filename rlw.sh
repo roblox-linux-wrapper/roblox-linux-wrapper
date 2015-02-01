@@ -73,9 +73,6 @@ fi
 rwine () {
 	$WINE "$@"; [[ $? = "0" ]] || { spawndialog error "wine closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
 }
-rwine-silent () {
-	$WINE "$@"
-}
 rwineboot () {
 	$WINEBOOTBIN; [[ $? = "0" ]] || { spawndialog error "wineboot closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
 }
@@ -102,10 +99,10 @@ roblox-install () {
 			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
 			rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
 			rwinetricks ddr=gdi
-			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine-silent /tmp/RobloxPlayerLauncher.exe
+			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
 			cd "$WINEPREFIX"
 			ROBLOXPROXY="$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')"
-			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine-silent /tmp/Firefox-Setup-esr.exe /SD | zenity \
+			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \
 				--window-icon="$RBXICON" \
 				--title='Installing Mozilla Firefox' \
 				--text='Installing Mozilla Firefox ESR ...' \
