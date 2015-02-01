@@ -87,9 +87,8 @@ rwinetricks () {
 }
 
 roblox-install () {
-	if [[ -e $WINEPREFIX_OLD ]] && [[ ! -e $WINEPREFIX ]]; then
-		mv "$WINEPREFIX_OLD" "$WINEPREFIX"
-	fi
+	[[ -e "$WINEPREFIX" ]] && rmdir "$WINEPREFIX"
+	[[ -e $WINEPREFIX_OLD ]] && [[ ! -e $WINEPREFIX ]] && { mv "$WINEPREFIX_OLD" "$WINEPREFIX"; }
 	if [[ ! -e $WINEPREFIX ]]; then
 		spawndialog question 'A working Roblox wineprefix was not found. Would you like to install one?'
 		if [[ $? == "0" ]]; then
