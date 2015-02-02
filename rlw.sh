@@ -31,7 +31,7 @@ spawndialog () {
 }
 
 # Define some variables and the spawndialog function
-export RLWVERSION=20150131
+export RLWVERSION=20150202
 export RLWCHANNEL=staging
 export WINEARCH=win32
 
@@ -71,7 +71,11 @@ fi
 # Note: the "r" prefix indicates a function that extends system functionality.
 
 rwine () {
-	$WINE "$@"; [[ $? = "0" ]] || { spawndialog error "wine closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
+	if [[ "$1" == "silent" ]]; then
+		$WINE "${@:2}"
+	else
+		$WINE "$@"; [[ $? = "0" ]] || { spawndialog error "wine closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
+	fi
 }
 rwineboot () {
 	$WINEBOOTBIN; [[ $? = "0" ]] || { spawndialog error "wineboot closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
@@ -93,12 +97,15 @@ roblox-install () {
 		spawndialog question 'A working Roblox wineprefix was not found. Would you like to install one?'
 		if [[ $? == "0" ]]; then
 			# Make sure our directories really exist
-			[[ -e $HOME/.local/share/wineprefixes ]] || mkdir -p "$HOME/.local/share/wineprefixes"
+			[[ -e "$HOME/.local/share/wineprefixes" ]] || mkdir -p "$HOME/.local/share/wineprefixes"
 			rwineboot
+			rwineserver --wait
+			cd "$WINEPREFIX"
+			# Can cause problems in mutter. Examine further, don't use if not necessary.
+			# rwinetricks --gui ddr=gdi
 			[[ $? == 0 ]]  || { spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"; exit $?; }
 			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
 			rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
-			rwinetricks ddr=gdi
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
 			cd "$WINEPREFIX"
 			ROBLOXPROXY="$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')"
