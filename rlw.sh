@@ -71,7 +71,7 @@ fi
 # Note: the "r" prefix indicates a function that extends system functionality.
 
 rwine () {
-	if [[ "$1" == "silent" ]]; then
+	if [[ "$1" == "--silent" ]]; then
 		$WINE "${@:2}"
 	else
 		$WINE "$@"; [[ $? = "0" ]] || { spawndialog error "wine closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
@@ -167,7 +167,7 @@ wrapper-install () {
 
 playerwrapper () {
 	ROBLOXPROXY=$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')
-	rwine regsvr32 /i "$ROBLOXPROXY"
+	rwine --silent regsvr32 /i "$ROBLOXPROXY"
 	if [[ $1 = legacy ]]; then
 		export GAMEURL=$(\
 			zenity \
