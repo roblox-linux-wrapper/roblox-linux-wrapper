@@ -52,18 +52,15 @@ echo 'Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL"
 #export WINEPREFIX_OLD=$HOME/.local/share/wineprefixes/Roblox-wine
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
-if [[ -f /opt/wine-compholio/bin/wine ]]; then
-	export WINE=/opt/wine-compholio/bin/wine
-	export WINEBOOTBIN=/opt/wine-compholio/bin/wineboot
-	export WINESERVERBIN=/opt/wine-compholio/bin/wineserver
-	export WINEPREFIX=$HOME/.local/share/wineprefixes/roblox-wine-compholio
-	export WINEPREFIX_OLD=$HOME/.local/share/wineprefixes/Roblox-wine-compholio
-elif [[ -f /opt/wine-staging/bin/wine ]]; then
+if [[ -f /opt/wine-staging/bin/wine ]]; then
 	export WINE=/opt/wine-staging/bin/wine
 	export WINEBOOTBIN=/opt/wine-staging/bin/wineboot
 	export WINESERVERBIN=/opt/wine-staging/bin/wineserver
 	export WINEPREFIX=$HOME/.local/share/wineprefixes/roblox-wine-staging
 	export WINEPREFIX_OLD=$HOME/.local/share/wineprefixes/Roblox-wine-staging
+else
+	spawndialog error "Missing dependencies! Make sure wine-staging is installed."
+	exit 1
 fi
 
 # Some internal functions to make wine more useful to the wrapper.
