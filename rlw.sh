@@ -31,7 +31,7 @@ spawndialog () {
 }
 
 # Define some variables and the spawndialog function
-export RLWVERSION=20150202
+export RLWVERSION=20150206
 export RLWCHANNEL=staging
 export WINEARCH=win32
 
