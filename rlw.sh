@@ -133,13 +133,17 @@ wrapper-install () {
 			Icon=roblox
 			Categories=Game;
 			Type=Application
+			
+			[Desktop Action Support]
+			Name=GitHub Support Ticket
+			Exec=xdg-open 'https://github.com/alfonsojon/roblox-linux-wrapper/issues/new'
 
 			[Desktop Action ROLWiki]
-			Name='Roblox on Linux Wiki'
+			Name=Roblox on Linux Wiki
 			Exec=xdg-open 'http://roblox.wikia.com/wiki/Roblox_On_Linux'
 
 			[Desktop Action RFAGroup]
-			Name='Roblox for All'
+			Name=Roblox for All
 			Exec=xdg-open 'http://www.roblox.com/Groups/group.aspx?gid=292611'
 			EOF
 			mkdir -p "$HOME/.rlw"
