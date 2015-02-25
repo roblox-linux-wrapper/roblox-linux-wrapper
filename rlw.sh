@@ -97,20 +97,37 @@ roblox-install () {
 			# Can cause problems in mutter. Examine further, don't use if not necessary.
 			# rwinetricks --gui ddr=gdi
 			[[ $? == 0 ]]  || { spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"; exit $?; }
-			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
-			rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
-			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
-			cd "$WINEPREFIX"
-			ROBLOXPROXY="$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')"
-			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \
+			rwget http://roblox.com/insseltall/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
+			ans=$(zenity \
+				--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL' by alfonsojon' \
 				--window-icon="$RBXICON" \
-				--title='Installing Mozilla Firefox' \
-				--text='Installing Mozilla Firefox ESR ...' \
-				--progress \
-				--pulsate \
-				--no-cancel \
-				--auto-close
-			rwineserver --wait
+				--width=480 \
+				--height=240 \
+				--cancel-label='Quit' \
+				--list \
+				--text 'Which browser do you want?' \
+				--radiolist \
+				--column '' \
+				--column 'Options' \
+				TRUE 'Firefox' \
+				FALSE 'Chrome')
+			case $ans in
+			'Firefox')
+				rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
+				WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
+				cd "$WINEPREFIX"
+				ROBLOXPROXY="$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')"
+				WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \
+					--window-icon="$RBXICON" \
+					--title='Installing Mozilla Firefox' \
+					--text='Installing Mozilla Firefox ESR ...' \
+					--progress \
+					--pulsate \
+					--no-cancel \
+					--auto-close
+				rwineserver --wait
+			exit
+			esac
 		else
 			exit 1
 		fi
@@ -197,7 +214,7 @@ main () {
 		--height=240 \
 		--cancel-label='Quit' \
 		--list \
-		--text 'Select a choice.' \
+		--text 'What option would you like?' \
 		--radiolist \
 		--column '' \
 		--column 'Options' \
