@@ -129,7 +129,6 @@ roblox-install () {
 			elif [$ans = Chrome]
 			then
 					echo "Unsupported"
-				
 			fi
 		else
 			exit 1
