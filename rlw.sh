@@ -126,8 +126,9 @@ roblox-install () {
 					--no-cancel \
 					--auto-close
 				rwineserver --wait
-			elif [$ans = Chrome]
-				echo "Unsupported"
+				elif [$ans = Chrome]
+					echo "Unsupported"
+				
 			fi
 		else
 			exit 1
