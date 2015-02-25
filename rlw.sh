@@ -103,7 +103,7 @@ roblox-install () {
 				--column 'Options' \
 				TRUE 'Firefox' \
 				FALSE 'Chrome')
-			if [ $ans == Firefox ]
+			if [[ $ans == Firefox ]]
 			then
 				# Make sure our directories really exist
 				[[ -e "$HOME/.local/share/wineprefixes" ]] || mkdir -p "$HOME/.local/share/wineprefixes"
@@ -127,9 +127,8 @@ roblox-install () {
 					--no-cancel \
 					--auto-close
 				rwineserver --wait
-			elif [ $ans == Chrome ]
-			then
-				echo "Unsupported"
+			else
+				exit 1
 			fi
 		else
 			exit 1
