@@ -1,23 +1,19 @@
 #!/usr/bin/env bash
 #
-#  Copyright 2015 Jonathan Alfonso <alfonsojon1997@gmail.com>
+#    Copyright 2015 Jonathan Alfonso <alfonsojon1997@gmail.com>
 #
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
-#  You should have received a copy of the GNU General Public License
-#  along with this program; if not, write to the Free Software
-#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-#  MA 02110-1301, USA.
-#
-#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 spawndialog () {
 	echo -e "$2"
@@ -137,13 +133,17 @@ wrapper-install () {
 			Icon=roblox
 			Categories=Game;
 			Type=Application
+			
+			[Desktop Action Support]
+			Name=GitHub Support Ticket
+			Exec=xdg-open 'https://github.com/alfonsojon/roblox-linux-wrapper/issues/new'
 
 			[Desktop Action ROLWiki]
-			Name='Roblox on Linux Wiki'
+			Name=Roblox on Linux Wiki
 			Exec=xdg-open 'http://roblox.wikia.com/wiki/Roblox_On_Linux'
 
 			[Desktop Action RFAGroup]
-			Name='Roblox for All'
+			Name=Roblox for All
 			Exec=xdg-open 'http://www.roblox.com/Groups/group.aspx?gid=292611'
 			EOF
 			mkdir -p "$HOME/.rlw"
