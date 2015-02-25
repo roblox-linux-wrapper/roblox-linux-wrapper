@@ -97,7 +97,6 @@ roblox-install () {
 			# Can cause problems in mutter. Examine further, don't use if not necessary.
 			# rwinetricks --gui ddr=gdi
 			[[ $? == 0 ]]  || { spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"; exit $?; }
-			rwget http://roblox.com/insseltall/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
 			ans=$(zenity \
 				--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL' by alfonsojon' \
 				--window-icon="$RBXICON" \
@@ -111,8 +110,9 @@ roblox-install () {
 				--column 'Options' \
 				TRUE 'Firefox' \
 				FALSE 'Chrome')
-			case $ans in
-			'Firefox')
+			if [ $ans = Firefox ]
+			then
+				rwget http://roblox.com/insseltall/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
 				rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
 				WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
 				cd "$WINEPREFIX"
@@ -126,8 +126,9 @@ roblox-install () {
 					--no-cancel \
 					--auto-close
 				rwineserver --wait
-			exit
-			esac
+			elif [$ans = Chrome]
+				echo "Unsupported"
+			fi
 		else
 			exit 1
 		fi
