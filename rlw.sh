@@ -88,15 +88,8 @@ roblox-install () {
 	[[ -e $WINEPREFIX_OLD ]] && [[ ! -e $WINEPREFIX ]] && { mv "$WINEPREFIX_OLD" "$WINEPREFIX"; }
 	if [[ ! -e $WINEPREFIX ]]; then
 		spawndialog question 'A working Roblox wineprefix was not found. Would you like to install one?'
-		if [[ $? == "0" ]]; then
-			# Make sure our directories really exist
-			[[ -e "$HOME/.local/share/wineprefixes" ]] || mkdir -p "$HOME/.local/share/wineprefixes"
-			rwineboot
-			rwineserver --wait
-			cd "$WINEPREFIX"
-			# Can cause problems in mutter. Examine further, don't use if not necessary.
-			# rwinetricks --gui ddr=gdi
-			[[ $? == 0 ]]  || { spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"; exit $?; }
+		if [[ $? == "0" ]]
+		then
 			ans=$(zenity \
 				--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL' by alfonsojon' \
 				--window-icon="$RBXICON" \
@@ -110,6 +103,14 @@ roblox-install () {
 				--column 'Options' \
 				TRUE 'Firefox' \
 				FALSE 'Chrome')
+			# Make sure our directories really exist
+			[[ -e "$HOME/.local/share/wineprefixes" ]] || mkdir -p "$HOME/.local/share/wineprefixes"
+			rwineboot
+			rwineserver --wait
+			cd "$WINEPREFIX"
+			# Can cause problems in mutter. Examine further, don't use if not necessary.
+			# rwinetricks --gui ddr=gdi
+			[[ $? == 0 ]]  || { spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"; exit $?; }
 			if [ $ans = Firefox ]
 			then
 				rwget http://roblox.com/insseltall/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
