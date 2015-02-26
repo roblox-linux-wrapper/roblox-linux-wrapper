@@ -9,12 +9,11 @@ To install Roblox on your Linux computer, run the command `bash <(wget -q https:
 
 #### Questions and Answers
 
-* Q: Is there a one-line command I can run?
-  * A: Yes, run the following command:
-  * `bash <(wget -q https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O -)`
-
-* Q: How can I install this?
+* Q: How do I install this?
   * A: See the usage section.
+
+* Q: My graphics aren't working, the game is white/black!
+  * A: This is a Wine bug with your graphics card. Make sure you have your drivers installed, or try to upgrade your graphics card.
 
 * Q: It tells me there is a syntax error, or I'm having another problem.
   * A: Download it again and retry. If the same thing occurs again, [open a new issue here][1]. If you report a bug, please be as informative as possible.
@@ -25,13 +24,13 @@ To install Roblox on your Linux computer, run the command `bash <(wget -q https:
 * Q: What is the "Play Roblox (Legacy Mode)" option?
   * A: This is the old method used to launch games. Paste the game link in and click "Play" to launch the game.
 
-* Q: It keeps telling me to install stuff!
-  * A: Then install stuff! If it tells you "Please install wine", then install Wine. It does not install these dependencies automatically.
+* Q: Help, it's telling me "Missing dependencies"! What do I do?
+  * A: If it says you are missing a dependency, then you need to install it. See the dependency section below and verify you have it all installed.
 
 
 ## Dependencies
 
-    rlw.sh: cabextract shasum wget wine wine-staging zenity
+    rlw.sh: cabextract git shasum wget wine wine-staging zenity
     rlw-stub.sh: wget shasum zenity
     
   [1]: https://github.com/alfonsojon/roblox-linux-wrapper/issues

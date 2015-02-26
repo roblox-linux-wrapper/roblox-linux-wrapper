@@ -21,22 +21,16 @@
 
 spawndialog () {
 	echo -e "$2"
-	zenity \
-		--window-icon="$RBXICON" \
-		--title='Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL" \
-		--"$1" \
-		--no-wrap \
-		--text="$2"
-
+	zenity --window-icon="$RBXICON" --title='Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL" --"$1" --no-wrap --text="$2"
 }
 
 # Define some variables and the spawndialog function
-export RLWVERSION=20150202
+export RLWVERSION=20150226
 export RLWCHANNEL=staging
 export WINEARCH=win32
 
 # Check that everything is here
-[[ -e $(which zenity) && $(which wget) && $(which wine) ]] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
+[[ -e $(which zenity) && $(which wget) && $(which wine) && "/opt/wine-staging/bin/wine" ]] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
 
 
 if [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
@@ -46,25 +40,15 @@ echo 'Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL"
 
 # Uncomment these lines to use stock Wine (default)
 #export WINE=$(which wine)
-#export WINEBOOTBIN=$(which wineboot)
 #export WINESERVERBIN=$(which wineserver)
 #export WINEPREFIX=$HOME/.local/share/wineprefixes/roblox-wine
 #export WINEPREFIX_OLD=$HOME/.local/share/wineprefixes/Roblox-wine
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
-if [[ -f /opt/wine-compholio/bin/wine ]]; then
-	export WINE=/opt/wine-compholio/bin/wine
-	export WINEBOOTBIN=/opt/wine-compholio/bin/wineboot
-	export WINESERVERBIN=/opt/wine-compholio/bin/wineserver
-	export WINEPREFIX=$HOME/.local/share/wineprefixes/roblox-wine-compholio
-	export WINEPREFIX_OLD=$HOME/.local/share/wineprefixes/Roblox-wine-compholio
-elif [[ -f /opt/wine-staging/bin/wine ]]; then
-	export WINE=/opt/wine-staging/bin/wine
-	export WINEBOOTBIN=/opt/wine-staging/bin/wineboot
-	export WINESERVERBIN=/opt/wine-staging/bin/wineserver
-	export WINEPREFIX=$HOME/.local/share/wineprefixes/roblox-wine-staging
-	export WINEPREFIX_OLD=$HOME/.local/share/wineprefixes/Roblox-wine-staging
-fi
+export WINE=/opt/wine-staging/bin/wine
+export WINESERVERBIN=/opt/wine-staging/bin/wineserver
+export WINEPREFIX=$HOME/.local/share/wineprefixes/roblox-wine-staging
+export WINEPREFIX_OLD=$HOME/.local/share/wineprefixes/Roblox-wine-staging
 
 # Some internal functions to make wine more useful to the wrapper.
 # This allows the wrapper to know what went wrong and where, without excessive code.
@@ -76,9 +60,6 @@ rwine () {
 	else
 		$WINE "$@"; [[ $? = "0" ]] || { spawndialog error "wine closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
 	fi
-}
-rwineboot () {
-	$WINEBOOTBIN; [[ $? = "0" ]] || { spawndialog error "wineboot closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
 }
 rwineserver () {
 	$WINESERVERBIN "$@"; [[ $? = "0" ]] || { spawndialog error "wineserver closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
@@ -98,9 +79,6 @@ roblox-install () {
 		if [[ $? == "0" ]]; then
 			# Make sure our directories really exist
 			[[ -e "$HOME/.local/share/wineprefixes" ]] || mkdir -p "$HOME/.local/share/wineprefixes"
-			rwineboot
-			rwineserver --wait
-			cd "$WINEPREFIX"
 			# Can cause problems in mutter. Examine further, don't use if not necessary.
 			# rwinetricks --gui ddr=gdi
 			[[ $? == 0 ]]  || { spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"; exit $?; }
@@ -166,7 +144,7 @@ wrapper-install () {
 }
 
 playerwrapper () {
-	ROBLOXPROXY=$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')
+	ROBLOXPROXY=$(find "$WINEPREFIX" -iname 'RobloxProxy.dll' | sed "s/*.//drive_c/C:/" | tr '/' '\\')
 	rwine --silent regsvr32 /i "$ROBLOXPROXY"
 	if [[ $1 = legacy ]]; then
 		export GAMEURL=$(\
@@ -244,4 +222,5 @@ main () {
 }
 
 # Run dependency check & launch main function
+cd "$HOME"
 wrapper-install && roblox-install && main
