@@ -16,7 +16,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 spawndialog () {
-	printf "$2"
+	echo -e "$2"
 	zenity \
 		--window-icon="$RBXICON" \
 		--title='Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL" \
@@ -102,53 +102,54 @@ roblox-install () {
 			[[ $? = 0 ]]  || { spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"; exit $?; }
 			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
-				cd "$WINEPREFIX"
-				ROBLOXPROXY="$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')"
-				if [[ ! -e "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe" ]]
-				then
-					ans=$(zenity \
-						--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL' by alfonsojon' \
+			cd "$WINEPREFIX"
+			ROBLOXPROXY="$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')"
+			if [[ ! -e "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe" ]]
+			then
+				ans=$(zenity \
+					--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL' by alfonsojon' \
+					--window-icon="$RBXICON" \
+					--width=480 \
+					--height=240 \
+					--cancel-label='Quit' \
+					--list \
+					--text 'Which browser do you want?' \
+					--radiolist \
+					--column '' \
+					--column 'Options' \
+					TRUE 'Firefox' \
+					FALSE 'Chrome' \
+					FALSE 'Internet Explorer')
+				case $ans in
+				'Firefox')
+					rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
+					WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \ 
 						--window-icon="$RBXICON" \
-						--width=480 \
-						--height=240 \
-						--cancel-label='Quit' \
-						--list \
-						--text 'Which browser do you want?' \
-						--radiolist \
-						--column '' \
-						--column 'Options' \
-						TRUE 'Firefox' \
-						FALSE 'Chrome')
-					case $ans in
-					'Firefox')
-						rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
-						WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \ 
-							--window-icon="$RBXICON" \
-							--title='Installing Mozilla Firefox' \
-							--text='Installing Mozilla Firefox Browser ...' \
-							--progress \
-							--pulsate \
-							--no-cancel \
-							--auto-close
-						rwineserver --wait ;;
-					'Chrome')
-						rwget https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B0C86EB40-435D-A29F-35BB-B17099972FDA%7D%26lang%3Den%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dtrue/update2/installers/ChromeStandaloneSetup.exe -O /tmp/ChromeStandaloneSetup.exe
-						WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/ChromeStandaloneSetup.exe  /SD | zenity \
-							--window-icon="$RBXICON" \
-							--title='Installing Google Chrome' \
-							--text='Installing Google Chrome Browser ...' \
-							--progress \
-							--pulsate \
-							--no-cancel \
-							--auto-close
-						rwineserver --wait ;;
-					esac
-				fi
-			else
-				exit 1
+						--title='Installing Mozilla Firefox' \
+						--text='Installing Mozilla Firefox Browser ...' \
+						--progress \
+						--pulsate \
+						--no-cancel \
+						--auto-close
+					rwineserver --wait ;;
+				'Chrome')
+					rwget https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B0C86EB40-435D-A29F-35BB-B17099972FDA%7D%26lang%3Den%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dtrue/update2/installers/ChromeStandaloneSetup.exe -O /tmp/ChromeStandaloneSetup.exe
+					WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/ChromeStandaloneSetup.exe  /SD | zenity \
+						--window-icon="$RBXICON" \
+						--title='Installing Google Chrome' \
+						--text='Installing Google Chrome Browser ...' \
+						--progress \
+						--pulsate \
+						--no-cancel \
+						--auto-close
+					rwineserver --wait ;;
+				esac
 			fi
+		else
+			exit 1
 		fi
 	fi
+
 }
 
 wrapper-install () {
@@ -190,7 +191,7 @@ wrapper-install () {
 			chmod +x "$HOME/.local/share/applications/Roblox.desktop"
 			xdg-desktop-menu install --novendor "$HOME/.local/share/applications/Roblox.desktop"
 			xdg-desktop-menu forceupdate
-			[[ -f '$HOME/.rlw/rlw-stub.sh' && -f '$HOME/.rlw/rlw.sh' && -f '$HOME/.local/share/icons/roblox.png' && -f '$HOME/.local/share/applications/Roblox.desktop' ]] || { spawndialog error 'Roblox Linux Wrapper did not install successfully.'; exit 1; }
+			[[ -f $HOME/.rlw/rlw-stub.sh && -f $HOME/.rlw/rlw.sh && -f $HOME/.local/share/icons/roblox.png && -f $HOME/.local/share/applications/Roblox.desktop ]] || { spawndialog error 'Roblox Linux Wrapper did not install successfully.'; exit 1; }
 		else
 			exit 1
 		fi
@@ -224,12 +225,13 @@ playerwrapper () {
 	fi
 }
 
+#code to chexk which browser you run
 wbrowser () {
 	if [[ -e "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe" ]]
 	then
 		wbpath='C:\Program Files\Mozilla Firefox\firefox.exe'
 	else
-		spawndialog error 'No browser installed. Please reinstall Roblox.
+		echo 'No browser installed. Please reinstall.'
 	fi
 }
 
