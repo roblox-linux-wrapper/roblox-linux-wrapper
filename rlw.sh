@@ -88,8 +88,19 @@ roblox-install () {
 	[[ -e $WINEPREFIX_OLD ]] && [[ ! -e $WINEPREFIX ]] && { mv "$WINEPREFIX_OLD" "$WINEPREFIX"; }
 	if [[ ! -e $WINEPREFIX ]]; then
 		spawndialog question 'A working Roblox wineprefix was not found. Would you like to install one?'
-		if [[ $? == "0" ]]
-		then
+		if [[ $? == "0" ]]; then
+			# Make sure our directories really exist
+			[[ -e "$HOME/.local/share/wineprefixes" ]] || mkdir -p "$HOME/.local/share/wineprefixes"
+			rwineboot
+			rwineserver --wait
+			cd "$WINEPREFIX"
+			# Can cause problems in mutter. Examine further, don't use if not necessary.
+			# rwinetricks --gui ddr=gdi
+			[[ $? == 0 ]]  || { spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"; exit $?; }
+			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
+			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
+				cd "$WINEPREFIX"
+				ROBLOXPROXY="$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')"
 			ans=$(zenity \
 				--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL' by alfonsojon' \
 				--window-icon="$RBXICON" \
@@ -102,34 +113,32 @@ roblox-install () {
 				--column '' \
 				--column 'Options' \
 				TRUE 'Firefox' \
-				FALSE 'Chrome')
-			if [[ $ans == Firefox ]]
-			then
-				# Make sure our directories really exist
-				[[ -e "$HOME/.local/share/wineprefixes" ]] || mkdir -p "$HOME/.local/share/wineprefixes"
-				rwineboot
-				rwineserver --wait
-				cd "$WINEPREFIX"
-				# Can cause problems in mutter. Examine further, don't use if not necessary.
-				# rwinetricks --gui ddr=gdi
-				[[ $? == 0 ]]  || { spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"; exit $?; }
-				rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
+				FALSE 'Chrome'\
+				FALSE 'Internet Explorer')
+			case $ans in
+			'Firefox')
 				rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
-				WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
-				cd "$WINEPREFIX"
-				ROBLOXPROXY="$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')"
-				WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \
+				WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \ 
 					--window-icon="$RBXICON" \
 					--title='Installing Mozilla Firefox' \
-					--text='Installing Mozilla Firefox ESR ...' \
+					--text='Installing Mozilla Firefox Browser ...' \
 					--progress \
 					--pulsate \
 					--no-cancel \
 					--auto-close
-				rwineserver --wait
-			else
-				exit 1
-			fi
+				rwineserver --wait ;;
+			'Chrome')
+rwget https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B0C86EB40-435D-A29F-35BB-B17099972FDA%7D%26lang%3Den%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dtrue/update2/installers/ChromeStandaloneSetup.exe -O /tmp/ChromeStandaloneSetup.exe
+				WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/ChromeStandaloneSetup.exe  /SD | zenity \
+					--window-icon="$RBXICON" \
+					--title='Installing Google Chrome' \
+					--text='Installing Google Chrome Browser ...' \
+					--progress \
+					--pulsate \
+					--no-cancel \
+					--auto-close
+				rwineserver --wait ;;
+			esac
 		else
 			exit 1
 		fi
@@ -202,9 +211,17 @@ playerwrapper () {
 			return
 		fi
 	else
-		rwine 'C:\Program Files\Mozilla Firefox\firefox.exe' http://www.roblox.com/Games.aspx
+		rwine $wbpath http://www.roblox.com/Games.aspx
 	fi
 }
+
+wbrowser () {
+	if [[ ! -e "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe ]]
+	then
+		wbpath='C:\Program Files\Mozilla Firefox\firefox.exe'
+	else
+		wbpath='C:\Program Files\Internet Explorer\iexplore.exe'
+	fi
 
 main () {
 	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
@@ -260,4 +277,4 @@ main () {
 }
 
 # Run dependency check & launch main function
-wrapper-install && roblox-install && main
+wrapper-install && roblox-install && wbrowser && main
