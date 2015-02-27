@@ -119,7 +119,6 @@ roblox-install () {
 					--column 'Options' \
 					TRUE 'Firefox' \
 					FALSE 'Chrome' \
-					FALSE 'Internet Explorer')
 				case $ans in
 				'Firefox')
 					rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
