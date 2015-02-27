@@ -221,6 +221,7 @@ wbrowser () {
 	else
 		wbpath='C:\Program Files\Internet Explorer\iexplore.exe'
 	fi
+}
 
 main () {
 	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
