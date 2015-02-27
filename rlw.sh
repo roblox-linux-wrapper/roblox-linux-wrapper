@@ -56,6 +56,7 @@ then
 	export WINESERVERBIN=/opt/wine-staging/bin/wineserver
 	export WINEPREFIX=$HOME/.local/share/wineprefixes/roblox-wine-staging
 	export WINEPREFIX_OLD=$HOME/.local/share/wineprefixes/Roblox-wine-staging
+	export WINEPREFIX_PROGRAMS=$HOME/.local/share/wineprefixes/roblox-wine-staging/drive_c
 else
 	spawndialog error "Missing dependencies! Make sure wine-staging is installed."
 	exit 1
@@ -118,7 +119,6 @@ roblox-install () {
 					--column '' \
 					--column 'Options' \
 					TRUE 'Firefox' \
-					FALSE 'Chrome' \
 				case $ans in
 				'Firefox')
 					rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
@@ -126,17 +126,6 @@ roblox-install () {
 						--window-icon="$RBXICON" \
 						--title='Installing Mozilla Firefox' \
 						--text='Installing Mozilla Firefox Browser ...' \
-						--progress \
-						--pulsate \
-						--no-cancel \
-						--auto-close
-					rwineserver --wait ;;
-				'Chrome')
-					rwget https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B0C86EB40-435D-A29F-35BB-B17099972FDA%7D%26lang%3Den%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dtrue/update2/installers/ChromeStandaloneSetup.exe -O /tmp/ChromeStandaloneSetup.exe
-					WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/ChromeStandaloneSetup.exe  /SD | zenity \
-						--window-icon="$RBXICON" \
-						--title='Installing Google Chrome' \
-						--text='Installing Google Chrome Browser ...' \
 						--progress \
 						--pulsate \
 						--no-cancel \
@@ -224,13 +213,14 @@ playerwrapper () {
 	fi
 }
 
-#code to chexk which browser you run
+#code to check which browser you're running
 wbrowser () {
-	if [[ -e "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe" ]]
+	if [[ -e "$WINEPREFIX_PROGRAMS/Program Files/Mozilla Firefox/firefox.exe" ]]
 	then
 		wbpath='C:\Program Files\Mozilla Firefox\firefox.exe'
 	else
 		echo 'No browser installed. Please reinstall.'
+		spawndialog error 'No browser installed. Please reinstall.'
 	fi
 }
 
@@ -251,7 +241,7 @@ main () {
 		TRUE 'Play Roblox' \
 		FALSE 'Play Roblox (Legacy Mode)' \
 		FALSE 'Roblox Studio' \
-		FALSE 'Reset Roblox to defaults' \
+		FALSE 'Reinstall Roblox' \
 		FALSE 'Uninstall Roblox')
 	case $sel in
 	'Play Roblox')
@@ -263,6 +253,7 @@ main () {
 		rwineserver --wait
 		main;;
 	'Reinstall Roblox')
+		spawndialog question 'Are you sure you would like to reinstall?'
 		rm -rf "$WINEPREFIX";
 		roblox-install; main;;
 	'Uninstall Roblox')
