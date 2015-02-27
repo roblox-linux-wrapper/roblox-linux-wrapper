@@ -35,7 +35,8 @@ export WINEARCH=win32
 [[ -e $(which zenity) && $(which wget) && $(which wine) ]] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
 
 
-if [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]; then
+if [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]
+then
 	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 fi
 echo 'Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL"
@@ -48,7 +49,8 @@ echo 'Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL"
 #export WINEPREFIX_OLD=$HOME/.local/share/wineprefixes/Roblox-wine
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
-if [[ -f /opt/wine-staging/bin/wine ]]; then
+if [[ -f /opt/wine-staging/bin/wine ]]
+then
 	export WINE=/opt/wine-staging/bin/wine
 	export WINEBOOTBIN=/opt/wine-staging/bin/wineboot
 	export WINESERVERBIN=/opt/wine-staging/bin/wineserver
@@ -64,7 +66,8 @@ fi
 # Note: the "r" prefix indicates a function that extends system functionality.
 
 rwine () {
-	if [[ "$1" == "--silent" ]]; then
+	if [[ "$1" == "--silent" ]]
+then
 		$WINE "${@:2}"
 	else
 		$WINE "$@"; [[ $? = "0" ]] || { spawndialog error "wine closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
@@ -148,7 +151,8 @@ rwget https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530
 wrapper-install () {
 	if [[ ! -d $HOME/.rlw ]] || [[ ! -f $HOME/.local/share/applications/Roblox.desktop ]]; then
 		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
-		if [[ $? == 0 ]]; then
+		if [[ $? == 0 ]]
+		then
 			[[ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]] || { mkdir -p "$HOME/.local/share/icons/hicolor/512x512/apps"; rwget http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png -O "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"; }
 			export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 			cat <<-EOF > $HOME/.local/share/applications/Roblox.desktop
@@ -193,7 +197,8 @@ wrapper-install () {
 playerwrapper () {
 	ROBLOXPROXY=$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')
 	rwine --silent regsvr32 /i "$ROBLOXPROXY"
-	if [[ $1 = legacy ]]; then
+	if [[ $1 = legacy ]]
+	then
 		export GAMEURL=$(\
 			zenity \
 				--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL \
@@ -204,19 +209,21 @@ playerwrapper () {
 				--width=450 \
 				--height=122)
 			GAMEID=$(echo "$GAMEURL" | cut -d "=" -f 2)
-		if [[ -n "$GAMEID" ]]; then
+		if [[ -n "$GAMEID" ]]
+		then
 			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
 			rwineserver --wait
 		else
 			return
 		fi
 	else
-		rwine $wbpath http://www.roblox.com/Games.aspx
+		rwine "$wbpath" http://www.roblox.com/Games.aspx
 	fi
 }
 
 wbrowser () {
-	if [[ -e "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe" ]] ; then
+	if [[ -e "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe" ]]
+	then
 		wbpath='C:\Program Files\Mozilla Firefox\firefox.exe'
 	else
 		wbpath='C:\Program Files\Internet Explorer\iexplore.exe'
@@ -256,7 +263,8 @@ main () {
 		roblox-install; main;;
 	'Uninstall Roblox')
 		spawndialog question 'Are you sure you would like to uninstall?'
-		if [[ $? == "0" ]]; then
+		if [[ $? == "0" ]]
+		then
 			xdg-desktop-menu uninstall "$HOME/.local/share/applications/Roblox.desktop"
 			rm -rf "$HOME/.rlw"
 			[[ ! -e "$HOME/.local/share/icons/roblox.png" ]] || rm -rf "$HOME/.local/share/icons/roblox.png"
@@ -264,7 +272,8 @@ main () {
 			xdg-desktop-menu forceupdate
 			$WINESERVERBIN --kill
 			rm -rf "$WINEPREFIX"
-			if [[ -d $HOME/.rlw ]] || [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]] || [[ -d $WINEPREFIX ]]; then
+			if [[ -d $HOME/.rlw ]] || [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]] || [[ -d $WINEPREFIX ]]
+			then
 				spawndialog error 'Roblox is still installed. Please try uninstalling again.'
 			else
 				spawndialog info 'Roblox has been uninstalled successfully.'
