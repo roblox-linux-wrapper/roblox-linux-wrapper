@@ -87,13 +87,13 @@ rwinetricks () {
 }
 
 roblox-install () {
-	[[ -e "$WINEPREFIX" ]] && rmdir "$WINEPREFIX"
-	[[ -e $WINEPREFIX_OLD ]] && [[ ! -e $WINEPREFIX ]] && { mv "$WINEPREFIX_OLD" "$WINEPREFIX"; }
+	[[ -d "$WINEPREFIX" ]] && rmdir "$WINEPREFIX"
+	[[ -d "$WINEPREFIX_OLD" ]] && [[ ! -d "$WINEPREFIX" ]] && { mv "$WINEPREFIX_OLD" "$WINEPREFIX"; }
 	if [[ ! -e $WINEPREFIX ]]; then
 		spawndialog question 'A working Roblox wineprefix was not found. Would you like to install one?'
-		if [[ $? == "0" ]]; then
+		if [[ $? = "0" ]]; then
 			# Make sure our directories really exist
-			[[ -e "$HOME/.local/share/wineprefixes" ]] || mkdir -p "$HOME/.local/share/wineprefixes"
+			[[ -d "$HOME/.local/share/wineprefixes" ]] || mkdir -p "$HOME/.local/share/wineprefixes"
 			rwineboot
 			rwineserver --wait
 			cd "$WINEPREFIX"
@@ -197,7 +197,7 @@ wrapper-install () {
 playerwrapper () {
 	ROBLOXPROXY=$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')
 	rwine --silent regsvr32 /i "$ROBLOXPROXY"
-	if [[ $1 = legacy ]]
+	if [[ "$1" = legacy ]]
 	then
 		export GAMEURL=$(\
 			zenity \
