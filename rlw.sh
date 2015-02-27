@@ -35,7 +35,7 @@ export WINEARCH=win32
 [[ -e $(which zenity) && $(which wget) && $(which wine) ]] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
 
 
-if [[ -e $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]
+if [[ -f $HOME/.local/share/icons/hicolor/512x512/apps/roblox.png ]]
 then
 	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 fi
