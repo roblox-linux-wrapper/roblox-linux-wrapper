@@ -263,7 +263,7 @@ main () {
 		WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b" rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
 		rwineserver --wait
 		main;;
-	'Reset Roblox to defaults')
+	'Reinstall Roblox')
 		rm -rf "$WINEPREFIX";
 		roblox-install; main;;
 	'Uninstall Roblox')
