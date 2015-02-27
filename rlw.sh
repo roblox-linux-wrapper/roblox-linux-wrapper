@@ -216,7 +216,7 @@ playerwrapper () {
 }
 
 wbrowser () {
-	if [[ ! -e "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe ]] ; then
+	if [[ ! -e "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe" ]] ; then
 		wbpath='C:\Program Files\Mozilla Firefox\firefox.exe'
 	else
 		wbpath='C:\Program Files\Internet Explorer\iexplore.exe'
