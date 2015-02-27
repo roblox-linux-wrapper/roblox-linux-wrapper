@@ -113,7 +113,7 @@ roblox-install () {
 				--column '' \
 				--column 'Options' \
 				TRUE 'Firefox' \
-				FALSE 'Chrome'\
+				FALSE 'Chrome' \
 				FALSE 'Internet Explorer')
 			case $ans in
 			'Firefox')
