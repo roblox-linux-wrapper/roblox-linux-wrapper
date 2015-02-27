@@ -16,7 +16,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 spawndialog () {
-	echo -e "$2"
+	printf "$2"
 	zenity \
 		--window-icon="$RBXICON" \
 		--title='Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL" \
@@ -116,8 +116,7 @@ roblox-install () {
 				--column '' \
 				--column 'Options' \
 				TRUE 'Firefox' \
-				FALSE 'Chrome' \
-				FALSE 'Internet Explorer')
+				FALSE 'Chrome')
 			case $ans in
 			'Firefox')
 				rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
@@ -226,7 +225,7 @@ wbrowser () {
 	then
 		wbpath='C:\Program Files\Mozilla Firefox\firefox.exe'
 	else
-		wbpath='C:\Program Files\Internet Explorer\iexplore.exe'
+		spawndialog error 'No browser installed. Please reinstall Roblox.
 	fi
 }
 
