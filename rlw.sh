@@ -263,7 +263,7 @@ main () {
 		roblox-install; main;;
 	'Uninstall Roblox')
 		spawndialog question 'Are you sure you would like to uninstall?'
-		if [[ $? == "0" ]]
+		if [[ $? = "0" ]]
 		then
 			xdg-desktop-menu uninstall "$HOME/.local/share/applications/Roblox.desktop"
 			rm -rf "$HOME/.rlw"
