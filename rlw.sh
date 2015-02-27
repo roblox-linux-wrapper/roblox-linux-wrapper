@@ -66,7 +66,7 @@ fi
 # Note: the "r" prefix indicates a function that extends system functionality.
 
 rwine () {
-	if [[ "$1" == "--silent" ]]
+	if [[ "$1" = "--silent" ]]
 then
 		$WINE "${@:2}"
 	else
@@ -99,7 +99,7 @@ roblox-install () {
 			cd "$WINEPREFIX"
 			# Can cause problems in mutter. Examine further, don't use if not necessary.
 			# rwinetricks --gui ddr=gdi
-			[[ $? == 0 ]]  || { spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"; exit $?; }
+			[[ $? = 0 ]]  || { spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"; exit $?; }
 			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
 				cd "$WINEPREFIX"
@@ -151,7 +151,7 @@ rwget https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530
 wrapper-install () {
 	if [[ ! -d $HOME/.rlw ]] || [[ ! -f $HOME/.local/share/applications/Roblox.desktop ]]; then
 		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
-		if [[ $? == 0 ]]
+		if [[ $? = 0 ]]
 		then
 			[[ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]] || { mkdir -p "$HOME/.local/share/icons/hicolor/512x512/apps"; rwget http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png -O "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"; }
 			export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
