@@ -249,13 +249,13 @@ main () {
 	'Roblox Studio')
 		WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b" rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
 		rwineserver --wait
-		main;;
+		main ;;
 	'Reinstall Roblox')
 		spawndialog question 'Are you sure you would like to reinstall?'
 		if [[ $? = "0" ]]
 		then
 			rm -rf "$WINEPREFIX";
-			roblox-install; main;;
+			roblox-install; main
 		else
 			main
 		fi;;
