@@ -16,7 +16,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 spawndialog () {
-	echo -e "$2"
+	printf "$2"
 	zenity \
 		--window-icon="$RBXICON" \
 		--title='Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL" \
