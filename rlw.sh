@@ -104,6 +104,7 @@ roblox-install () {
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
 			cd "$WINEPREFIX"
 			ROBLOXPROXY="$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')"
+			rwineserver --wait
 			if [[ ! -e "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe" ]]
 			then
 				ans=$(zenity \
