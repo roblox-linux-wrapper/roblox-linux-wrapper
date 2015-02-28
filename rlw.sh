@@ -258,6 +258,9 @@ main () {
 		then
 			rm -rf "$WINEPREFIX";
 			roblox-install; main;;
+		else
+			main
+		fi;;
 	'Uninstall Roblox')
 		spawndialog question 'Are you sure you would like to uninstall?'
 		if [[ $? = "0" ]]
