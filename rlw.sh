@@ -130,8 +130,7 @@ roblox-install () {
 						--pulsate \
 						--no-cancel \
 						--auto-close
-					rwineserver --wait ;;
-				esac
+					rwineserver --wait
 			fi
 		else
 			exit 1
