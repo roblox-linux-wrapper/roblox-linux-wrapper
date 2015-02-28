@@ -217,7 +217,6 @@ wbrowser () {
 	then
 		wbpath='C:\Program Files\Mozilla Firefox\firefox.exe'
 	else
-		echo 'No browser installed. Please reinstall.'
 		spawndialog error 'No browser installed. Please reinstall.'
 	fi
 }
