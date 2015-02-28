@@ -254,8 +254,10 @@ main () {
 		main;;
 	'Reinstall Roblox')
 		spawndialog question 'Are you sure you would like to reinstall?'
-		rm -rf "$WINEPREFIX";
-		roblox-install; main;;
+		if [[ $? = "0" ]]
+		then
+			rm -rf "$WINEPREFIX";
+			roblox-install; main;;
 	'Uninstall Roblox')
 		spawndialog question 'Are you sure you would like to uninstall?'
 		if [[ $? = "0" ]]
