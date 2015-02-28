@@ -46,6 +46,6 @@ if [[ `shasum $HOME/.rlw/rlw.sh | cut -d' ' -f1` != `shasum $HOME/.rlw/rlw.sh.up
 	fi
 fi
 
-printf "Loading rlw.sh ... \n"
+echo -e "Loading rlw.sh ... \n"
 chmod +x $HOME/.rlw/rlw.sh
 bash $HOME/.rlw/rlw.sh
