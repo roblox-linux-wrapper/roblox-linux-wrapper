@@ -1,6 +1,8 @@
 # Roblox Linux Wrapper
 
 ## Information
+This script is a fork of alfonsojon's, and is intended to be POSIX compatible. Enjoy!
+
 This script is not created nor supported officially by Roblox. It is unofficial and may be unstable. Use at your own risk.
 
 #### Usage
