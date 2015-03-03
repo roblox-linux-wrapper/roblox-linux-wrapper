@@ -15,7 +15,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 spawndialog () {
-	printf "$2"
+	printf "%s" "$2"
 	zenity \
 		--window-icon="$RBXICON" \
 		--title='Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL" \
@@ -26,7 +26,7 @@ spawndialog () {
 }
 
 # Define some variables and the spawndialog function
-export RLWVERSION=20150206
+export RLWVERSION=20150303
 export RLWCHANNEL=staging
 export WINEARCH=win32
 
