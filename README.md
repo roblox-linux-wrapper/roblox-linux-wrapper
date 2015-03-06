@@ -1,6 +1,8 @@
 # Roblox Linux Wrapper
 
 ## Information
+This script is a fork of alfonsojon's, and is intended to be POSIX compatible. Enjoy!
+
 This script is not created nor supported officially by Roblox. It is unofficial and may be unstable. Use at your own risk.
 
 #### Usage
@@ -17,10 +19,10 @@ To install Roblox on your Linux computer, run the command `bash <(wget -q https:
   * A: See the usage section.
 
 * Q: It tells me there is a syntax error, or I'm having another problem.
-  * A: Download it again and retry. If the same thing occurs again, [open a new issue here][1]. If you report a bug, please be as informative as possible.
+  * A: Download it again and retry. If the same thing occurs again, autospamfighter@yahoo.com. If you report a bug, please be as informative as possible.
 
 * Q: Roblox isn't behaving like it should.
-  * A: Select the "Reset Roblox to defaults" option and press Ok. If you contuinue having problems, [file a bug report here][1].
+  * A: Select the "Reset Roblox to defaults" option and press Ok. If you contuinue having problems, please email me at autospamfighter@yahoo.com.
 
 * Q: What is the "Play Roblox (Legacy Mode)" option?
   * A: This is the old method used to launch games. Paste the game link in and click "Play" to launch the game.
