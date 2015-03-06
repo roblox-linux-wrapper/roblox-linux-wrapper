@@ -80,7 +80,15 @@ rwineserver () {
 	$WINESERVERBIN "$@"; [ "$?" = "0" ] || { spawndialog error "wineserver closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
 }
 rwget () {
-	wget "$@" 2>&1 | sed -u 's/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | zenity --progress --window-icon="$RBXICON" --title='Downloading' --auto-close --no-cancel --width=450 --height=120; [[ $? = "0" ]] || { spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"; exit $?; }
+	wget "$@" 2>&1 | sed -u 's/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | zenity \
+		--progress \
+		--window-icon="$RBXICON" \
+		--title='Downloading' \
+		--auto-close \
+		--no-cancel \
+		--width=450 \
+		--height=120 \
+	[ "$?" = "0" ] || { spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"; exit $?; }
 }
 rwinetricks () {
 	$(which winetricks) "$@"
@@ -120,17 +128,17 @@ roblox-install () {
 					--column 'Options' \
 					TRUE 'Firefox')
 				case $ans in
-					'Firefox')
-						rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
-						WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \ 
-							--window-icon="$RBXICON" \
-							--title='Installing Mozilla Firefox' \
-							--text='Installing Mozilla Firefox Browser ...' \
-							--progress \
-							--pulsate \
-							--no-cancel \
-							--auto-close
-						rwineserver --wait
+				'Firefox')
+					rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
+					WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \ 
+						--window-icon="$RBXICON" \
+						--title='Installing Mozilla Firefox' \
+						--text='Installing Mozilla Firefox Browser ...' \
+						--progress \
+						--pulsate \
+						--no-cancel \
+						--auto-close
+					rwineserver --wait
 				esac
 			fi
 		else
