@@ -87,7 +87,7 @@ rwget () {
 		--auto-close \
 		--no-cancel \
 		--width=450 \
-		--height=120 \
+		--height=120
 	[ "$?" = "0" ] || { spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"; exit $?; }
 }
 rwinetricks () {
