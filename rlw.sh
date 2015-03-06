@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 #
 #    Copyright 2015 Jonathan Alfonso <alfonsojon1997@gmail.com>
-#
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +15,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 spawndialog () {
-	printf "$2"
+	printf "%s" "$2"
 	zenity \
 		--window-icon="$RBXICON" \
 		--title='Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL" \
@@ -27,7 +26,7 @@ spawndialog () {
 }
 
 # Define some variables and the spawndialog function
-export RLWVERSION=20150206
+export RLWVERSION=20150303
 export RLWCHANNEL=staging
 export WINEARCH=win32
 
@@ -105,6 +104,7 @@ roblox-install () {
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
 			cd "$WINEPREFIX"
 			ROBLOXPROXY="$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')"
+			rwineserver --wait
 			if [[ ! -e "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe" ]]
 			then
 				ans=$(zenity \
@@ -118,19 +118,19 @@ roblox-install () {
 					--radiolist \
 					--column '' \
 					--column 'Options' \
-					TRUE 'Firefox' \
+					TRUE 'Firefox')
 				case $ans in
-				'Firefox')
-					rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
-					WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \ 
-						--window-icon="$RBXICON" \
-						--title='Installing Mozilla Firefox' \
-						--text='Installing Mozilla Firefox Browser ...' \
-						--progress \
-						--pulsate \
-						--no-cancel \
-						--auto-close
-					rwineserver --wait ;;
+					'Firefox')
+						rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
+						WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \ 
+							--window-icon="$RBXICON" \
+							--title='Installing Mozilla Firefox' \
+							--text='Installing Mozilla Firefox Browser ...' \
+							--progress \
+							--pulsate \
+							--no-cancel \
+							--auto-close
+						rwineserver --wait
 				esac
 			fi
 		else
@@ -219,7 +219,6 @@ wbrowser () {
 	then
 		wbpath='C:\Program Files\Mozilla Firefox\firefox.exe'
 	else
-		echo 'No browser installed. Please reinstall.'
 		spawndialog error 'No browser installed. Please reinstall.'
 	fi
 }
@@ -251,11 +250,16 @@ main () {
 	'Roblox Studio')
 		WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b" rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
 		rwineserver --wait
-		main;;
+		main ;;
 	'Reinstall Roblox')
 		spawndialog question 'Are you sure you would like to reinstall?'
-		rm -rf "$WINEPREFIX";
-		roblox-install; main;;
+		if [[ $? = "0" ]]
+		then
+			rm -rf "$WINEPREFIX";
+			roblox-install; main
+		else
+			main
+		fi;;
 	'Uninstall Roblox')
 		spawndialog question 'Are you sure you would like to uninstall?'
 		if [[ $? = "0" ]]
