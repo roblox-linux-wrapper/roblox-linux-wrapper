@@ -17,35 +17,53 @@
 
 
 rwget () {
-	wget "$@" 2>&1 | sed -u 's/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | zenity --progress --window-icon="$RBXICON" --title='Downloading' --auto-close --no-cancel --width=450 --height=120; [[ $? = "0" ]] || { spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"; exit $?; }
+	wget "$@" 2>&1 | sed -u 's/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | zenity \
+	--progress \
+	--window-icon="$RBXICON" \
+	--title='Downloading' \
+	--auto-close \
+	--no-cancel \
+	--width=450 \
+	--height=120 \
+	[ "$?" = "0" ] || { spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"; exit $?; }
 }
 spawndialog () {
-	echo -e "$2"
-	zenity --window-icon="$RBXICON" --title='Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL" --"$1" --no-wrap --text="$2"
+	printf "%s" "$2"
+	zenity \
+		--window-icon="$RBXICON" \
+		--title='Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL" \
+		--"$1" \
+		--no-wrap \
+		--text="$2"
 }
-[[ -e $(which zenity) && $(which shasum) && $(which wget)  ]] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
-if [[ ! -e $HOME/.rlw/rlw.sh ]]; then
-	download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh $HOME/.rlw/rlw.sh
-	cp $HOME/.rlw/rlw.sh $HOME/.rlw/rlw.sh.update
+[ -e "$(which zenity)" -a "$(which shasum)" -a "$(which wget)"  ] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
+if [ ! -e "$HOME/.rlw/rlw.sh" ]; then
+	download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh "$HOME/.rlw/rlw.sh"
+	cp "$HOME/.rlw/rlw.sh" "$HOME/.rlw/rlw.sh.update"
 fi
-rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O $HOME/.rlw/rlw.sh.update
-if [[ `shasum $HOME/.rlw/rlw.sh.update | cut -d' ' -f1` != `cat $HOME/.rlw/update.ignored | cut -d' ' -f1` ]]; then
-	rm -rf $HOME/.rlw/update.ignored
+rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O "$HOME/.rlw/rlw.sh.update"
+if [ "$(shasum "$HOME/.rlw/rlw.sh.update" | cut -d' ' -f1)" != "$(cat "$HOME/.rlw/update.ignored" | cut -d' ' -f1)" ]
+then
+	rm -rf "$HOME/.rlw/update.ignored"
 fi
-if [[ `shasum $HOME/.rlw/rlw.sh | cut -d' ' -f1` != `shasum $HOME/.rlw/rlw.sh.update | cut -d' ' -f1` ]]; then
-	if [[ ! -e $HOME/.rlw/update.ignored ]]; then
-		if [[ `cat $HOME/.rlw/update.ignored | cut -d' ' -f1` != `shasum $HOME/.rlw/rlw.sh.update` ]]; then
+if [ "$(shasum "$HOME/.rlw/rlw.sh" | cut -d' ' -f1)" != "$(shasum "$HOME/.rlw/rlw.sh.update" | cut -d' ' -f1)" ]
+then
+	if [ ! -e "$HOME/.rlw/update.ignored" ]
+	then
+		if [ "$(cat "$HOME/.rlw/update.ignored" | cut -d' ' -f1)" != "$(shasum "$HOME/.rlw/rlw.sh.update")" ]
+		then
 			spawndialog question "An update to Roblox Linux Wrapper is available.\nWould you like to update?"
-			if [[ $? != "0" ]]; then
-				shasum $HOME/.rlw/rlw.sh.update > $HOME/.rlw/update.ignored
+			if [[ $? != "0" ]]
+			then
+				shasum "$HOME/.rlw/rlw.sh.update" > "$HOME/.rlw/update.ignored"
 			else
-				rm -rf $HOME/.rlw/rlw.sh
-				cp	$HOME/.rlw/rlw.sh.update $HOME/.rlw/rlw.sh
+				rm -rf "$HOME/.rlw/rlw.sh"
+				cp	"$HOME/.rlw/rlw.sh.update $HOME/.rlw/rlw.sh"
 			fi
 		fi
 	fi
 fi
 
 printf "Loading rlw.sh ... \n"
-chmod +x $HOME/.rlw/rlw.sh
-bash $HOME/.rlw/rlw.sh
+chmod +x "$HOME/.rlw/rlw.sh"
+bash "$HOME/.rlw/rlw.sh"
