@@ -19,7 +19,6 @@ spawndialog () {
 		--window-icon="$RBXICON" \
 		--title='Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL" \
 		--"$1" \
-		--no-wrap \
 		--text="$2"
 }
 
