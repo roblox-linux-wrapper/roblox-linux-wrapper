@@ -28,9 +28,6 @@ export RLWVERSION=20150313
 export RLWCHANNEL=staging
 export WINEARCH=win32
 
-# Check that everything is here
-[ -e "$(which zenity)" -a "$(which wget)" -a "$(which wine)" ] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
-
 if [ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]
 then
 	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
@@ -38,11 +35,11 @@ fi
 echo 'Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL"
 
 # Uncomment these lines to use stock Wine (default)
-#export WINE=$(which wine)
-#export WINEBOOTBIN=$(which wineboot)
-#export WINESERVERBIN=$(which wineserver)
-#export WINEPREFIX=$HOME/.local/share/wineprefixes/roblox-wine
-#export WINEPREFIX_OLD=$HOME/.local/share/wineprefixes/Roblox-wine
+#export WINE="$(which wine)"
+#export WINEBOOTBIN="$(which wineboot)"
+#export WINESERVERBIN="$(which wineserver)"
+#export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
+#export WINEPREFIX_OLD="$HOME/.local/share/wineprefixes/Roblox-wine"
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
 if [ -f /opt/wine-staging/bin/wine ]
@@ -53,10 +50,10 @@ then
 	export WINEPREFIX=$HOME/.local/share/wineprefixes/roblox-wine-staging
 	export WINEPREFIX_OLD=$HOME/.local/share/wineprefixes/Roblox-wine-staging
 	export WINEPREFIX_PROGRAMS=$HOME/.local/share/wineprefixes/roblox-wine-staging/drive_c
-else
-	spawndialog error "Missing dependencies! Make sure wine-staging is installed."
-	exit 1
 fi
+
+# Check that everything is here
+[ -e "$(which zenity)" -a "$(which wget)" -a "$(which $WINE)" -a "$(which $WINEBOOTBIN)" -a "$(which $WINESERVERBIN)"  ] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
 
 # Some internal functions to make wine more useful to the wrapper.
 # This allows the wrapper to know what went wrong and where, without excessive code.
