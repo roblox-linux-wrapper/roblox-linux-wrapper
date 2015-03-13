@@ -15,14 +15,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 spawndialog () {
-	printf "%s" "$2"
 	zenity \
 		--window-icon="$RBXICON" \
 		--title='Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL" \
 		--"$1" \
 		--no-wrap \
 		--text="$2"
-
 }
 
 # Define some variables and the spawndialog function
@@ -32,7 +30,6 @@ export WINEARCH=win32
 
 # Check that everything is here
 [ -e "$(which zenity)" -a "$(which wget)" -a "$(which wine)" ] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
-
 
 if [ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]
 then
