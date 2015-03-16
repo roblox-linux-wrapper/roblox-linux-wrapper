@@ -53,7 +53,7 @@ export WINEPREFIX_PROGRAMS="$HOME/.local/share/wineprefixes/roblox-wine/drive_c"
 #fi
 
 # Check that everything is here
-[ -e "$(which zenity)" -a "$(which wget)" -a "$(which $WINE)" -a "$(which $WINEBOOTBIN)" -a "$(which $WINESERVERBIN)"  ] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
+[ -e "$(which zenity)" -a "$(which wget)" -a $WINE" -a "$WINEBOOTBIN" -a "$WINESERVERBIN"  ] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
 
 # Some internal functions to make wine more useful to the wrapper.
 # This allows the wrapper to know what went wrong and where, without excessive code.
