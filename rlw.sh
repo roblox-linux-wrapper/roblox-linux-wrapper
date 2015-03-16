@@ -23,7 +23,7 @@ spawndialog () {
 }
 
 # Define some variables and the spawndialog function
-export RLWVERSION=20150313
+export RLWVERSION=20150316
 export RLWCHANNEL=staging
 export WINEARCH=win32
 
@@ -34,22 +34,23 @@ fi
 echo 'Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL"
 
 # Uncomment these lines to use stock Wine (default)
-#export WINE="$(which wine)"
-#export WINEBOOTBIN="$(which wineboot)"
-#export WINESERVERBIN="$(which wineserver)"
-#export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
-#export WINEPREFIX_OLD="$HOME/.local/share/wineprefixes/Roblox-wine"
+export WINE="$(which wine)"
+export WINEBOOTBIN="$(which wineboot)"
+export WINESERVERBIN="$(which wineserver)"
+export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
+export WINEPREFIX_OLD="$HOME/.local/share/wineprefixes/Roblox-wine"
+export WINEPREFIX_PROGRAMS="$HOME/.local/share/wineprefixes/roblox-wine/drive_c"
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
-if [ -f /opt/wine-staging/bin/wine ]
-then
-	export WINE=/opt/wine-staging/bin/wine
-	export WINEBOOTBIN=/opt/wine-staging/bin/wineboot
-	export WINESERVERBIN=/opt/wine-staging/bin/wineserver
-	export WINEPREFIX=$HOME/.local/share/wineprefixes/roblox-wine-staging
-	export WINEPREFIX_OLD=$HOME/.local/share/wineprefixes/Roblox-wine-staging
-	export WINEPREFIX_PROGRAMS=$HOME/.local/share/wineprefixes/roblox-wine-staging/drive_c
-fi
+#if [ -f /opt/wine-staging/bin/wine ]
+#then
+#	export WINE="/opt/wine-staging/bin/wine"
+#	export WINEBOOTBIN="/opt/wine-staging/bin/wineboot"
+#	export WINESERVERBIN="/opt/wine-staging/bin/wineserver"
+#	export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine-staging"
+#	export WINEPREFIX_OLD="$HOME/.local/share/wineprefixes/Roblox-wine-staging"
+#	export WINEPREFIX_PROGRAMS="$HOME/.local/share/wineprefixes/roblox-wine-staging/drive_c"
+#fi
 
 # Check that everything is here
 [ -e "$(which zenity)" -a "$(which wget)" -a "$(which $WINE)" -a "$(which $WINEBOOTBIN)" -a "$(which $WINESERVERBIN)"  ] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
@@ -96,8 +97,8 @@ roblox-install () {
 			# Make sure our directories really exist
 			[ -d "$HOME/.local/share/wineprefixes" ] || mkdir -p "$HOME/.local/share/wineprefixes"
 			rwineboot
-			rwineserver --wait
 			cd "$WINEPREFIX"
+			rwineserver --wait
 			# Can cause problems in mutter. Examine further, don't use if not necessary.
 			# rwinetricks --gui ddr=gdi
 			[ "$?" = 0 ]  || { spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"; exit $?; }
@@ -123,7 +124,7 @@ roblox-install () {
 				case $ans in
 				'Firefox')
 					rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
-					WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \ 
+					WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \
 						--window-icon="$RBXICON" \
 						--title='Installing Mozilla Firefox' \
 						--text='Installing Mozilla Firefox Browser ...' \
@@ -158,7 +159,7 @@ wrapper-install () {
 			Icon=roblox
 			Categories=Game;
 			Type=Application
-			
+
 			[Desktop Action Support]
 			Name=GitHub Support Ticket
 			Exec=xdg-open 'https://github.com/alfonsojon/roblox-linux-wrapper/issues/new'

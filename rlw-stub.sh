@@ -18,22 +18,20 @@
 
 rwget () {
 	wget "$@" 2>&1 | sed -u 's/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | zenity \
-	--progress \
-	--window-icon="$RBXICON" \
-	--title='Downloading' \
-	--auto-close \
-	--no-cancel \
-	--width=450 \
-	--height=120 \
+		--progress \
+		--window-icon="$RBXICON" \
+		--title='Downloading' \
+		--auto-close \
+		--no-cancel \
+		--width=450 \
+		--height=120
 	[ "$?" = "0" ] || { spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"; exit $?; }
 }
 spawndialog () {
-	printf "%s" "$2"
 	zenity \
 		--window-icon="$RBXICON" \
 		--title='Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL" \
 		--"$1" \
-		--no-wrap \
 		--text="$2"
 }
 [ -e "$(which zenity)" -a "$(which shasum)" -a "$(which wget)"  ] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
