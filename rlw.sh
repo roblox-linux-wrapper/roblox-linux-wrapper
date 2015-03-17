@@ -27,8 +27,7 @@ export RLWVERSION=20150317
 export RLWCHANNEL=stable
 export WINEARCH=win32
 
-if [ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]
-then
+if [ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]; then
 	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 fi
 echo 'Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL"
@@ -57,7 +56,7 @@ export WINEPREFIX_PROGRAMS="$HOME/.local/share/wineprefixes/roblox-wine/drive_c"
 
 # Check for optional dependencies
 # Note: git is used for automatic updating, and is recommended.
-[[ -x "$(which git)" ]] || { spawndialog warning "git not found. Automatic updates will be disabled."; }
+[[ -x "$(which git)" ]] || { spawndialog warning "git not found. Automatic updates will be disabled.\nSee https://github.com/alfonsojon/roblox-linux-wrapper for more info."; }
 
 # Some internal functions to make wine more useful to the wrapper.
 # This allows the wrapper to know what went wrong and where, without excessive code.
@@ -88,6 +87,7 @@ rwget () {
 	[[ "$?" = "0" ]] || { spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"; exit $?; }
 }
 rwinetricks () {
+	[[ -x "$(which winetricks)" ]] || { spawndialog error "Missing dependencies! Please install winetricks, then try again."; exit 1; }
 	$(which winetricks) "$@"
 }
 
@@ -105,6 +105,7 @@ roblox-install () {
 			rwineserver --wait
 			# Can cause problems in mutter. Examine further, don't use if not necessary.
 			# rwinetricks --gui ddr=gdi
+			rwinetricks wininet
 			[[ "$?" = 0 ]]  || { spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"; exit $?; }
 			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
