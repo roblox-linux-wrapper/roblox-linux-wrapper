@@ -42,8 +42,7 @@ export WINEPREFIX_OLD="$HOME/.local/share/wineprefixes/Roblox-wine"
 export WINEPREFIX_PROGRAMS="$HOME/.local/share/wineprefixes/roblox-wine/drive_c"
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
-#if [[ -x /opt/wine-staging/bin/wine ]]
-#then
+#if [[ -x /opt/wine-staging/bin/wine ]]; then
 #	export WINE="/opt/wine-staging/bin/wine"
 #	export WINEBOOTBIN="/opt/wine-staging/bin/wineboot"
 #	export WINESERVERBIN="/opt/wine-staging/bin/wineserver"
@@ -114,8 +113,7 @@ roblox-install () {
 			cd "$WINEPREFIX"
 			ROBLOXPROXY="$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')"
 			rwineserver --wait
-			if [[ ! -f "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe" ]]
-			then
+			if [[ ! -f "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe" ]]; then
 				# Don't ask to install only one browser
 				#
 				#ans=$(zenity \
@@ -200,8 +198,7 @@ wrapper-install () {
 playerwrapper () {
 	ROBLOXPROXY=$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')
 	rwine --silent regsvr32 /i "$ROBLOXPROXY"
-	if [ "$1" = legacy ]
-	then
+	if [ "$1" = legacy ]; then
 		export GAMEURL=$(\
 			zenity \
 				--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL \
@@ -212,8 +209,7 @@ playerwrapper () {
 				--width=450 \
 				--height=122)
 			GAMEID=$(echo "$GAMEURL" | cut -d "=" -f 2)
-		if [[ -n "$GAMEID" ]]
-		then
+		if [[ -n "$GAMEID" ]]; then
 			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
 			rwineserver --wait
 		else
@@ -227,8 +223,7 @@ playerwrapper () {
 
 #code to check which browser you're running
 browser-install () {
-	if [ -e "$WINEPREFIX_PROGRAMS/Program Files/Mozilla Firefox/firefox.exe" ]
-	then
+	if [[ -f "$WINEPREFIX_PROGRAMS/Program Files/Mozilla Firefox/firefox.exe" ]]; then
 		browser='C:\Program Files\Mozilla Firefox\firefox.exe'
 	else
 		spawndialog error 'No browser installed. Please reinstall.'
@@ -265,8 +260,7 @@ main () {
 		main ;;
 	'Reinstall Roblox')
 		spawndialog question 'Are you sure you would like to reinstall?'
-		if [ "$?" = "0" ]
-		then
+		if [[ "$?" = "0" ]]; then
 			rm -rf "$WINEPREFIX";
 			roblox-install; main
 		else
