@@ -15,6 +15,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 spawndialog () {
+	[[ -x "$(which zenity)" ]] || { echo "Missing dependency! Please install \"zenity\", then try again."; exit 1; }
 	zenity \
 		--window-icon="$RBXICON" \
 		--title='Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL" \
@@ -52,7 +53,7 @@ export WINEPREFIX_PROGRAMS="$HOME/.local/share/wineprefixes/roblox-wine/drive_c"
 #fi
 
 # Check that everything is here
-[[ -x "$(which zenity)" && -x "$(which wget)" && -x "$WINE" && -x "$WINEBOOTBIN" && -x "$WINESERVERBIN"  ]] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
+[[ -x "$WINE" && -x "$WINEBOOTBIN" && -x "$WINESERVERBIN"  ]] || { spawndialog error "Missing dependencies! Please install wine and wine-staging."; exit 1; }
 
 # Check for optional dependencies
 # Note: git is used for automatic updating, and is recommended.
@@ -76,6 +77,7 @@ rwineserver () {
 	$WINESERVERBIN "$@"; [[ "$?" = "0" ]] || { spawndialog error "wineserver closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
 }
 rwget () {
+	[[ -x "$(which wget)" ]] || { spawndialog error "Missing dependency! Please install wget, then try again."; }
 	wget "$@" 2>&1 | sed -u 's/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | zenity \
 		--progress \
 		--window-icon="$RBXICON" \
