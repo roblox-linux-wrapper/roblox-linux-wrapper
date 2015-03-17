@@ -53,25 +53,28 @@ export WINEPREFIX_PROGRAMS="$HOME/.local/share/wineprefixes/roblox-wine/drive_c"
 #fi
 
 # Check that everything is here
-[ -e "$(which zenity)" -a "$(which wget)" -a "$WINE" -a "$WINEBOOTBIN" -a "$WINESERVERBIN"  ] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
+[[ -x "$(which zenity)" -x "$(which wget)" -x "$WINE" -x "$WINEBOOTBIN" -x "$WINESERVERBIN"  ]] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
+
+# Check for optional dependencies
+# Note: git is used for automatic updating, and is recommended.
+[[ -x "(which git)" ]] || { spawndialog warning "git not found. Automatic updates will be disabled."; }
 
 # Some internal functions to make wine more useful to the wrapper.
 # This allows the wrapper to know what went wrong and where, without excessive code.
 # Note: the "r" prefix indicates a function that extends system functionality.
 
 rwine () {
-	if [ "$1" = "--silent" ]
-then
+	if [[ "$1" = "--silent" ]]; then
 		$WINE "${@:2}"
 	else
-		$WINE "$@"; [ "$?" = "0" ] || { spawndialog error "wine closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
+		$WINE "$@"; [[ "$?" = "0" ]] || { spawndialog error "wine closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
 	fi
 }
 rwineboot () {
-	$WINEBOOTBIN; [ "$?" = "0" ] || { spawndialog error "wineboot closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
+	$WINEBOOTBIN; [[ "$?" = "0" ]] || { spawndialog error "wineboot closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
 }
 rwineserver () {
-	$WINESERVERBIN "$@"; [ "$?" = "0" ] || { spawndialog error "wineserver closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
+	$WINESERVERBIN "$@"; [[ "$?" = "0" ]] || { spawndialog error "wineserver closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
 }
 rwget () {
 	wget "$@" 2>&1 | sed -u 's/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | zenity \
@@ -82,32 +85,33 @@ rwget () {
 		--no-cancel \
 		--width=450 \
 		--height=120
-	[ "$?" = "0" ] || { spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"; exit $?; }
+	[[ "$?" = "0" ]] || { spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"; exit $?; }
 }
 rwinetricks () {
 	$(which winetricks) "$@"
 }
 
 roblox-install () {
-	[ -d "$WINEPREFIX" ] && rmdir "$WINEPREFIX"
-	[ -d "$WINEPREFIX_OLD" ] && [ ! -d "$WINEPREFIX" ] && { mv "$WINEPREFIX_OLD" "$WINEPREFIX"; }
-	if [ ! -e "$WINEPREFIX" ]; then
+	[[ -d "$WINEPREFIX" ]] && rmdir "$WINEPREFIX"
+	[[ -d "$WINEPREFIX_OLD" ]] && [[ ! -d "$WINEPREFIX" ]] && { mv "$WINEPREFIX_OLD" "$WINEPREFIX"; }
+	if [[ ! -d "$WINEPREFIX/drive_c" ]]; then
 		spawndialog question 'A working Roblox wineprefix was not found. Would you like to install one?'
-		if [ $? = "0" ]; then
+		if [[ $? = "0" ]]; then
+			rm -rf "$WINEPREFIX"
 			# Make sure our directories really exist
-			[ -d "$HOME/.local/share/wineprefixes" ] || mkdir -p "$HOME/.local/share/wineprefixes"
+			[[ -d "$HOME/.local/share/wineprefixes" ]] || mkdir -p "$HOME/.local/share/wineprefixes"
 			rwineboot
 			cd "$WINEPREFIX"
 			rwineserver --wait
 			# Can cause problems in mutter. Examine further, don't use if not necessary.
 			# rwinetricks --gui ddr=gdi
-			[ "$?" = 0 ]  || { spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"; exit $?; }
+			[[ "$?" = 0 ]]  || { spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"; exit $?; }
 			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
 			cd "$WINEPREFIX"
 			ROBLOXPROXY="$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')"
 			rwineserver --wait
-			if [ ! -e "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe" ]
+			if [[ ! -f "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe" ]]
 			then
 				ans=$(zenity \
 					--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL' by alfonsojon' \
@@ -143,11 +147,11 @@ roblox-install () {
 }
 
 wrapper-install () {
-	if [ ! -d "$HOME/.rlw" ] || [ ! -f "$HOME/.local/share/applications/Roblox.desktop" ]; then
+	if [[ ! -d "$HOME/.rlw" ]] || [ ! -f "$HOME/.local/share/applications/Roblox.desktop" ]; then
 		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
 		if [ $? = 0 ]
 		then
-			[ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ] || { mkdir -p "$HOME/.local/share/icons/hicolor/512x512/apps"; rwget http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png -O "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"; }
+			[[ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]] || { mkdir -p "$HOME/.local/share/icons/hicolor/512x512/apps"; rwget http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png -O "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"; }
 			export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 			cat <<-EOF > $HOME/.local/share/applications/Roblox.desktop
 			[Desktop Entry]
@@ -181,7 +185,7 @@ wrapper-install () {
 			chmod +x "$HOME/.local/share/applications/Roblox.desktop"
 			xdg-desktop-menu install --novendor "$HOME/.local/share/applications/Roblox.desktop"
 			xdg-desktop-menu forceupdate
-			[ -f "$HOME/.rlw/rlw-stub.sh" -a -f "$HOME/.rlw/rlw.sh && -f $HOME/.local/share/icons/roblox.png && -f $HOME/.local/share/applications/Roblox.desktop" ] || { spawndialog error 'Roblox Linux Wrapper did not install successfully.'; exit 1; }
+			[[ -x "$HOME/.rlw/rlw-stub.sh" -x "$HOME/.rlw/rlw.sh && -f $HOME/.local/share/icons/roblox.png && -f $HOME/.local/share/applications/Roblox.desktop" ]] || { spawndialog error 'Roblox Linux Wrapper did not install successfully.'; exit 1; }
 		else
 			exit 1
 		fi
@@ -203,23 +207,24 @@ playerwrapper () {
 				--width=450 \
 				--height=122)
 			GAMEID=$(echo "$GAMEURL" | cut -d "=" -f 2)
-		if [ -n "$GAMEID" ]
+		if [[ -n "$GAMEID" ]]
 		then
 			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
 			rwineserver --wait
 		else
+			spawndialog warning "Invalid game URL or ID."
 			return
 		fi
 	else
-		rwine "$wbpath" http://www.roblox.com/Games.aspx
+		rwine "$browser" http://www.roblox.com/Games.aspx
 	fi
 }
 
 #code to check which browser you're running
-wbrowser () {
+browser-install () {
 	if [ -e "$WINEPREFIX_PROGRAMS/Program Files/Mozilla Firefox/firefox.exe" ]
 	then
-		wbpath='C:\Program Files\Mozilla Firefox\firefox.exe'
+		browser='C:\Program Files\Mozilla Firefox\firefox.exe'
 	else
 		spawndialog error 'No browser installed. Please reinstall.'
 	fi
@@ -264,16 +269,15 @@ main () {
 		fi;;
 	'Uninstall Roblox')
 		spawndialog question 'Are you sure you would like to uninstall?'
-		if [ "$?" = "0" ]
-		then
+		if [[ "$?" = "0" ]]; then
 			xdg-desktop-menu uninstall "$HOME/.local/share/applications/Roblox.desktop"
 			rm -rf "$HOME/.rlw"
-			[ ! -e "$HOME/.local/share/icons/roblox.png" ] || rm -rf "$HOME/.local/share/icons/roblox.png"
+			[[ ! -f "$HOME/.local/share/icons/roblox.png" ]] || rm -rf "$HOME/.local/share/icons/roblox.png"
 			rm -rf "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"
 			xdg-desktop-menu forceupdate
 			$WINESERVERBIN --kill
 			rm -rf "$WINEPREFIX"
-			if [ -d "$HOME/.rlw" ] || [ -e "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ] || [ -d "$WINEPREFIX" ]
+			if [[ -d "$HOME/.rlw" ]] || [[ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]] || [[ -d "$WINEPREFIX" ]]
 			then
 				spawndialog error 'Roblox is still installed. Please try uninstalling again.'
 			else
@@ -287,4 +291,4 @@ main () {
 }
 
 # Run dependency check & launch main function
-wrapper-install && roblox-install && wbrowser && main
+wrapper-install && roblox-install && browser-install && main
