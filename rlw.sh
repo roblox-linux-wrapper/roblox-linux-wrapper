@@ -23,7 +23,7 @@ spawndialog () {
 }
 
 # Define some variables and the spawndialog function
-export RLWVERSION=20150316
+export RLWVERSION=20150317
 export RLWCHANNEL=stable
 export WINEARCH=win32
 
@@ -57,7 +57,7 @@ export WINEPREFIX_PROGRAMS="$HOME/.local/share/wineprefixes/roblox-wine/drive_c"
 
 # Check for optional dependencies
 # Note: git is used for automatic updating, and is recommended.
-[[ -x "(which git)" ]] || { spawndialog warning "git not found. Automatic updates will be disabled."; }
+[[ -x "$(which git)" ]] || { spawndialog warning "git not found. Automatic updates will be disabled."; }
 
 # Some internal functions to make wine more useful to the wrapper.
 # This allows the wrapper to know what went wrong and where, without excessive code.
