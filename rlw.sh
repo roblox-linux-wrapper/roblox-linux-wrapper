@@ -24,7 +24,7 @@ spawndialog () {
 
 # Define some variables and the spawndialog function
 export RLWVERSION=20150316
-export RLWCHANNEL=staging
+export RLWCHANNEL=stable
 export WINEARCH=win32
 
 if [ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]
@@ -42,7 +42,7 @@ export WINEPREFIX_OLD="$HOME/.local/share/wineprefixes/Roblox-wine"
 export WINEPREFIX_PROGRAMS="$HOME/.local/share/wineprefixes/roblox-wine/drive_c"
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
-#if [ -f /opt/wine-staging/bin/wine ]
+#if [[ -x /opt/wine-staging/bin/wine ]]
 #then
 #	export WINE="/opt/wine-staging/bin/wine"
 #	export WINEBOOTBIN="/opt/wine-staging/bin/wineboot"
@@ -147,7 +147,7 @@ roblox-install () {
 }
 
 wrapper-install () {
-	if [[ ! -d "$HOME/.rlw" ]] || [ ! -f "$HOME/.local/share/applications/Roblox.desktop" ]; then
+	if [[ ! -d "$HOME/.rlw" ]] || [[ ! -x "$HOME/.local/share/applications/Roblox.desktop" ]]; then
 		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
 		if [ $? = 0 ]
 		then
