@@ -40,15 +40,15 @@ if [ ! -e "$HOME/.rlw/rlw.sh" ]; then
 	cp "$HOME/.rlw/rlw.sh" "$HOME/.rlw/rlw.sh.update"
 fi
 rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O "$HOME/.rlw/rlw.sh.update"
-if [ "$(shasum "$HOME/.rlw/rlw.sh.update" | cut -d' ' -f1)" != "$(cat "$HOME/.rlw/update.ignored" | cut -d' ' -f1)" ]
+if [ "$(shasum "$HOME/.rlw/rlw.sh.update" | cut -d' ' -f1)" != "$(cut -d' ' -f1 < cat "$HOME/.rlw/update.ignored")" ]
 then
 	rm -rf "$HOME/.rlw/update.ignored"
 fi
-if [ "$(shasum "$HOME/.rlw/rlw.sh" | cut -d' ' -f1)" != "$(shasum "$HOME/.rlw/rlw.sh.update" | cut -d' ' -f1)" ]
+if [ "$(cut -d' ' -f1 < shasum "$HOME/.rlw/rlw.sh.update")" != "$(shasum "$HOME/.rlw/rlw.sh.update" | cut -d' ' -f1)" ]
 then
 	if [ ! -e "$HOME/.rlw/update.ignored" ]
 	then
-		if [ "$(cat "$HOME/.rlw/update.ignored" | cut -d' ' -f1)" != "$(shasum "$HOME/.rlw/rlw.sh.update")" ]
+		if [ "$(cut -d' ' -f1 < "$HOME/.rlw/update.ignored")" != "$(shasum "$HOME/.rlw/rlw.sh.update")" ]
 		then
 			spawndialog question "An update to Roblox Linux Wrapper is available.\nWould you like to update?"
 			if [[ $? != "0" ]]
