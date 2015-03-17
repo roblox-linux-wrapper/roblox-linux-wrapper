@@ -53,7 +53,7 @@ export WINEPREFIX_PROGRAMS="$HOME/.local/share/wineprefixes/roblox-wine/drive_c"
 #fi
 
 # Check that everything is here
-[[ -x "$(which zenity)" -x "$(which wget)" -x "$WINE" -x "$WINEBOOTBIN" -x "$WINESERVERBIN"  ]] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
+[[ -x "$(which zenity)" && -x "$(which wget)" && -x "$WINE" && -x "$WINEBOOTBIN" && -x "$WINESERVERBIN"  ]] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
 
 # Check for optional dependencies
 # Note: git is used for automatic updating, and is recommended.
@@ -149,10 +149,9 @@ roblox-install () {
 wrapper-install () {
 	if [[ ! -d "$HOME/.rlw" ]] || [[ ! -x "$HOME/.local/share/applications/Roblox.desktop" ]]; then
 		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
-		if [ $? = 0 ]
-		then
-			[[ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]] || { mkdir -p "$HOME/.local/share/icons/hicolor/512x512/apps"; rwget http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png -O "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"; }
-			export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
+		if [[ "$?" = 0 ]]; then
+			[[ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]] || { mkdir -p "$HOME/.local/share/icons/hicolor/512x512/apps"; "rwget http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png" -O "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"; }
+			export RBXICON="$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"
 			cat <<-EOF > $HOME/.local/share/applications/Roblox.desktop
 			[Desktop Entry]
 			Comment=Play Roblox
@@ -185,7 +184,7 @@ wrapper-install () {
 			chmod +x "$HOME/.local/share/applications/Roblox.desktop"
 			xdg-desktop-menu install --novendor "$HOME/.local/share/applications/Roblox.desktop"
 			xdg-desktop-menu forceupdate
-			[[ -x "$HOME/.rlw/rlw-stub.sh" -x "$HOME/.rlw/rlw.sh && -f $HOME/.local/share/icons/roblox.png && -f $HOME/.local/share/applications/Roblox.desktop" ]] || { spawndialog error 'Roblox Linux Wrapper did not install successfully.'; exit 1; }
+			[[ -x "$HOME/.rlw/rlw-stub.sh" && -x "$HOME/.rlw/rlw.sh && -f $HOME/.local/share/icons/roblox.png && -f $HOME/.local/share/applications/Roblox.desktop" ]] || { spawndialog error 'Roblox Linux Wrapper did not install successfully.'; exit 1; }
 		else
 			exit 1
 		fi
