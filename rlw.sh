@@ -113,18 +113,21 @@ roblox-install () {
 			rwineserver --wait
 			if [[ ! -f "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe" ]]
 			then
-				ans=$(zenity \
-					--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL' by alfonsojon' \
-					--window-icon="$RBXICON" \
-					--width=480 \
-					--height=240 \
-					--cancel-label='Quit' \
-					--list \
-					--text 'Which browser do you want?' \
-					--radiolist \
-					--column '' \
-					--column 'Options' \
-					TRUE 'Firefox')
+				# Don't ask to install only one browser
+				#
+				#ans=$(zenity \
+				#	--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL' by alfonsojon' \
+				#	--window-icon="$RBXICON" \
+				#	--width=480 \
+				#	--height=240 \
+				#	--cancel-label='Quit' \
+				#	--list \
+				#	--text 'Which browser do you want?' \
+				#	--radiolist \
+				#	--column '' \
+				#	--column 'Options' \
+				#	TRUE 'Firefox')
+				ans="Firefox"
 				case $ans in
 				'Firefox')
 					rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
