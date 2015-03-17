@@ -23,8 +23,8 @@ spawndialog () {
 }
 
 # Define some variables and the spawndialog function
-export RLWVERSION=20150316
-export RLWCHANNEL=staging
+export RLWVERSION=20150317
+export RLWCHANNEL=stable
 export WINEARCH=win32
 
 if [ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]
