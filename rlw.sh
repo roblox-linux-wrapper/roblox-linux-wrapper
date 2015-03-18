@@ -24,7 +24,7 @@ spawndialog () {
 }
 
 # Define some variables and the spawndialog function
-export RLWVERSION=20150317
+export RLWVERSION=20150318
 export RLWCHANNEL=stable
 export WINEARCH=win32
 
@@ -106,7 +106,6 @@ roblox-install () {
 			rwineserver --wait
 			# Can cause problems in mutter. Examine further, don't use if not necessary.
 			# rwinetricks --gui ddr=gdi
-			rwinetricks wininet
 			[[ "$?" = 0 ]]  || { spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"; exit $?; }
 			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe

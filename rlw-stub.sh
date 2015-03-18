@@ -36,7 +36,7 @@ spawndialog () {
 }
 [ -e "$(which zenity)" -a "$(which shasum)" -a "$(which wget)"  ] || { spawndialog error "Missing dependencies! Make sure zenity, wget, wine, and wine-staging are installed."; exit 1; }
 if [ ! -e "$HOME/.rlw/rlw.sh" ]; then
-	download https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh "$HOME/.rlw/rlw.sh"
+	rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O "$HOME/.rlw/rlw.sh"
 	cp "$HOME/.rlw/rlw.sh" "$HOME/.rlw/rlw.sh.update"
 fi
 rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O "$HOME/.rlw/rlw.sh.update"
