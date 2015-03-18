@@ -15,7 +15,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 spawndialog () {
-	[[ -x "$(which zenity)" ]] || { echo "Missing dependency! Please install \"zenity\", then try again."; exit 1; }
+	[[ -x "$(which zenity)" ]] || { printf '%s' "Missing dependency! Please install \"zenity\", then try again."; exit 1; }
 	zenity \
 		--window-icon="$RBXICON" \
 		--title='Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL" \
@@ -31,7 +31,7 @@ export WINEARCH=win32
 if [ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]; then
 	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
 fi
-echo 'Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL"
+printf '%s' 'Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL"
 
 # Uncomment these lines to use stock Wine (default)
 export WINE="$(which wine)"
@@ -208,7 +208,7 @@ playerwrapper () {
 				--ok-label='Play' \
 				--width=450 \
 				--height=122)
-			GAMEID=$(echo "$GAMEURL" | cut -d "=" -f 2)
+			GAMEID=$(printf '%s' "$GAMEURL" | cut -d "=" -f 2)
 		if [[ -n "$GAMEID" ]]; then
 			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
 			rwineserver --wait
