@@ -15,7 +15,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 spawndialog () {
-	[[ -x "$(which zenity)" ]] || { printf '%s' "Missing dependency! Please install \"zenity\", then try again."; exit 1; }
+	[[ -x "$(which zenity)" ]] || {
+		printf '%s' "Missing dependency! Please install \"zenity\", then try again."
+		exit 1
+	}
 	zenity \
 		--window-icon="$RBXICON" \
 		--title='Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL" \
@@ -28,9 +31,6 @@ export RLWVERSION=20150317
 export RLWCHANNEL=stable
 export WINEARCH=win32
 
-if [ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]; then
-	export RBXICON=$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png
-fi
 printf '%s' 'Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL"
 
 # Uncomment these lines to use stock Wine (default)
@@ -52,11 +52,16 @@ export WINEPREFIX_PROGRAMS="$HOME/.local/share/wineprefixes/roblox-wine/drive_c"
 #fi
 
 # Check that everything is here
-[[ -x "$WINE" && -x "$WINEBOOTBIN" && -x "$WINESERVERBIN"  ]] || { spawndialog error "Missing dependencies! Please install wine and wine-staging."; exit 1; }
+[[ -x "$WINE" && -x "$WINEBOOTBIN" && -x "$WINESERVERBIN"  ]] || {
+	spawndialog error "Missing dependencies! Please install wine and wine-staging."
+	exit 1
+}
 
 # Check for optional dependencies
 # Note: git is used for automatic updating, and is recommended.
-[[ -x "$(which git)" ]] || { spawndialog warning "git not found. Automatic updates will be disabled.\nSee https://github.com/alfonsojon/roblox-linux-wrapper for more info."; }
+[[ -x "$(which git)" ]] || {
+	spawndialog warning "git not found. Automatic updates will be disabled.\nSee https://github.com/alfonsojon/roblox-linux-wrapper for more info."
+}
 
 # Some internal functions to make wine more useful to the wrapper.
 # This allows the wrapper to know what went wrong and where, without excessive code.
@@ -66,48 +71,71 @@ rwine () {
 	if [[ "$1" = "--silent" ]]; then
 		$WINE "${@:2}"
 	else
-		$WINE "$@"; [[ "$?" = "0" ]] || { spawndialog error "wine closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
+		$WINE "$@"; [[ "$?" = "0" ]] || {
+			spawndialog error "wine closed unsuccessfully.\nSee terminal for details. (exit code $?)"
+			exit $?
+	}
 	fi
 }
 rwineboot () {
-	$WINEBOOTBIN; [[ "$?" = "0" ]] || { spawndialog error "wineboot closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
+	$WINEBOOTBIN; [[ "$?" = "0" ]] || {
+		spawndialog error "wineboot closed unsuccessfully.\nSee terminal for details. (exit code $?)"
+		exit $?
+	}
 }
 rwineserver () {
-	$WINESERVERBIN "$@"; [[ "$?" = "0" ]] || { spawndialog error "wineserver closed unsuccessfully.\nSee terminal for details. (exit code $?)"; exit $?; }
+	$WINESERVERBIN "$@"; [[ "$?" = "0" ]] || {
+		spawndialog error "wineserver closed unsuccessfully.\nSee terminal for details. (exit code $?)"
+		exit $?
+	}
 }
 rwget () {
-	[[ -x "$(which wget)" ]] || { spawndialog error "Missing dependency! Please install wget, then try again."; }
-	wget "$@" 2>&1 | sed -u 's/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | zenity \
-		--progress \
-		--window-icon="$RBXICON" \
-		--title='Downloading' \
-		--auto-close \
-		--no-cancel \
-		--width=450 \
-		--height=120
-	[[ "$?" = "0" ]] || { spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"; exit $?; }
+	[[ -x "$(which wget)" ]] || {
+		spawndialog error "Missing dependency! Please install wget, then try again."
+	}
+	wget "$@" 2>&1 | sed -u 's/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | \
+		zenity \
+			--progress \
+			--window-icon="$RBXICON" \
+			--title='Downloading' \
+			--auto-close \
+			--no-cancel \
+			--width=450 \
+			--height=120
+	[[ "$?" = "0" ]] || {
+		spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"
+		exit $?
+	}
 }
 rwinetricks () {
-	[[ -x "$(which winetricks)" ]] || { spawndialog error "Missing dependencies! Please install winetricks, then try again."; exit 1; }
+	[[ -x "$(which winetricks)" ]] || {
+		spawndialog error "Missing dependencies! Please install winetricks, then try again."
+		exit 1
+	}
 	$(which winetricks) "$@"
 }
 
 roblox-install () {
-	[[ -d "$WINEPREFIX" ]] && rmdir "$WINEPREFIX"
-	[[ -d "$WINEPREFIX_OLD" ]] && [[ ! -d "$WINEPREFIX" ]] && { mv "$WINEPREFIX_OLD" "$WINEPREFIX"; }
+	[[ -d "$WINEPREFIX_OLD" ]] && [[ ! -d "$WINEPREFIX" ]] && {
+		mv "$WINEPREFIX_OLD" "$WINEPREFIX"
+	}
 	if [[ ! -d "$WINEPREFIX/drive_c" ]]; then
 		spawndialog question 'A working Roblox wineprefix was not found. Would you like to install one?'
 		if [[ $? = "0" ]]; then
 			rm -rf "$WINEPREFIX"
 			# Make sure our directories really exist
-			[[ -d "$HOME/.local/share/wineprefixes" ]] || mkdir -p "$HOME/.local/share/wineprefixes"
+			[[ -d "$HOME/.local/share/wineprefixes" ]] || {
+				mkdir -p "$HOME/.local/share/wineprefixes"
+			}
 			rwineboot
 			cd "$WINEPREFIX"
 			rwineserver --wait
 			# Can cause problems in mutter. Examine further, don't use if not necessary.
-			# rwinetricks --gui ddr=gdi
-			rwinetricks wininet
-			[[ "$?" = 0 ]]  || { spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"; exit $?; }
+			rwinetricks --gui ddr=gdi
+			[[ "$?" = 0 ]]  || {
+				spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"
+				exit $?
+			}
 			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
 			cd "$WINEPREFIX"
@@ -154,41 +182,28 @@ wrapper-install () {
 	if [[ ! -d "$HOME/.rlw" ]] || [[ ! -x "$HOME/.local/share/applications/Roblox.desktop" ]]; then
 		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
 		if [[ "$?" = 0 ]]; then
-			[[ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]] || { mkdir -p "$HOME/.local/share/icons/hicolor/512x512/apps"; "rwget http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png" -O "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"; }
-			export RBXICON="$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"
-			cat <<-EOF > $HOME/.local/share/applications/Roblox.desktop
-			[Desktop Entry]
-			Comment=Play Roblox
-			Name=Roblox Linux Wrapper
-			Exec=$HOME/.rlw/rlw-stub.sh
-			Actions=RFAGroup;ROLWiki;
-			GenericName=Building Game
-			Icon=roblox
-			Categories=Game;
-			Type=Application
-
-			[Desktop Action Support]
-			Name=GitHub Support Ticket
-			Exec=xdg-open 'https://github.com/alfonsojon/roblox-linux-wrapper/issues/new'
-
-			[Desktop Action ROLWiki]
-			Name=Roblox on Linux Wiki
-			Exec=xdg-open 'http://roblox.wikia.com/wiki/Roblox_On_Linux'
-
-			[Desktop Action RFAGroup]
-			Name=Roblox for All
-			Exec=xdg-open 'http://www.roblox.com/Groups/group.aspx?gid=292611'
-			EOF
 			mkdir -p "$HOME/.rlw"
-			rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O "$HOME/.rlw/rlw.sh"
-			rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw-stub.sh -O "$HOME/.rlw/rlw-stub.sh"
-			rwget http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png -O "$HOME/.local/share/icons/roblox.png"
+			if [[ -x "$(which git)" ]]; then
+				rm -rf "$HOME/.rlw/*"
+				git clone "https://github.com/alfonsojon/roblox-linux-wrapper.git" "$HOME/.rlw"
+				ln -s "$HOME/.rlw/Roblox.desktop" "$HOME/.local/share/applications/Roblox.desktop"
+			else
+				[[ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]] || {
+					rwget "http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png" -O "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png";
+				}
+				rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh 			-O "$HOME/.rlw/rlw.sh"
+				rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw-stub.sh 		-O "$HOME/.rlw/rlw-stub.sh"
+				rwget http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png 	-O "$HOME/.local/share/icons/roblox.png"
+			fi
 			chmod +x "$HOME/.rlw/rlw.sh"
 			chmod +x "$HOME/.rlw/rlw-stub.sh"
 			chmod +x "$HOME/.local/share/applications/Roblox.desktop"
 			xdg-desktop-menu install --novendor "$HOME/.local/share/applications/Roblox.desktop"
 			xdg-desktop-menu forceupdate
-			[[ -x "$HOME/.rlw/rlw-stub.sh" && -x "$HOME/.rlw/rlw.sh && -f $HOME/.local/share/icons/roblox.png && -f $HOME/.local/share/applications/Roblox.desktop" ]] || { spawndialog error 'Roblox Linux Wrapper did not install successfully.'; exit 1; }
+			[[ -x "$HOME/.rlw/rlw-stub.sh" && -x "$HOME/.rlw/rlw.sh && -f $HOME/.local/share/icons/roblox.png && -f $HOME/.local/share/applications/Roblox.desktop" ]] || {
+				spawndialog error 'Roblox Linux Wrapper did not install successfully.'
+				exit 1
+			}
 		else
 			exit 1
 		fi
@@ -198,7 +213,7 @@ wrapper-install () {
 playerwrapper () {
 	ROBLOXPROXY=$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')
 	rwine --silent regsvr32 /i "$ROBLOXPROXY"
-	if [ "$1" = legacy ]; then
+	if [[ "$1" = legacy ]]; then
 		export GAMEURL=$(\
 			zenity \
 				--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL \
@@ -272,7 +287,7 @@ main () {
 			xdg-desktop-menu uninstall "$HOME/.local/share/applications/Roblox.desktop"
 			rm -rf "$HOME/.rlw"
 			[[ ! -f "$HOME/.local/share/icons/roblox.png" ]] || rm -rf "$HOME/.local/share/icons/roblox.png"
-			rm -rf "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"
+			[[ ! -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]] || rm -rf "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"
 			xdg-desktop-menu forceupdate
 			$WINESERVERBIN --kill
 			rm -rf "$WINEPREFIX"
