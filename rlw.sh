@@ -228,7 +228,7 @@ playerwrapper () {
 			return
 		fi
 	else
-		rwine "$browser" http://www.roblox.com/Games.aspx
+		rwine "$browser" "http://www.roblox.com/Games.aspx"
 	fi
 }
 
@@ -281,14 +281,17 @@ main () {
 		spawndialog question 'Are you sure you would like to uninstall?'
 		if [[ "$?" = "0" ]]; then
 			xdg-desktop-menu uninstall "$HOME/.local/share/applications/Roblox.desktop"
-			rm -rf "$HOME/.rlw"
-			[[ ! -f "$HOME/.local/share/icons/roblox.png" ]] || rm -rf "$HOME/.local/share/icons/roblox.png"
-			[[ ! -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]] || rm -rf "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"
+			[[ ! -f "$HOME/.local/share/icons/roblox.png" ]] || {
+				rm -rf "$HOME/.local/share/icons/roblox.png"
+			}
+			[[ ! -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]] || {
+				rm -rf "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"
+			}
 			xdg-desktop-menu forceupdate
 			$wineserverbin --kill
 			rm -rf "$WINEPREFIX"
-			if [[ -d "$HOME/.rlw" ]] || [[ -f "$HOME/.rlw/roblox.png" ]] || [[ -d "$WINEPREFIX/drive_c" ]]
-			then
+			rm -rf "$HOME/.rlw"
+			if [[ -d "$HOME/.rlw" ]] || [[ -f "$HOME/.rlw/roblox.png" ]] || [[ -d "$WINEPREFIX/drive_c" ]]; then
 				spawndialog error 'Roblox is still installed. Please try uninstalling again.'
 			else
 				spawndialog info 'Roblox has been uninstalled successfully.'
@@ -301,5 +304,4 @@ main () {
 }
 
 # Run dependency check & launch main function
-wrapper-install && roblox-install && browser-install
-main
+wrapper-install && roblox-install && browser-install && main
