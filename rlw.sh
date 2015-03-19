@@ -104,18 +104,18 @@ rwget () {
 	}
 }
 rwinetricks () {
-	winetricks_bin="$(which winetricks)"
+	winetricksbin="$(which winetricks)"
 	[[ -x "$(which winetricks)" ]] || {
 		rwget "http://winetricks.org/winetricks" -O "$HOME/.rlw/winetricks"
 		chmod +x "$HOME/.rlw/winetricks"
-		winetricks_bin="$HOME/.rlw/winetricks"
+		winetricksbin="$HOME/.rlw/winetricks"
 	}
-	$("$WINETRICKS_BIN") "$@"
+	$winetricksbin "$@"
 }
 
 roblox-install () {
 	if [[ ! -d "$WINEPREFIX/drive_c" ]]; then
-		spawndialog question 'A working Roblox wineprefix was not found. Would you like to install one?'
+		spawndialog question 'A working Roblox wineprefix was not found.\nWould you like to install one?'
 		if [[ $? = "0" ]]; then
 			rm -rf "$WINEPREFIX"
 			# Make sure our directories really exist
@@ -123,7 +123,7 @@ roblox-install () {
 				mkdir -p "$HOME/.rlw"
 			}
 			rwineboot
-			rwinetricks ddr=gdi		# Causes problems in mutter/gala
+			rwinetricks ddr=gdi		# Causes graphical problems in mutter/gala (GNOME Shell/Elementary OS)
 			rwineserver --wait
 			cd "$WINEPREFIX"
 			[[ "$?" = 0 ]]  || {
@@ -184,10 +184,14 @@ wrapper-install () {
 				rm -rf "$HOME/.rlw/*"
 				git clone "https://github.com/alfonsojon/roblox-linux-wrapper.git" "$HOME/.rlw"
 			else
-				rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh 			-O "$HOME/.rlw/rlw.sh"
-				rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw-stub.sh 		-O "$HOME/.rlw/rlw-stub.sh"
+				rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh 					-O "$HOME/.rlw/rlw.sh"
+				rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw-stub.sh 				-O "$HOME/.rlw/rlw-stub.sh"
 				rwget http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png 	-O "$HOME/.rlw/roblox.png"
+				rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/Roblox.desktop			-O "$HOME/.rlw/Roblox.desktop"
 			fi
+			[[ -e "$HOME/.local/share/applications/Roblox.desktop" ]] && {
+				rm -rf "$HOME/.local/share/applications/Roblox.desktop"
+			}
 			ln -s "$HOME/.rlw/Roblox.desktop" "$HOME/.local/share/applications/Roblox.desktop"
 			chmod +x "$HOME/.rlw/rlw.sh"
 			chmod +x "$HOME/.rlw/rlw-stub.sh"
