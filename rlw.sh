@@ -16,7 +16,7 @@
 
 spawndialog () {
 	[[ -x "$(which zenity)" ]] || {
-		printf '%s %b' "Missing dependency! Please install \"zenity\", then try again."
+		printf '%b\n' "Missing dependency! Please install \"zenity\", then try again."
 		exit 1
 	}
 	zenity \
@@ -31,7 +31,7 @@ export rlwversion=20150317
 export rlwchannel=stable
 export WINEARCH=win32
 
-printf '%s %b' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$rlwchannel\n"
+printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$rlwchannel"
 
 # Uncomment these lines to use stock Wine (default)
 export WINE="$(which wine)"
