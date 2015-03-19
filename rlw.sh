@@ -34,23 +34,21 @@ export WINEARCH=win32
 printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$rlwchannel"
 
 # Uncomment these lines to use stock Wine (default)
-export WINE="$(which wine)"
-export WINEBOOTBIN="$(which wineboot)"
-export WINESERVERBIN="$(which wineserver)"
+export winebin="$(which wine)"
+export winebootbin="$(which wineboot)"
+export wineserverbin="$(which wineserver)"
 export WINEPREFIX="$HOME/.rlw/roblox-wine"
-export WINEPREFIX_PROGRAMS="$HOME/.rlw/roblox-wine/drive_c"
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
 #[[ -x /opt/wine-staging/bin/wine ]] && {
-#	export WINE="/opt/wine-staging/bin/wine"
-#	export WINEBOOTBIN="/opt/wine-staging/bin/wineboot"
-#	export WINESERVERBIN="/opt/wine-staging/bin/wineserver"
-#	export WINEPREFIX="$HOME/.rlw/oblox-wine-staging"
-#	export WINEPREFIX_PROGRAMS="$HOME/.rlw/roblox-wine-staging/drive_c"
+#	export winebin="/opt/wine-staging/bin/wine"
+#	export winebootbin="/opt/wine-staging/bin/wineboot"
+#	export wineserverbin="/opt/wine-staging/bin/wineserver"
+#	export WINEPREFIX="$HOME/.rlw/roblox-wine-staging"
 #}
 
 # Check that everything is here
-[[ -x "$WINE" && -x "$WINEBOOTBIN" && -x "$WINESERVERBIN"  ]] || {
+[[ -x "$winebin" && -x "$winebootbin" && -x "$wineserverbin"  ]] || {
 	spawndialog error "Missing dependencies! Please install wine and wine-staging."
 	exit 1
 }
@@ -67,22 +65,22 @@ export WINEPREFIX_PROGRAMS="$HOME/.rlw/roblox-wine/drive_c"
 
 rwine () {
 	if [[ "$1" = "--silent" ]]; then
-		$WINE "${@:2}"
+		$winebin "${@:2}"
 	else
-		$WINE "$@"; [[ "$?" = "0" ]] || {
+		$winebin "$@"; [[ "$?" = "0" ]] || {
 			spawndialog error "wine closed unsuccessfully.\nSee terminal for details. (exit code $?)"
 			exit $?
 	}
 	fi
 }
 rwineboot () {
-	$WINEBOOTBIN; [[ "$?" = "0" ]] || {
+	$winebootbin; [[ "$?" = "0" ]] || {
 		spawndialog error "wineboot closed unsuccessfully.\nSee terminal for details. (exit code $?)"
 		exit $?
 	}
 }
 rwineserver () {
-	$WINESERVERBIN "$@"; [[ "$?" = "0" ]] || {
+	$wineserverbin "$@"; [[ "$?" = "0" ]] || {
 		spawndialog error "wineserver closed unsuccessfully.\nSee terminal for details. (exit code $?)"
 		exit $?
 	}
@@ -114,7 +112,7 @@ rwinetricks () {
 }
 
 roblox-install () {
-	if [[ ! -d "$WINEPREFIX_PROGRAMS" ]]; then
+	if [[ ! -d "$WINEPREFIX/drive_c" ]]; then
 		spawndialog question 'A working Roblox wineprefix was not found. Would you like to install one?'
 		if [[ $? = "0" ]]; then
 			rm -rf "$WINEPREFIX"
@@ -235,7 +233,7 @@ playerwrapper () {
 }
 
 browser-install () {
-	if [[ -f "$WINEPREFIX_PROGRAMS/Program Files/Mozilla Firefox/firefox.exe" ]]; then
+	if [[ -f "$WINEPREFIX/drive_c/Program Files/Mozilla Firefox/firefox.exe" ]]; then
 		browser='C:\Program Files\Mozilla Firefox\firefox.exe'
 	else
 		spawndialog error 'No browser installed. Please reinstall.'
@@ -287,7 +285,7 @@ main () {
 			[[ ! -f "$HOME/.local/share/icons/roblox.png" ]] || rm -rf "$HOME/.local/share/icons/roblox.png"
 			[[ ! -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]] || rm -rf "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"
 			xdg-desktop-menu forceupdate
-			$WINESERVERBIN --kill
+			$wineserverbin --kill
 			rm -rf "$WINEPREFIX"
 			if [[ -d "$HOME/.rlw" ]] || [[ -f "$HOME/.rlw/roblox.png" ]] || [[ -d "$WINEPREFIX/drive_c" ]]
 			then
