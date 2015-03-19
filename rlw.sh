@@ -125,6 +125,7 @@ roblox-install () {
 			rwineboot
 			rwinetricks ddr=gdi		# Causes problems in mutter/gala
 			rwineserver --wait
+<<<<<<< HEAD
 			cd "$WINEPREFIX"
 			[[ "$?" = 0 ]]  || {
 				spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"
