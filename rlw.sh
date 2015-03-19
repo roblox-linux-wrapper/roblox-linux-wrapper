@@ -104,11 +104,13 @@ rwget () {
 	}
 }
 rwinetricks () {
+	winetricks_bin="$(which winetricks)"
 	[[ -x "$(which winetricks)" ]] || {
-		spawndialog error "Missing dependencies! Please install winetricks, then try again."
-		exit 1
+		rwget "http://winetricks.org/winetricks" -O "$HOME/.rlw/winetricks"
+		chmod +x "$HOME/.rlw/winetricks"
+		winetricks_bin="$HOME/.rlw/winetricks"
 	}
-	$(which winetricks) "$@"
+	$("$WINETRICKS_BIN") "$@"
 }
 
 roblox-install () {
