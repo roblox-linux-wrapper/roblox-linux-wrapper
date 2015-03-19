@@ -104,13 +104,13 @@ rwget () {
 	}
 }
 rwinetricks () {
-	winetricks_bin="$(which winetricks)"
+	winetricksbin="$(which winetricks)"
 	[[ -x "$(which winetricks)" ]] || {
 		rwget "http://winetricks.org/winetricks" -O "$HOME/.rlw/winetricks"
 		chmod +x "$HOME/.rlw/winetricks"
-		winetricks_bin="$HOME/.rlw/winetricks"
+		winetricksbin="$HOME/.rlw/winetricks"
 	}
-	$("$WINETRICKS_BIN") "$@"
+	$("$winetricksbin") "$@"
 }
 
 roblox-install () {
