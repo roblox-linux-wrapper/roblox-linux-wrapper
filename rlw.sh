@@ -21,38 +21,38 @@ spawndialog () {
 	}
 	zenity \
 		--window-icon="$RBXICON" \
-		--title='Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL" \
+		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$rlwchannel" \
 		--"$1" \
 		--text="$2"
 }
 
 # Define some variables and the spawndialog function
-export RLWVERSION=20150317
-export RLWCHANNEL=stable
+export rlwversion=20150317
+export rlwchannel=stable
 export WINEARCH=win32
 
-printf '%s' 'Roblox Linux Wrapper v'"$RLWVERSION"'-'"$RLWCHANNEL"
+printf '%s' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$rlwchannel"
 
 # Uncomment these lines to use stock Wine (default)
 export WINE="$(which wine)"
-export WINEBOOTBIN="$(which wineboot)"
-export WINESERVERBIN="$(which wineserver)"
+export winebootbin="$(which wineboot)"
+export wineserverbin="$(which wineserver)"
 export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
-export WINEPREFIX_OLD="$HOME/.local/share/wineprefixes/Roblox-wine"
-export WINEPREFIX_PROGRAMS="$HOME/.local/share/wineprefixes/roblox-wine/drive_c"
+export wineprefix_old="$HOME/.local/share/wineprefixes/Roblox-wine"
+export wineprefix_programs="$HOME/.local/share/wineprefixes/roblox-wine/drive_c"
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
-#if [[ -x /opt/wine-staging/bin/wine ]]; then
+#[[ -x /opt/wine-staging/bin/wine ]] && {
 #	export WINE="/opt/wine-staging/bin/wine"
-#	export WINEBOOTBIN="/opt/wine-staging/bin/wineboot"
-#	export WINESERVERBIN="/opt/wine-staging/bin/wineserver"
+#	export winebootbin="/opt/wine-staging/bin/wineboot"
+#	export wineserverbin="/opt/wine-staging/bin/wineserver"
 #	export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine-staging"
-#	export WINEPREFIX_OLD="$HOME/.local/share/wineprefixes/Roblox-wine-staging"
-#	export WINEPREFIX_PROGRAMS="$HOME/.local/share/wineprefixes/roblox-wine-staging/drive_c"
-#fi
+#	export wineprefix_old="$HOME/.local/share/wineprefixes/Roblox-wine-staging"
+#	export wineprefix_programs="$HOME/.local/share/wineprefixes/roblox-wine-staging/drive_c"
+#}
 
 # Check that everything is here
-[[ -x "$WINE" && -x "$WINEBOOTBIN" && -x "$WINESERVERBIN"  ]] || {
+[[ -x "$WINE" && -x "$winebootbin" && -x "$wineserverbin"  ]] || {
 	spawndialog error "Missing dependencies! Please install wine and wine-staging."
 	exit 1
 }
@@ -78,13 +78,13 @@ rwine () {
 	fi
 }
 rwineboot () {
-	$WINEBOOTBIN; [[ "$?" = "0" ]] || {
+	$winebootbin; [[ "$?" = "0" ]] || {
 		spawndialog error "wineboot closed unsuccessfully.\nSee terminal for details. (exit code $?)"
 		exit $?
 	}
 }
 rwineserver () {
-	$WINESERVERBIN "$@"; [[ "$?" = "0" ]] || {
+	$wineserverbin "$@"; [[ "$?" = "0" ]] || {
 		spawndialog error "wineserver closed unsuccessfully.\nSee terminal for details. (exit code $?)"
 		exit $?
 	}
@@ -116,10 +116,10 @@ rwinetricks () {
 }
 
 roblox-install () {
-	[[ -d "$WINEPREFIX_OLD" ]] && [[ ! -d "$WINEPREFIX" ]] && {
-		mv "$WINEPREFIX_OLD" "$WINEPREFIX"
+	[[ -d "$wineprefix_old" ]] && [[ ! -d "$WINEPREFIX" ]] && {
+		mv "$wineprefix_old" "$WINEPREFIX"
 	}
-	if [[ ! -d "$WINEPREFIX/drive_c" ]]; then
+	if [[ ! -d "$wineprefix_programs" ]]; then
 		spawndialog question 'A working Roblox wineprefix was not found. Would you like to install one?'
 		if [[ $? = "0" ]]; then
 			rm -rf "$WINEPREFIX"
@@ -141,11 +141,11 @@ roblox-install () {
 			cd "$WINEPREFIX"
 			ROBLOXPROXY="$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')"
 			rwineserver --wait
-			if [[ ! -f "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe" ]]; then
+			[[ ! -f "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe" ]] && {
 				# Don't ask to install only one browser
 				#
 				#ans=$(zenity \
-				#	--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL' by alfonsojon' \
+				#	--title='Roblox Linux Wrapper v'$rlwversion'-'$rlwchannel' by alfonsojon' \
 				#	--window-icon="$RBXICON" \
 				#	--width=480 \
 				#	--height=240 \
@@ -170,7 +170,7 @@ roblox-install () {
 						--auto-close
 					rwineserver --wait
 				esac
-			fi
+			}
 		else
 			exit 1
 		fi
@@ -193,7 +193,7 @@ wrapper-install () {
 				}
 				rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh 			-O "$HOME/.rlw/rlw.sh"
 				rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw-stub.sh 		-O "$HOME/.rlw/rlw-stub.sh"
-				rwget http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png 	-O "$HOME/.local/share/icons/roblox.png"
+				rwget http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png 	-O "$HOME/.rlw/roblox.png"
 			fi
 			chmod +x "$HOME/.rlw/rlw.sh"
 			chmod +x "$HOME/.rlw/rlw-stub.sh"
@@ -207,6 +207,10 @@ wrapper-install () {
 		else
 			exit 1
 		fi
+	else
+		[[ -x "$(which git)" && -d "$HOME/.rlw/.git" ]] && {
+			git -c "$HOME/.rlw" pull
+		}
 	fi
 }
 
@@ -216,7 +220,7 @@ playerwrapper () {
 	if [[ "$1" = legacy ]]; then
 		export GAMEURL=$(\
 			zenity \
-				--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL \
+				--title='Roblox Linux Wrapper v'$rlwversion'-'$rlwchannel \
 				--window-icon="$RBXICON" \
 				--entry \
 				--text='Paste the URL for the game here.' \
@@ -238,7 +242,7 @@ playerwrapper () {
 
 #code to check which browser you're running
 browser-install () {
-	if [[ -f "$WINEPREFIX_PROGRAMS/Program Files/Mozilla Firefox/firefox.exe" ]]; then
+	if [[ -f "$wineprefix_programs/Program Files/Mozilla Firefox/firefox.exe" ]]; then
 		browser='C:\Program Files\Mozilla Firefox\firefox.exe'
 	else
 		spawndialog error 'No browser installed. Please reinstall.'
@@ -249,7 +253,7 @@ main () {
 	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
 	sel=$(zenity \
-		--title='Roblox Linux Wrapper v'$RLWVERSION'-'$RLWCHANNEL' by alfonsojon' \
+		--title='Roblox Linux Wrapper v'$rlwversion'-'$rlwchannel' by alfonsojon' \
 		--window-icon="$RBXICON" \
 		--width=480 \
 		--height=240 \
@@ -289,7 +293,7 @@ main () {
 			[[ ! -f "$HOME/.local/share/icons/roblox.png" ]] || rm -rf "$HOME/.local/share/icons/roblox.png"
 			[[ ! -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]] || rm -rf "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"
 			xdg-desktop-menu forceupdate
-			$WINESERVERBIN --kill
+			$wineserverbin --kill
 			rm -rf "$WINEPREFIX"
 			if [[ -d "$HOME/.rlw" ]] || [[ -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]] || [[ -d "$WINEPREFIX" ]]
 			then
