@@ -5,7 +5,7 @@ Name=Roblox Linux Wrapper
 Exec=/usr/bin/env bash -c "\\$HOME/.rlw/rlw.sh"
 Actions=Support;RFAGroup;
 GenericName=Building Game
-Icon="roblox'
+Icon="$HOME/.rlw/roblox.png"
 Categories=Game;
 Type=Application
 
