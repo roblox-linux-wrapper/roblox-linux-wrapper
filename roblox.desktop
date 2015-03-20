@@ -2,7 +2,7 @@
 Comment=Play Roblox
 Name=Roblox Linux Wrapper
 Exec=bash -e "$HOME/roblox-linux-wrapper/rlw.sh"
-Actions=RFAGroup;ROLWiki;
+Actions=Support;RFAGroup;ROLWiki;
 GenericName=Building Game
 Icon=roblox.png
 Categories=Game;

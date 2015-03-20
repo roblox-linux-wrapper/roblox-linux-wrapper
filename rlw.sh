@@ -26,7 +26,7 @@ printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$rlwchannel"
 # Uncomment these lines to use stock Wine (default)
 export winebin="$(which wine)"
 export winebootbin="$(which wineboot)"
-export wineserverbin="$(which w	ineserver)"
+export wineserverbin="$(which wineserver)"
 export WINEPREFIX="$HOME/.rlw/roblox-wine"
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
@@ -178,11 +178,7 @@ wrapper-install () {
 	if [[ ! -d "$HOME/.rlw" ]] || [[ ! -x "$HOME/.local/share/applications/Roblox.desktop" ]]; then
 		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
 		if [[ "$?" = 0 ]]; then
-			mkdir -p "$HOME/.rlw"
 			git clone "https://github.com/alfonsojon/roblox-linux-wrapper.git" "$HOME/.rlw"
-			[[ -e "$HOME/.local/share/applications/Roblox.desktop" ]] && {
-				rm -rf "$HOME/.local/share/applications/Roblox.desktop"
-			}
 			chmod +x "$HOME/.rlw/rlw.sh"
 			chmod +x "$HOME/.rlw/Roblox.desktop"
 			xdg-desktop-menu install --novendor "$HOME/.rlw/Roblox.desktop"
