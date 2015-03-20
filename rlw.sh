@@ -170,7 +170,7 @@ wrapper-install () {
 			chmod +x "$HOME/.rlw/roblox.desktop"
 			xdg-desktop-menu install --novendor "$HOME/.rlw/roblox.desktop"
 			xdg-desktop-menu forceupdate
-			[[ -x "$HOME/.rlw/rlw.sh" && -f "$HOME/.rlw/roblox.png" && -f "$HOME/.rlw/Roblox.desktop" && -d "$HOME/.rlw/.git" ]] || {
+			[[ -x "$HOME/.rlw/rlw.sh" && -f "$HOME/.rlw/roblox.png" && -f "$HOME/.rlw/roblox.desktop" && -d "$HOME/.rlw/.git" ]] || {
 				spawndialog error 'Roblox Linux Wrapper did not install successfully.'
 				exit 1
 			}
