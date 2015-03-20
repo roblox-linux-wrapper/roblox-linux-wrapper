@@ -2,7 +2,7 @@
 [Desktop Entry]
 Comment=Play Roblox
 Name=Roblox Linux Wrapper
-Exec=/usr/bin/env bash "\\$HOME/.rlw/rlw.sh"
+Exec=/usr/bin/env bash -c "\\$HOME/.rlw/rlw.sh"
 Actions=Support;RFAGroup;
 GenericName=Building Game
 Icon="roblox'
