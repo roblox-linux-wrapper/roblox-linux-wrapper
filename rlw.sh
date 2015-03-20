@@ -184,7 +184,7 @@ wrapper-install () {
 			exit 1
 		fi
 	fi
-	git -C "$HOME/.rlw" pull
+	cd "$HOME/.rlw" && git pull
 }
 
 playerwrapper () {
