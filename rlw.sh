@@ -16,7 +16,7 @@
 
 cd "$HOME"
 
-# Define some variables and the spawndialog function
+# Define some variables
 export rlwversion=20150319
 export rlwchannel=stable
 export WINEARCH=win32
@@ -26,7 +26,7 @@ printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$rlwchannel"
 # Uncomment these lines to use stock Wine (default)
 export winebin="$(which wine)"
 export winebootbin="$(which wineboot)"
-export wineserverbin="$(which wineserver)"
+export wineserverbin="$(which w	ineserver)"
 export WINEPREFIX="$HOME/.rlw/roblox-wine"
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
@@ -183,12 +183,11 @@ wrapper-install () {
 			[[ -e "$HOME/.local/share/applications/Roblox.desktop" ]] && {
 				rm -rf "$HOME/.local/share/applications/Roblox.desktop"
 			}
-			ln -s "$HOME/.rlw/Roblox.desktop" "$HOME/.local/share/applications/Roblox.desktop"
 			chmod +x "$HOME/.rlw/rlw.sh"
-			chmod +x "$HOME/.local/share/applications/Roblox.desktop"
-			xdg-desktop-menu install --novendor "$HOME/.local/share/applications/Roblox.desktop"
+			chmod +x "$HOME/.rlw/Roblox.desktop"
+			xdg-desktop-menu install --novendor "$HOME/.rlw/Roblox.desktop"
 			xdg-desktop-menu forceupdate
-			[[ -x "$HOME/.rlw/rlw-stub.sh" && -x "$HOME/.rlw/rlw.sh && -f $HOME/.local/share/icons/roblox.png && -f $HOME/.local/share/applications/Roblox.desktop" ]] || {
+			[[ -x "$HOME/.rlw/rlw.sh && -f $HOME/.local/share/icons/roblox.png && -f $HOME/.local/share/applications/Roblox.desktop" ]] || {
 				spawndialog error 'Roblox Linux Wrapper did not install successfully.'
 				exit 1
 			}
@@ -216,7 +215,6 @@ playerwrapper () {
 			GAMEID=$(printf '%s' "$GAMEURL" | cut -d "=" -f 2)
 		if [[ -n "$GAMEID" ]]; then
 			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
-			rwineserver --wait
 		else
 			spawndialog warning "Invalid game URL or ID."
 			return
@@ -256,7 +254,6 @@ main () {
 		playerwrapper legacy; main;;
 	'Roblox Studio')
 		WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b" rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
-		rwineserver --wait
 		main ;;
 	'Reinstall Roblox')
 		spawndialog question 'Are you sure you would like to reinstall?'
@@ -277,7 +274,7 @@ main () {
 				rm -rf "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"
 			}
 			xdg-desktop-menu forceupdate
-			$wineserverbin --kill
+			rwineserver --kill
 			rm -rf "$WINEPREFIX"
 			rm -rf "$HOME/.rlw"
 			if [[ -d "$HOME/.rlw" ]] || [[ -f "$HOME/.rlw/roblox.png" ]] || [[ -d "$WINEPREFIX/drive_c" ]]; then
