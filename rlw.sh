@@ -28,6 +28,7 @@ printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
 #export winebootbin="$(which wineboot)"
 #export wineserverbin="$(which wineserver)"
 #export WINEPREFIX="$HOME/.rlw/roblox-wine"
+#WINEPREFIX="$HOME/.wine" "$(which wineboot)"
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
 [[ -x /opt/wine-staging/bin/wine ]] && {
@@ -35,6 +36,7 @@ printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
 	export winebootbin="/opt/wine-staging/bin/wineboot"
 	export wineserverbin="/opt/wine-staging/bin/wineserver"
 	export WINEPREFIX="$HOME/.rlw/roblox-wine-staging"
+	WINEPREFIX="$HOME/.wine-staging" "/opt/wine-staging/bin/wineboot"
 }
 
 # Some internal functions to make wine more useful to the wrapper.
