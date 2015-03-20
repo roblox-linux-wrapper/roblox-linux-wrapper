@@ -18,7 +18,7 @@ cd "$HOME"
 
 # Define some variables
 export rlwversion=20150320
-export branch=testing
+export branch=master
 export WINEARCH=win32
 
 printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
