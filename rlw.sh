@@ -18,10 +18,10 @@ cd "$HOME"
 
 # Define some variables
 export rlwversion=20150319
-export rlwchannel=stable
+export branch=testing
 export WINEARCH=win32
 
-printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$rlwchannel"
+printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
 
 # Uncomment these lines to use stock Wine (default)
 export winebin="$(which wine)"
@@ -48,7 +48,7 @@ spawndialog () {
 	}
 	zenity \
 		--window-icon="$RBXICON" \
-		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$rlwchannel" \
+		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$branch" \
 		--"$1" \
 		--text="$2"
 }
@@ -136,36 +136,16 @@ roblox-install () {
 			cd "$WINEPREFIX"
 			ROBLOXPROXY="$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')"
 			rwineserver --wait
-			[[ ! -f "$WINEPREFIX/Program Files/Mozilla Firefox/firefox.exe" ]] && {
-				# Don't ask to install only one browser
-				#
-				#ans=$(zenity \
-				#	--title='Roblox Linux Wrapper v'$rlwversion'-'$rlwchannel' by alfonsojon' \
-				#	--window-icon="$RBXICON" \
-				#	--width=480 \
-				#	--height=240 \
-				#	--cancel-label='Quit' \
-				#	--list \
-				#	--text 'Which browser do you want?' \
-				#	--radiolist \
-				#	--column '' \
-				#	--column 'Options' \
-				#	TRUE 'Firefox')
-				ans="Firefox"
-				case $ans in
-				'Firefox')
-					rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
-					WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \
-						--window-icon="$RBXICON" \
-						--title='Installing Mozilla Firefox' \
-						--text='Installing Mozilla Firefox Browser ...' \
-						--progress \
-						--pulsate \
-						--no-cancel \
-						--auto-close
-					rwineserver --wait
-				esac
-			}
+			rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
+			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \
+				--window-icon="$RBXICON" \
+				--title='Installing Mozilla Firefox' \
+				--text='Installing Mozilla Firefox Browser ...' \
+				--progress \
+				--pulsate \
+				--no-cancel \
+				--auto-close
+			rwineserver --wait
 		else
 			exit 1
 		fi
@@ -174,8 +154,12 @@ roblox-install () {
 }
 
 wrapper-install () {
+	[[ -d "$HOME/.rlw/.git" ]] && {
+		cd "$HOME/.rlw"
+		git pull
+	}
 	printf '%b\n' "> begin wrapper-install ()\n---"
-	if [[ ! -d "$HOME/.rlw" ]] || [[ ! -x "$HOME/.rlw/roblox.desktop" ]]; then
+	[[ -d "$HOME/.rlw" ]] || [[ -x "$HOME/.rlw/roblox.desktop" ]] {
 		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
 		if [[ "$?" = 0 ]]; then
 			git clone "https://github.com/alfonsojon/roblox-linux-wrapper.git" "$HOME/.rlw"
@@ -190,8 +174,7 @@ wrapper-install () {
 		else
 			exit 1
 		fi
-	fi
-	cd "$HOME/.rlw" && git pull
+	}
 }
 
 playerwrapper () {
@@ -228,7 +211,7 @@ main () {
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
 	rm -rf "$HOME/.local/share/wineprefixes/roblox*" "$HOME/.local/share/wineprefixes/Roblox*"
 	sel=$(zenity \
-		--title='Roblox Linux Wrapper v'$rlwversion'-'$rlwchannel' by alfonsojon' \
+		--title='Roblox Linux Wrapper v'$rlwversion'-'$branch' by alfonsojon' \
 		--window-icon="$RBXICON" \
 		--width=480 \
 		--height=240 \
