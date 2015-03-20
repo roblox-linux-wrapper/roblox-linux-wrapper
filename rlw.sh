@@ -163,22 +163,11 @@ roblox-install () {
 }
 
 wrapper-install () {
-	[[ -x "$(which git)" && -d "$HOME/.rlw/.git" ]] && {
-		git -c "$HOME/.rlw" pull
-	}
 	if [[ ! -d "$HOME/.rlw" ]] || [[ ! -x "$HOME/.local/share/applications/Roblox.desktop" ]]; then
 		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
 		if [[ "$?" = 0 ]]; then
 			mkdir -p "$HOME/.rlw"
-			if [[ -x "$(which git)" ]]; then
-				rm -rf "$HOME/.rlw/*"
-				git clone "https://github.com/alfonsojon/roblox-linux-wrapper.git" "$HOME/.rlw"
-			else
-				rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh 					-O "$HOME/.rlw/rlw.sh"
-				rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw-stub.sh 				-O "$HOME/.rlw/rlw-stub.sh"
-				rwget http://img1.wikia.nocookie.net/__cb20130302012343/robloxhelp/images/f/fb/ROBLOX_Circle_Logo.png 	-O "$HOME/.rlw/roblox.png"
-				rwget https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/Roblox.desktop			-O "$HOME/.rlw/Roblox.desktop"
-			fi
+			git clone "https://github.com/alfonsojon/roblox-linux-wrapper.git" "$HOME/.rlw"
 			[[ -e "$HOME/.local/share/applications/Roblox.desktop" ]] && {
 				rm -rf "$HOME/.local/share/applications/Roblox.desktop"
 			}
@@ -194,11 +183,8 @@ wrapper-install () {
 		else
 			exit 1
 		fi
-	else
-		[[ -x "$(which git)" && -d "$HOME/.rlw/.git" ]] && {
-			git -c "$HOME/.rlw" pull
-		}
 	fi
+	git -C "$HOME/.rlw" pull
 }
 
 playerwrapper () {
@@ -228,6 +214,7 @@ playerwrapper () {
 }
 
 main () {
+	cd "$HOME"
 	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
 	rm -rf "$HOME/.local/share/wineprefixes/roblox*" "$HOME/.local/share/wineprefixes/Roblox*"
