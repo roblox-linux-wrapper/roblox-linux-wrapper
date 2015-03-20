@@ -27,11 +27,7 @@ To install Roblox on your Linux computer, run the command `bash <(wget -q https:
 
 ## Required Dependencies
 
-    rlw.sh: cabextract shasum wget wine wine-staging zenity
-    rlw-stub.sh: wget shasum zenity
-    
-## Optional Dependencies
-    rlw.sh: git
+    rlw.sh: cabextract git shasum wget wine wine-staging zenity
 
   [1]: https://github.com/alfonsojon/roblox-linux-wrapper/issues
 
