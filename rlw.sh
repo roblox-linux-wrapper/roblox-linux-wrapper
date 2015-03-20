@@ -168,7 +168,7 @@ wrapper-install () {
 			chmod +x "$HOME/.rlw/roblox.desktop"
 			xdg-desktop-menu install --novendor "$HOME/.rlw/roblox.desktop"
 			xdg-desktop-menu forceupdate
-			[[ -x "$HOME/.rlw/rlw.sh" && -f "$HOME/.rlw/roblox.png" && -f "$HOME/.rlw/Roblox.desktop" ]] || {
+			[[ -x "$HOME/.rlw/rlw.sh" && -f "$HOME/.rlw/roblox.png" && -f "$HOME/.rlw/Roblox.desktop" && -d "$HOME/.rlw/.git" ]] || {
 				spawndialog error 'Roblox Linux Wrapper did not install successfully.'
 				exit 1
 			}
@@ -246,7 +246,7 @@ main () {
 	'Uninstall Roblox')
 		spawndialog question 'Are you sure you would like to uninstall?'
 		if [[ "$?" = "0" ]]; then
-			xdg-desktop-menu uninstall "$HOME/.local/share/applications/Roblox.desktop"
+			xdg-desktop-menu uninstall "$HOME/.rlw/roblox.desktop"
 			[[ ! -f "$HOME/.local/share/icons/roblox.png" ]] || {
 				rm -rf "$HOME/.local/share/icons/roblox.png"
 			}
@@ -254,10 +254,8 @@ main () {
 				rm -rf "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"
 			}
 			xdg-desktop-menu forceupdate
-			rwineserver --kill
-			rm -rf "$WINEPREFIX"
 			rm -rf "$HOME/.rlw"
-			if [[ -d "$HOME/.rlw" ]] || [[ -f "$HOME/.rlw/roblox.png" ]] || [[ -d "$WINEPREFIX/drive_c" ]]; then
+			if [[ -d "$HOME/.rlw" ]]; then
 				spawndialog error 'Roblox is still installed. Please try uninstalling again.'
 			else
 				spawndialog info 'Roblox has been uninstalled successfully.'
@@ -269,6 +267,7 @@ main () {
 	esac
 	printf '%b\n' " > end main ()\n---"
 }
+
 # Check that everything is here
 [[ -x "$winebin" && -x "$winebootbin" && -x "$wineserverbin"  ]] || {
 	spawndialog error "Missing dependencies! Please install wine and wine-staging."

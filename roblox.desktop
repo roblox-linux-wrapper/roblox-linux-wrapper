@@ -1,10 +1,10 @@
 [Desktop Entry]
 Comment=Play Roblox
 Name=Roblox Linux Wrapper
-Exec=bash -e "$HOME/roblox-linux-wrapper/rlw.sh"
+Exec=$HOME/.rlw/rlw.sh
 Actions=Support;RFAGroup;ROLWiki;
 GenericName=Building Game
-Icon=roblox.png
+Icon=$HOME/.rlw/roblox.png
 Categories=Game;
 Type=Application
 
