@@ -1,0 +1,18 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Comment=Play Roblox
+Name=Roblox Linux Wrapper
+Exec=/usr/bin/env bash -c "\\$HOME/.rlw/rlw.sh"
+Actions=Support;RFAGroup;
+GenericName=Building Game
+Icon="$HOME/.rlw/roblox.png"
+Categories=Game;
+Type=Application
+
+[Desktop Action Support]
+Name=GitHub Support Ticket
+Exec=xdg-open "https://github.com/alfonsojon/roblox-linux-wrapper/issues/new"
+
+[Desktop Action RFAGroup]
+Name=Roblox for All
+Exec=xdg-open "http://www.roblox.com/Groups/group.aspx?gid=292611"
