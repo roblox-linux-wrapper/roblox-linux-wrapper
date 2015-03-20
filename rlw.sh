@@ -14,17 +14,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-spawndialog () {
-	[[ -x "$(which zenity)" ]] || {
-		printf '%b\n' "Missing dependency! Please install \"zenity\", then try again."
-		exit 1
-	}
-	zenity \
-		--window-icon="$RBXICON" \
-		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$rlwchannel" \
-		--"$1" \
-		--text="$2"
-}
+cd "$HOME"
 
 # Define some variables and the spawndialog function
 export rlwversion=20150319
@@ -47,21 +37,21 @@ export WINEPREFIX="$HOME/.rlw/roblox-wine"
 #	export WINEPREFIX="$HOME/.rlw/roblox-wine-staging"
 #}
 
-# Check that everything is here
-[[ -x "$winebin" && -x "$winebootbin" && -x "$wineserverbin"  ]] || {
-	spawndialog error "Missing dependencies! Please install wine and wine-staging."
-	exit 1
-}
-
-# Check for optional dependencies
-# Note: git is used for automatic updating, and is recommended.
-[[ -x "$(which git)" ]] || {
-	spawndialog warning "git not found. Automatic updates will be disabled.\nSee https://github.com/alfonsojon/roblox-linux-wrapper for more info."
-}
-
 # Some internal functions to make wine more useful to the wrapper.
 # This allows the wrapper to know what went wrong and where, without excessive code.
 # Note: the "r" prefix indicates a function that extends system functionality.
+
+spawndialog () {
+	[[ -x "$(which zenity)" ]] || {
+		printf '%b\n' "Missing dependency! Please install \"zenity\", then try again."
+		exit 1
+	}
+	zenity \
+		--window-icon="$RBXICON" \
+		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$rlwchannel" \
+		--"$1" \
+		--text="$2"
+}
 
 rwine () {
 	if [[ "$1" = "--silent" ]]; then
@@ -194,7 +184,6 @@ wrapper-install () {
 			}
 			ln -s "$HOME/.rlw/Roblox.desktop" "$HOME/.local/share/applications/Roblox.desktop"
 			chmod +x "$HOME/.rlw/rlw.sh"
-			chmod +x "$HOME/.rlw/rlw-stub.sh"
 			chmod +x "$HOME/.local/share/applications/Roblox.desktop"
 			xdg-desktop-menu install --novendor "$HOME/.local/share/applications/Roblox.desktop"
 			xdg-desktop-menu forceupdate
@@ -234,15 +223,7 @@ playerwrapper () {
 			return
 		fi
 	else
-		rwine "$browser" "http://www.roblox.com/Games.aspx"
-	fi
-}
-
-browser-install () {
-	if [[ -f "$WINEPREFIX/drive_c/Program Files/Mozilla Firefox/firefox.exe" ]]; then
-		browser='C:\Program Files\Mozilla Firefox\firefox.exe'
-	else
-		spawndialog error 'No browser installed. Please reinstall.'
+		rwine "$WINEPREFIX/drive_c/Program Files/Mozilla Firefox/firefox.exe" "http://www.roblox.com/Games.aspx"
 	fi
 }
 
@@ -308,6 +289,16 @@ main () {
 		fi;;
 	esac
 }
+# Check that everything is here
+[[ -x "$winebin" && -x "$winebootbin" && -x "$wineserverbin"  ]] || {
+	spawndialog error "Missing dependencies! Please install wine and wine-staging."
+	exit 1
+}
 
+# Note: git is used for automatic updating, and is recommended.
+[[ -x "$(which git)" ]] || {
+	spawndialog error "Missing dependencies! Please install git."
+	exit 1
+}
 # Run dependency check & launch main function
 wrapper-install && roblox-install && browser-install && main
