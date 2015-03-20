@@ -54,6 +54,7 @@ spawndialog () {
 }
 
 rwine () {
+	printf '%b\n' " > begin rwine ()\n---"
 	if [[ "$1" = "--silent" ]]; then
 		$winebin "${@:2}"
 	else
@@ -62,20 +63,26 @@ rwine () {
 			exit $?
 	}
 	fi
+	printf '%b\n' " > end rwine ()\n---"
 }
 rwineboot () {
+	printf '%b\n' " > begin rwineboot ()\n---"
 	$winebootbin; [[ "$?" = "0" ]] || {
 		spawndialog error "wineboot closed unsuccessfully.\nSee terminal for details. (exit code $?)"
 		exit $?
 	}
+	printf '%b\n' " > end rwineboot ()\n---"
 }
 rwineserver () {
+	printf '%b\n' " > begin rwineserver ()\n---"
 	$wineserverbin "$@"; [[ "$?" = "0" ]] || {
 		spawndialog error "wineserver closed unsuccessfully.\nSee terminal for details. (exit code $?)"
 		exit $?
 	}
+	printf '%b\n' " > end rwineserver ()\n---"
 }
 rwget () {
+	printf '%b\n' " > begin rwget ()\n---"
 	[[ -x "$(which wget)" ]] || {
 		spawndialog error "Missing dependency! Please install wget, then try again."
 	}
@@ -92,8 +99,10 @@ rwget () {
 		spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"
 		exit $?
 	}
+	printf '%b\n' " > end rwget ()\n---"
 }
 rwinetricks () {
+	printf '%b\n' " > begin rwinetricks ()\n---"
 	winetricksbin="$(which winetricks)"
 	[[ -x "$(which winetricks)" ]] || {
 		rwget "http://winetricks.org/winetricks" -O "$HOME/.rlw/winetricks"
@@ -101,9 +110,11 @@ rwinetricks () {
 		winetricksbin="$HOME/.rlw/winetricks"
 	}
 	$winetricksbin "$@"
+	printf '%b\n' " > end rwinetricks ()\n---"
 }
 
 roblox-install () {
+	printf '%b\n' " > begin roblox-install ()\n---"
 	if [[ ! -d "$WINEPREFIX/drive_c" ]]; then
 		spawndialog question 'A working Roblox wineprefix was not found.\nWould you like to install one?'
 		if [[ $? = "0" ]]; then
@@ -159,10 +170,11 @@ roblox-install () {
 			exit 1
 		fi
 	fi
-
+	printf '%b\n' " > end roblox-install ()\n---"
 }
 
 wrapper-install () {
+	printf '%b\n' "> begin wrapper-install ()\n---"
 	if [[ ! -d "$HOME/.rlw" ]] || [[ ! -x "$HOME/.local/share/applications/Roblox.desktop" ]]; then
 		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
 		if [[ "$?" = 0 ]]; then
@@ -188,6 +200,7 @@ wrapper-install () {
 }
 
 playerwrapper () {
+	printf '%b\n' " > begin playerwrapper ()\n---"
 	ROBLOXPROXY=$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')
 	rwine --silent regsvr32 /i "$ROBLOXPROXY"
 	if [[ "$1" = legacy ]]; then
@@ -211,9 +224,11 @@ playerwrapper () {
 	else
 		rwine "$WINEPREFIX/drive_c/Program Files/Mozilla Firefox/firefox.exe" "http://www.roblox.com/Games.aspx"
 	fi
+	printf '%b\n' " > end playerwrapper ()\n---"
 }
 
 main () {
+	printf '%b\n' " > begin main ()\n---"
 	cd "$HOME"
 	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
@@ -275,6 +290,7 @@ main () {
 			main
 		fi;;
 	esac
+	printf '%b\n' " > end main ()\n---"
 }
 # Check that everything is here
 [[ -x "$winebin" && -x "$winebootbin" && -x "$wineserverbin"  ]] || {
