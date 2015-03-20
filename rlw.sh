@@ -17,25 +17,25 @@
 cd "$HOME"
 
 # Define some variables
-export rlwversion=20150319
+export rlwversion=20150320
 export branch=testing
 export WINEARCH=win32
 
 printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
 
 # Uncomment these lines to use stock Wine (default)
-export winebin="$(which wine)"
-export winebootbin="$(which wineboot)"
-export wineserverbin="$(which wineserver)"
-export WINEPREFIX="$HOME/.rlw/roblox-wine"
+#export winebin="$(which wine)"
+#export winebootbin="$(which wineboot)"
+#export wineserverbin="$(which wineserver)"
+#export WINEPREFIX="$HOME/.rlw/roblox-wine"
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
-#[[ -x /opt/wine-staging/bin/wine ]] && {
-#	export winebin="/opt/wine-staging/bin/wine"
-#	export winebootbin="/opt/wine-staging/bin/wineboot"
-#	export wineserverbin="/opt/wine-staging/bin/wineserver"
-#	export WINEPREFIX="$HOME/.rlw/roblox-wine-staging"
-#}
+[[ -x /opt/wine-staging/bin/wine ]] && {
+	export winebin="/opt/wine-staging/bin/wine"
+	export winebootbin="/opt/wine-staging/bin/wineboot"
+	export wineserverbin="/opt/wine-staging/bin/wineserver"
+	export WINEPREFIX="$HOME/.rlw/roblox-wine-staging"
+}
 
 # Some internal functions to make wine more useful to the wrapper.
 # This allows the wrapper to know what went wrong and where, without excessive code.
@@ -187,7 +187,7 @@ playerwrapper () {
 	if [[ "$1" = legacy ]]; then
 		export GAMEURL=$(\
 			zenity \
-				--title='Roblox Linux Wrapper v'$rlwversion'-'$rlwchannel \
+				--title='Roblox Linux Wrapper v'$rlwversion'-'$branch \
 				--window-icon="$RBXICON" \
 				--entry \
 				--text='Paste the URL for the game here.' \
@@ -236,6 +236,7 @@ main () {
 		playerwrapper legacy; main;;
 	'Roblox Studio')
 		WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b" rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
+		rwineserver --wait
 		main ;;
 	'Reinstall Roblox')
 		spawndialog question 'Are you sure you would like to reinstall?'
