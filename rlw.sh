@@ -304,4 +304,4 @@ main () {
 	exit 1
 }
 # Run dependency check & launch main function
-wrapper-install && roblox-install && browser-install && main
+wrapper-install && roblox-install && main
