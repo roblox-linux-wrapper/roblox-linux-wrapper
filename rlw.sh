@@ -17,27 +17,27 @@
 cd "$HOME"
 
 # Define some variables
-export rlwversion=20150320
+export rlwversion=20150325
 export branch=master
 export WINEARCH=win32
 
 printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
 
 # Uncomment these lines to use stock Wine (default)
-#export winebin="$(which wine)"
-#export winebootbin="$(which wineboot)"
-#export wineserverbin="$(which wineserver)"
-#export WINEPREFIX="$HOME/.rlw/roblox-wine"
-#WINEPREFIX="$HOME/.wine" "$(which wineboot)"
+export winebin="$(which wine)"
+export winebootbin="$(which wineboot)"
+export wineserverbin="$(which wineserver)"
+export WINEPREFIX="$HOME/.rlw/roblox-wine"
+WINEPREFIX="$HOME/.wine" "$(which wineboot)"
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
-[[ -x /opt/wine-staging/bin/wine ]] && {
-	export winebin="/opt/wine-staging/bin/wine"
-	export winebootbin="/opt/wine-staging/bin/wineboot"
-	export wineserverbin="/opt/wine-staging/bin/wineserver"
-	export WINEPREFIX="$HOME/.rlw/roblox-wine-staging"
-	WINEPREFIX="$HOME/.wine-staging" "/opt/wine-staging/bin/wineboot"
-}
+#[[ -x /opt/wine-staging/bin/wine ]] && {
+#	export winebin="/opt/wine-staging/bin/wine"
+#	export winebootbin="/opt/wine-staging/bin/wineboot"
+#	export wineserverbin="/opt/wine-staging/bin/wineserver"
+#	export WINEPREFIX="$HOME/.rlw/roblox-wine-staging"
+#	WINEPREFIX="$HOME/.wine-staging" "/opt/wine-staging/bin/wineboot"
+#}
 
 # Some internal functions to make wine more useful to the wrapper.
 # This allows the wrapper to know what went wrong and where, without excessive code.
