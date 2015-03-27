@@ -14,35 +14,6 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-cd "$HOME"
-
-# Define some variables
-export rlwversion=20150325
-export branch=master
-export WINEARCH=win32
-
-printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
-
-# Uncomment these lines to use stock Wine (default)
-export winebin="$(which wine)"
-export winebootbin="$(which wineboot)"
-export wineserverbin="$(which wineserver)"
-export WINEPREFIX="$HOME/.rlw/roblox-wine"
-WINEPREFIX="$HOME/.wine" "$(which wineboot)"
-
-# Uncomment these lines to use wine-staging (formerly wine-compholio)
-#[[ -x /opt/wine-staging/bin/wine ]] && {
-#	export winebin="/opt/wine-staging/bin/wine"
-#	export winebootbin="/opt/wine-staging/bin/wineboot"
-#	export wineserverbin="/opt/wine-staging/bin/wineserver"
-#	export WINEPREFIX="$HOME/.rlw/roblox-wine-staging"
-#	WINEPREFIX="$HOME/.wine-staging" "/opt/wine-staging/bin/wineboot"
-#}
-
-# Some internal functions to make wine more useful to the wrapper.
-# This allows the wrapper to know what went wrong and where, without excessive code.
-# Note: the "r" prefix indicates a function that extends system functionality.
-
 spawndialog () {
 	[[ -x "$(which zenity)" ]] || {
 		printf '%b\n' "Missing dependency! Please install \"zenity\", then try again."
@@ -58,9 +29,9 @@ spawndialog () {
 rwine () {
 	printf '%b\n' " > begin rwine ()\n---"
 	if [[ "$1" = "--silent" ]]; then
-		$winebin "${@:2}"
+		$winebin "${@:2}" && rwineserver --wait
 	else
-		$winebin "$@"; [[ "$?" = "0" ]] || {
+		$winebin "$@" && rwineserver --wait; [[ "$?" = "0" ]] || {
 			spawndialog error "wine closed unsuccessfully.\nSee terminal for details. (exit code $?)"
 			exit $?
 	}
@@ -112,6 +83,10 @@ rwinetricks () {
 		winetricksbin="$HOME/.rlw/winetricks"
 	}
 	$winetricksbin "$@"
+	[[ "$?" = "0" ]] || {
+		spawndialog error "winetricks failed. \nSee terminal for details. (exit code $?"
+		exit $?
+	}
 	printf '%b\n' " > end rwinetricks ()\n---"
 }
 
@@ -127,17 +102,10 @@ roblox-install () {
 			}
 			rwineboot
 			rwinetricks ddr=gdi		# Causes graphical problems in mutter/gala (GNOME Shell/Elementary OS)
-			rwineserver --wait
-			cd "$WINEPREFIX"
-			[[ "$?" = 0 ]]  || {
+			[[ "$?" = 0 ]] || {
 				spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"
 				exit $?
 			}
-			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
-			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
-			cd "$WINEPREFIX"
-			ROBLOXPROXY="$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')"
-			rwineserver --wait
 			rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \
 				--window-icon="$RBXICON" \
@@ -147,7 +115,9 @@ roblox-install () {
 				--pulsate \
 				--no-cancel \
 				--auto-close
-			rwineserver --wait
+			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
+			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
+			rwine regsvr32 /i "$(find "$WINEPREFIX" -iname 'RobloxProxy.dll')"
 		else
 			exit 1
 		fi
@@ -184,12 +154,11 @@ wrapper-install () {
 
 playerwrapper () {
 	printf '%b\n' " > begin playerwrapper ()\n---"
-	ROBLOXPROXY=$(find . -iname 'RobloxProxy.dll' | sed "s/.\/drive_c/C:/" | tr '/' '\\')
-	rwine --silent regsvr32 /i "$ROBLOXPROXY"
+	rwine regsvr32 /i "$(find "$WINEPREFIX" -iname 'RobloxProxy.dll')"
 	if [[ "$1" = legacy ]]; then
 		export GAMEURL=$(\
 			zenity \
-				--title='Roblox Linux Wrapper v'$rlwversion'-'$branch \
+				--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$branch" \
 				--window-icon="$RBXICON" \
 				--entry \
 				--text='Paste the URL for the game here.' \
@@ -216,7 +185,7 @@ main () {
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
 	rm -rf "$HOME/.local/share/wineprefixes/roblox*" "$HOME/.local/share/wineprefixes/Roblox*"
 	sel=$(zenity \
-		--title='Roblox Linux Wrapper v'$rlwversion'-'$branch' by alfonsojon' \
+		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"' by alfonsojon' \
 		--window-icon="$RBXICON" \
 		--width=480 \
 		--height=240 \
@@ -238,7 +207,6 @@ main () {
 		playerwrapper legacy; main;;
 	'Roblox Studio')
 		WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b" rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
-		rwineserver --wait
 		main ;;
 	'Reinstall Roblox')
 		spawndialog question 'Are you sure you would like to reinstall?'
@@ -272,6 +240,34 @@ main () {
 	esac
 	printf '%b\n' " > end main ()\n---"
 }
+
+cd "$HOME"
+
+# Define some variables
+export rlwversion=20150326
+export branch=master
+export WINEARCH=win32
+
+printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
+
+# Uncomment these lines to use stock Wine (default)
+export winebin="$(which wine)"
+export winebootbin="$(which wineboot)"
+export wineserverbin="$(which wineserver)"
+export WINEPREFIX="$HOME/.rlw/roblox-wine"
+
+# Uncomment these lines to use wine-staging (formerly wine-compholio)
+#[[ -x /opt/wine-staging/bin/wine ]] && {
+#	export winebin="/opt/wine-staging/bin/wine"
+#	export winebootbin="/opt/wine-staging/bin/wineboot"
+#	export wineserverbin="/opt/wine-staging/bin/wineserver"
+#	export WINEPREFIX="$HOME/.rlw/roblox-wine-staging"
+#	WINEPREFIX="$HOME/.wine-staging" "/opt/wine-staging/bin/wineboot"
+#}
+
+# Some internal functions to make wine more useful to the wrapper.
+# This allows the wrapper to know what went wrong and where, without excessive code.
+# Note: the "r" prefix indicates a function that extends system functionality.
 
 # Check that everything is here
 [[ -x "$winebin" && -x "$winebootbin" && -x "$wineserverbin"  ]] || {
