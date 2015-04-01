@@ -144,7 +144,6 @@ wrapper-install () {
 			cd "$HOME/.rlw"
 			git checkout "$branch"
 			chmod +x "$HOME/.rlw/rlw.sh"
-			chmod +x "$HOME/.rlw/roblox.desktop"
 			xdg-desktop-menu install --novendor "$HOME/.rlw/roblox.desktop"
 			xdg-desktop-menu forceupdate
 			[[ -x "$HOME/.rlw/rlw.sh" && -x "$HOME/.rlw/roblox.desktop" && -f "$HOME/.rlw/roblox.png" && -d "$HOME/.rlw/.git" ]] || {
