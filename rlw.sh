@@ -250,7 +250,7 @@ cd "$HOME"
 
 # Define some variables
 export rlwversion=20150326
-export branch=master
+export branch=`git symbolic-ref --short -q HEAD`
 export WINEARCH=win32
 
 printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
