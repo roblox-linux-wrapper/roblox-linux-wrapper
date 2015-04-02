@@ -20,6 +20,7 @@ spawndialog () {
 		exit 1
 	}
 	zenity \
+		--no-wrap \
 		--window-icon="$RBXICON" \
 		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$branch" \
 		--"$1" \
@@ -244,7 +245,7 @@ main () {
 cd "$HOME"
 
 # Define some variables
-export rlwversion=20150326
+export rlwversion=20150402
 export branch=master
 export WINEARCH=win32
 
@@ -272,6 +273,11 @@ export WINEPREFIX="$HOME/.rlw/roblox-wine"
 # Check that everything is here
 [[ -x "$winebin" && -x "$winebootbin" && -x "$wineserverbin"  ]] || {
 	spawndialog error "Missing dependencies! Please install wine and wine-staging."
+	exit 1
+}
+
+[[ "$(wine --version | sed 's/.*-//')" > "1.7.27" ]] || {
+	spawndialog error "Wine is out of date. Please install version 1.7.28 or greater.\n(expected 1.7.28, got $(wine --version | sed 's/.*-//'))"
 	exit 1
 }
 
