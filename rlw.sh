@@ -256,9 +256,9 @@ export WINEARCH=win32
 printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
 
 # Uncomment these lines to use stock Wine (default)
-export winebin="$(which wine)"
-export winebootbin="$(which wineboot)"
-export wineserverbin="$(which wineserver)"
+export winebin="$(which wine-development)" || "$(which wine)"
+export winebootbin="$(which wineboot-development)" || "$(which wineboot)"
+export wineserverbin="$(which wineserver-development)" || "$(which wineserver)"
 export WINEPREFIX="$HOME/.rlw/roblox-wine"
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
