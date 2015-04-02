@@ -276,7 +276,7 @@ export WINEPREFIX="$HOME/.rlw/roblox-wine"
 
 # Check that everything is here
 [[ -x "$winebin" && -x "$winebootbin" && -x "$wineserverbin"  ]] || {
-	spawndialog error "Missing dependencies! Please install wine and wine-staging."
+	spawndialog error "Missing dependencies! Please install wine and/or wine-staging."
 	exit 1
 }
 
