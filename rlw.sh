@@ -277,7 +277,7 @@ export WINEPREFIX="$HOME/.rlw/roblox-wine"
 }
 
 [[ "$(wine --version | sed 's/.*-//')" > "1.7.27" ]] || {
-	spawndialog error "Wine is out of date. Please install version 1.7.28 or greater.\n(expected 1.7.28, got $(wine --version | sed 's/.*-//'))"
+	spawndialog error "Your copy of Wine is too old. Please install version 1.7.28 or greater.\n(expected 1.7.28, got $(wine --version | sed 's/.*-//'))"
 	exit 1
 }
 
