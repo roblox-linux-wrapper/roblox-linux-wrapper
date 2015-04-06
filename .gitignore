@@ -1,5 +1,6 @@
 roblox-wine/
 roblox-wine-staging/
+winetricks
 
 # Compiled Object files
 *.slo
