@@ -127,24 +127,14 @@ roblox-install () {
 }
 
 wrapper-install () {
+	printf '%b\n' "> begin wrapper-install ()\n---"
 	[[ -d "$HOME/.rlw/.git" ]] && {
 		cd "$HOME/.rlw"
-		git checkout "$branch"
 		git pull
 	}
-	printf '%b\n' "> begin wrapper-install ()\n---"
 	[[ -d "$HOME/.rlw" ]] || [[ -f "$HOME/.rlw/roblox.desktop" ]] || {
 		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
 		if [[ "$?" = 0 ]]; then
-			# If we're in the rlw source repository, install that copy!
-			if [[ -x "$HOME/.rlw/rlw.sh" && -f "$HOME/.rlw/roblox.desktop" && -f "$HOME/.rlw/roblox.png" && -d "$HOME/.rlw/.git" ]]; then
-				cp -R $SOURCE_DIR "$HOME/.rlw"
-			else
-				git clone "https://github.com/alfonsojon/roblox-linux-wrapper.git" "$HOME/.rlw"
-			fi
-			cd "$HOME/.rlw"
-			git checkout "$branch"
-			chmod +x "$HOME/.rlw/rlw.sh"
 			xdg-desktop-menu install --novendor "$HOME/.rlw/roblox.desktop"
 			xdg-desktop-menu forceupdate
 			[[ -x "$HOME/.rlw/rlw.sh" && -f "$HOME/.rlw/roblox.desktop" && -f "$HOME/.rlw/roblox.png" && -d "$HOME/.rlw/.git" ]] || {

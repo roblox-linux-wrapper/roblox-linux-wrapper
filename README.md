@@ -5,7 +5,15 @@ This script is not created nor supported officially by Roblox. It is unofficial 
 
 #### Usage
 
-To install Roblox on your Linux computer, run the command `bash <(wget -q https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O -)` in a terminal. The script will automatically generate a wine prefix with Roblox installed, along with the Microsoft Windows build of Mozilla Firefox for launching games.
+To install Roblox on your Linux computer, run the commands:
+
+```
+git clone https://github.com/alfonsojon/roblox-linux-wrapper ~/.rlw
+cd ~/.rlw
+./rlw.sh
+```
+
+in a terminal. The script will automatically generate a wine prefix with Roblox installed, along with the Microsoft Windows build of Mozilla Firefox for launching games.
 
 #### Questions and Answers
 
@@ -16,7 +24,7 @@ To install Roblox on your Linux computer, run the command `bash <(wget -q https:
   * A: Download it again and retry. If the same thing occurs again, [open a new issue here][1]. If you report a bug, please be as informative as possible.
 
 * Q: Roblox isn't behaving like it should.
-  * A: Select the "Reinstall Roblox" option and press "Ok". If you contuinue having problems, [file a bug report here][1].
+  * A: Select the "Reinstall Roblox" option and press "Ok". If you continue having problems, [file a bug report here][1].
 
 * Q: What is the "Play Roblox (Legacy Mode)" option?
   * A: This is the old method used to launch games. Paste the game link in and click "Play" to launch the game.
