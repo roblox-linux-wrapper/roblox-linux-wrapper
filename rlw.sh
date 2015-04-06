@@ -137,7 +137,7 @@ wrapper-install () {
 		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
 		if [[ "$?" = 0 ]]; then
 			# If we're in the rlw source repository, install that copy!
-			if [[ -x "$SOURCE_DIR/rlw.sh" ]]; then
+			if [[ -x "$HOME/.rlw/rlw.sh" && -f "$HOME/.rlw/roblox.desktop" && -f "$HOME/.rlw/roblox.png" && -d "$HOME/.rlw/.git" ]]; then
 				cp -R $SOURCE_DIR "$HOME/.rlw"
 			else
 				git clone "https://github.com/alfonsojon/roblox-linux-wrapper.git" "$HOME/.rlw"
@@ -147,7 +147,7 @@ wrapper-install () {
 			chmod +x "$HOME/.rlw/rlw.sh"
 			xdg-desktop-menu install --novendor "$HOME/.rlw/roblox.desktop"
 			xdg-desktop-menu forceupdate
-			[[ -x "$HOME/.rlw/rlw.sh" && -x "$HOME/.rlw/roblox.desktop" && -f "$HOME/.rlw/roblox.png" && -d "$HOME/.rlw/.git" ]] || {
+			[[ -x "$HOME/.rlw/rlw.sh" && -f "$HOME/.rlw/roblox.desktop" && -f "$HOME/.rlw/roblox.png" && -d "$HOME/.rlw/.git" ]] || {
 				spawndialog error 'Roblox Linux Wrapper did not install successfully.'
 				exit 1
 			}
@@ -250,7 +250,7 @@ SOURCE_DIR=$(pwd)
 cd "$HOME"
 
 # Define some variables
-export rlwversion=20150402
+export rlwversion=20150405
 export branch=$(git symbolic-ref --short -q HEAD)
 export WINEARCH=win32
 
