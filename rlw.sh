@@ -107,8 +107,8 @@ roblox-install () {
 				spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"
 				exit $?
 			}
-			wget -r --no-parent -Aexe http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/latest-esr/win32/en-US/ -nd -P /tmp/Firefox-Setup/
-			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup/*.exe /SD | zenity \
+			rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
+			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \
 				--window-icon="$RBXICON" \
 				--title='Installing Mozilla Firefox' \
 				--text='Installing Mozilla Firefox Browser ...' \
@@ -133,18 +133,14 @@ wrapper-install () {
 		git pull
 	}
 	printf '%b\n' "> begin wrapper-install ()\n---"
-	[[ -d "$HOME/.rlw" ]] || [[ -f "$HOME/.rlw/roblox.desktop" ]] || {
+	[[ -d "$HOME/.rlw" ]] || [[ -x "$HOME/.rlw/roblox.desktop" ]] || {
 		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
 		if [[ "$?" = 0 ]]; then
-			# If we're in the rlw source repository, install that copy!
-			if [[ -x "$SOURCE_DIR/rlw.sh" ]]; then
-				cp -R $SOURCE_DIR "$HOME/.rlw"
-			else
-				git clone "https://github.com/alfonsojon/roblox-linux-wrapper.git" "$HOME/.rlw"
-			fi
+			git clone "https://github.com/alfonsojon/roblox-linux-wrapper.git" "$HOME/.rlw"
 			cd "$HOME/.rlw"
 			git checkout "$branch"
 			chmod +x "$HOME/.rlw/rlw.sh"
+			chmod +x "$HOME/.rlw/roblox.desktop"
 			xdg-desktop-menu install --novendor "$HOME/.rlw/roblox.desktop"
 			xdg-desktop-menu forceupdate
 			[[ -x "$HOME/.rlw/rlw.sh" && -x "$HOME/.rlw/roblox.desktop" && -f "$HOME/.rlw/roblox.png" && -d "$HOME/.rlw/.git" ]] || {
@@ -246,20 +242,19 @@ main () {
 	printf '%b\n' " > end main ()\n---"
 }
 
-SOURCE_DIR=$(pwd)
 cd "$HOME"
 
 # Define some variables
 export rlwversion=20150402
-export branch=$(git symbolic-ref --short -q HEAD)
+export branch=master
 export WINEARCH=win32
 
 printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
 
 # Uncomment these lines to use stock Wine (default)
-export winebin="$(which wine-development)" || "$(which wine)"
-export winebootbin="$(which wineboot-development)" || "$(which wineboot)"
-export wineserverbin="$(which wineserver-development)" || "$(which wineserver)"
+export winebin="$(which wine)"
+export winebootbin="$(which wineboot)"
+export wineserverbin="$(which wineserver)"
 export WINEPREFIX="$HOME/.rlw/roblox-wine"
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
@@ -277,7 +272,7 @@ export WINEPREFIX="$HOME/.rlw/roblox-wine"
 
 # Check that everything is here
 [[ -x "$winebin" && -x "$winebootbin" && -x "$wineserverbin"  ]] || {
-	spawndialog error "Missing dependencies! Please install wine and/or wine-staging."
+	spawndialog error "Missing dependencies! Please install wine and wine-staging."
 	exit 1
 }
 
