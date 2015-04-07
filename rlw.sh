@@ -133,12 +133,30 @@ wrapper-install () {
 		echo Updating Robox Linux Wrapper...
 		git pull
 	}
-	[[ -f "$HOME/.local/share/roblox.desktop" ]] || {
+	[[ -f "$HOME/.local/share/applications/roblox.desktop" ]] || {
 		spawndialog question "Roblox Linux Wrapper is not installed. This is optional, and allows you to launch the wrapper easily via your DE\'s application menu.\nWould you like to install it?"
 		if [[ "$?" = 0 ]]; then
+			printf '[Desktop Entry]
+Comment=Play Roblox
+Name=Roblox Linux Wrapper
+Exec=%s/rlw.sh
+Actions=Support;RFAGroup;
+GenericName=Building Game
+Icon=%s/roblox.png
+Categories=Game;
+Type=Application
+
+[Desktop Action Support]
+Name=GitHub Support Ticket
+Exec=xdg-open "https://github.com/alfonsojon/roblox-linux-wrapper/issues/new"
+
+[Desktop Action RFAGroup]
+Name=Roblox for All
+Exec=xdg-open "http://www.roblox.com/Groups/group.aspx?gid=292611"
+' "$WRAPPER_DIR" "$WRAPPER_DIR" > roblox.desktop
 			xdg-desktop-menu install --novendor "roblox.desktop"
 			xdg-desktop-menu forceupdate
-			[[ -f "$HOME/.local/share/roblox.desktop" ]] || {
+			[[ -f "$HOME/.local/share/applications/roblox.desktop" ]] || {
 				spawndialog error 'Roblox Linux Wrapper did not install successfully.'
 				exit 1
 			}
@@ -232,10 +250,12 @@ main () {
 }
 
 # Define some variables
+source "$HOME/.bash_profile" # Fetch custom $PATH variable, if any
+WRAPPER_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+cd "$WRAPPER_DIR"
 export rlwversion=20150405
 export branch=$(git symbolic-ref --short -q HEAD)
 export WINEARCH=win32
-WRAPPER_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
 
@@ -254,9 +274,14 @@ export WINEPREFIX="$WRAPPER_DIR/roblox-wine"
 #	WINEPREFIX="$HOME/.wine-staging" "/opt/wine-staging/bin/wineboot"
 #}
 
+# Don't allow running as root
+if [ "$(id -u)" == "0" ]; then
+   spawndialog error "RLW should not be run as root."
+   exit 1
+fi
 
 # Check that everything is here
-[[ -x "$winebin" && -x "$winebootbin" && -x "$wineserverbin"  ]] || {
+[[ -x "$winebin" && -x "$winebootbin" && -x "$wineserverbin" ]] || {
 	spawndialog error "Missing dependencies! Please install wine and/or wine-staging."
 	exit 1
 }
