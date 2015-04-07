@@ -107,7 +107,7 @@ roblox-install () {
 				spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"
 				exit $?
 			}
-			wget -r --no-parent -Aexe http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/latest-esr/win32/en-US/ -nd -P /tmp/Firefox-Setup/
+			wget -N -r --no-parent -Aexe http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/latest-esr/win32/en-US/ -nd -P /tmp/Firefox-Setup/
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup/*.exe /SD | zenity \
 				--window-icon="$RBXICON" \
 				--title='Installing Mozilla Firefox' \
@@ -128,13 +128,13 @@ roblox-install () {
 
 wrapper-install () {
 	printf '%b\n' "> begin wrapper-install ()\n---"
-	cd $WRAPPER_DIR
+	cd "$WRAPPER_DIR"
 	[[ -d ".git" ]] && {
 		echo Updating Robox Linux Wrapper...
 		git pull
 	}
 	[[ -f "$HOME/.local/share/roblox.desktop" ]] || {
-		spawndialog question 'Roblox Linux Wrapper is not installed. This is optional, and allows you to launch the wrapper easily via your DE\'s application menu.\nWould you like to install it?'
+		spawndialog question "Roblox Linux Wrapper is not installed. This is optional, and allows you to launch the wrapper easily via your DE\'s application menu.\nWould you like to install it?"
 		if [[ "$?" = 0 ]]; then
 			xdg-desktop-menu install --novendor "roblox.desktop"
 			xdg-desktop-menu forceupdate
@@ -235,7 +235,7 @@ main () {
 export rlwversion=20150405
 export branch=$(git symbolic-ref --short -q HEAD)
 export WINEARCH=win32
-WRAPPER_DIR=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+WRAPPER_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
 
