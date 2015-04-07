@@ -8,8 +8,8 @@ This script is not created nor supported officially by Roblox. It is unofficial 
 To install Roblox on your Linux computer, run the commands:
 
 ```
-git clone https://github.com/alfonsojon/roblox-linux-wrapper ~/.rlw
-cd ~/.rlw
+git clone https://github.com/alfonsojon/roblox-linux-wrapper
+cd roblox-linux-wrapper
 ./rlw.sh
 ```
 
