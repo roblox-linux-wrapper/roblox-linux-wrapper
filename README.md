@@ -10,6 +10,7 @@ To install Roblox on your Linux computer, run the commands:
 ```
 git clone https://github.com/alfonsojon/roblox-linux-wrapper
 cd roblox-linux-wrapper
+git checkout testing
 ./rlw.sh
 ```
 
