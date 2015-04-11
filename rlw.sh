@@ -126,33 +126,6 @@ roblox-install () {
 	printf '%b\n' " > end roblox-install ()\n---"
 }
 
-wrapper-install () {
-	[[ -d "$HOME/.rlw/.git" ]] && {
-		cd "$HOME/.rlw"
-		git checkout "$branch"
-		git pull
-	}
-	printf '%b\n' "> begin wrapper-install ()\n---"
-	[[ -d "$HOME/.rlw" ]] || [[ -x "$HOME/.rlw/roblox.desktop" ]] || {
-		spawndialog question 'Roblox Linux Wrapper is not installed. This is necessary to launch games properly.\nWould you like to install it?'
-		if [[ "$?" = 0 ]]; then
-			git clone "https://github.com/alfonsojon/roblox-linux-wrapper.git" "$HOME/.rlw"
-			cd "$HOME/.rlw"
-			git checkout "$branch"
-			chmod +x "$HOME/.rlw/rlw.sh"
-			chmod +x "$HOME/.rlw/roblox.desktop"
-			xdg-desktop-menu install --novendor "$HOME/.rlw/roblox.desktop"
-			xdg-desktop-menu forceupdate
-			[[ -x "$HOME/.rlw/rlw.sh" && -x "$HOME/.rlw/roblox.desktop" && -f "$HOME/.rlw/roblox.png" && -d "$HOME/.rlw/.git" ]] || {
-				spawndialog error 'Roblox Linux Wrapper did not install successfully.'
-				exit 1
-			}
-		else
-			exit 1
-		fi
-	}
-}
-
 playerwrapper () {
 	printf '%b\n' " > begin playerwrapper ()\n---"
 	rwine regsvr32 /i "$(find "$WINEPREFIX" -iname 'RobloxProxy.dll')"
@@ -283,8 +256,7 @@ export WINEPREFIX="$HOME/.rlw/roblox-wine"
 
 # Note: git is used for automatic updating, and is recommended.
 [[ -x "$(which git)" ]] || {
-	spawndialog error "Missing dependencies! Please install git."
-	exit 1
+	spawndialog error "git is not installed, or was not found. Please install git\nto enable automatic updates."
 }
 # Run dependency check & launch main function
-wrapper-install && roblox-install && main
+roblox-install && main
