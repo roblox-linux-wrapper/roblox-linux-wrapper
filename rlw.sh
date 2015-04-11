@@ -80,7 +80,7 @@ rwinetricks () {
 	winetricksbin="$(which winetricks)"
 	[[ -x "$(which winetricks)" ]] || {
 		rwget "http://winetricks.org/winetricks" -O "/tmp/winetricks"
-		chmod +x "$HOME/.rlw/winetricks"
+		chmod +x "/tmp/winetricks"
 		winetricksbin="/tmp/winetricks"
 	}
 	$winetricksbin "$@"
