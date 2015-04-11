@@ -192,7 +192,7 @@ main () {
 	'Uninstall Roblox')
 		spawndialog question 'Are you sure you would like to uninstall?'
 		if [[ "$?" = "0" ]]; then
-			xdg-desktop-menu uninstall "$HOME/.rlw/roblox.desktop"
+			xdg-desktop-menu uninstall "roblox.desktop"
 			[[ ! -f "$HOME/.local/share/icons/roblox.png" ]] || {
 				rm -rf "$HOME/.local/share/icons/roblox.png"
 			}
@@ -201,11 +201,7 @@ main () {
 			}
 			xdg-desktop-menu forceupdate
 			rm -rf "$HOME/.rlw"
-			if [[ -d "$HOME/.rlw" ]]; then
-				spawndialog error 'Roblox is still installed. Please try uninstalling again.'
-			else
-				spawndialog info 'Roblox has been uninstalled successfully.'
-			fi
+			spawndialog info 'Roblox has been uninstalled successfully.'
 			exit
 		else
 			main
@@ -243,7 +239,7 @@ export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
 # Note: the "r" prefix indicates a function that extends system functionality.
 
 # Check that everything is here
-[[ -x "$winebin" && -x "$winebootbin" && -x "$wineserverbin"  ]] || {
+[[ -x "$winebin" && -x "$winebootbin" && -x "$wineserverbin" ]] || {
 	spawndialog error "Missing dependencies! Please install wine and wine-staging."
 	exit 1
 }
