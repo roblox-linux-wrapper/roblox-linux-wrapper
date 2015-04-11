@@ -16,7 +16,7 @@
 
 # Some internal functions to make wine more useful to the wrapper.
 # This allows the wrapper to know what went wrong and where, without excessive code.
-# Note: functons prefixed with "r" indicate wrappeea that extends system functionality.
+# Note: functions prefixed with "r" indicate wrappers that extends system functionality.
 spawndialog () {
 	[[ -x "$(which zenity)" ]] || {
 		printf '%b\n' "Missing dependency! Please install \"zenity\", then try again."
