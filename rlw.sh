@@ -16,7 +16,7 @@
 
 # Some internal functions to make wine more useful to the wrapper.
 # This allows the wrapper to know what went wrong and where, without excessive code.
-# Note: functions prefixed with "r" indicate wrappers that extends system functionality.
+# Note: functions prefixed with "r" indicate wrappers that extend system functionality.
 spawndialog () {
 	[[ -x "$(which zenity)" ]] || {
 		printf '%b\n' "Missing dependency! Please install \"zenity\", then try again."
@@ -238,7 +238,7 @@ export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
 
 # Don't allow running as root
 if [ "$(id -u)" == "0" ]; then
-   spawndialog error "RLW should not be run as root."
+   spawndialog error "RLW should not be ran as root."
    exit 1
 fi
 
