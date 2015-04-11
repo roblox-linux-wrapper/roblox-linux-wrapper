@@ -79,9 +79,9 @@ rwinetricks () {
 	printf '%b\n' " > begin rwinetricks ()\n---"
 	winetricksbin="$(which winetricks)"
 	[[ -x "$(which winetricks)" ]] || {
-		rwget "http://winetricks.org/winetricks" -O "$HOME/.rlw/winetricks"
+		rwget "http://winetricks.org/winetricks" -O "/tmp/winetricks"
 		chmod +x "$HOME/.rlw/winetricks"
-		winetricksbin="$HOME/.rlw/winetricks"
+		winetricksbin="/tmp/winetricks"
 	}
 	$winetricksbin "$@"
 	[[ "$?" = "0" ]] || {
@@ -98,8 +98,8 @@ roblox-install () {
 		if [[ $? = "0" ]]; then
 			rm -rf "$WINEPREFIX"
 			# Make sure our directories really exist
-			[[ -d "$HOME/.rlw" ]] || {
-				mkdir -p "$HOME/.rlw"
+			[[ -d "$HOME/.local/share/wineprefixes" ]] || {
+				mkdir -p "$HOME/.local/share/wineprefixes"
 			}
 			rwineboot
 			rwinetricks ddr=gdi		# Causes graphical problems in mutter/gala (GNOME Shell/Elementary OS)
@@ -157,7 +157,6 @@ main () {
 	cd "$HOME"
 	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
-	rm -rf "$HOME/.local/share/wineprefixes/roblox*" "$HOME/.local/share/wineprefixes/Roblox*"
 	sel=$(zenity \
 		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"' by alfonsojon' \
 		--window-icon="$RBXICON" \
@@ -218,7 +217,7 @@ main () {
 cd "$HOME"
 
 # Define some variables
-export rlwversion=20150402
+export rlwversion=20150411
 export branch=master
 export WINEARCH=win32
 
@@ -228,14 +227,14 @@ printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
 export winebin="$(which wine)"
 export winebootbin="$(which wineboot)"
 export wineserverbin="$(which wineserver)"
-export WINEPREFIX="$HOME/.rlw/roblox-wine"
+export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
 #[[ -x /opt/wine-staging/bin/wine ]] && {
 #	export winebin="/opt/wine-staging/bin/wine"
 #	export winebootbin="/opt/wine-staging/bin/wineboot"
 #	export wineserverbin="/opt/wine-staging/bin/wineserver"
-#	export WINEPREFIX="$HOME/.rlw/roblox-wine-staging"
+#	export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine-staging"
 #	WINEPREFIX="$HOME/.wine-staging" "/opt/wine-staging/bin/wineboot"
 #}
 
@@ -259,4 +258,5 @@ export WINEPREFIX="$HOME/.rlw/roblox-wine"
 	spawndialog error "git is not installed, or was not found. Please install git\nto enable automatic updates."
 }
 # Run dependency check & launch main function
+git pull
 roblox-install && main
