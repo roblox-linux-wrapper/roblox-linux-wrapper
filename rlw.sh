@@ -83,9 +83,9 @@ rwinetricks () {
 	winetricksbin="$(which winetricks)"
 	[[ -x "$(which winetricks)" ]] || {
 		# Winetricks was not found, so we'll download our own copy.
-		rwget "http://winetricks.org/winetricks" -O "$WRAPPER_DIR/winetricks"
-		chmod +x "$WRAPPER_DIR/winetricks"
-		winetricksbin="$WRAPPER_DIR/winetricks"
+		rwget "http://winetricks.org/winetricks" -O "/tmp/winetricks"
+		chmod +x "/tmp/winetricks"
+		winetricksbin="/tmp/winetricks"
 	}
 	$winetricksbin "$@"
 	[[ "$?" = "0" ]] || {
@@ -101,6 +101,10 @@ roblox-install () {
 		spawndialog question 'A working Roblox wineprefix was not found.\nWould you like to install one?'
 		if [[ $? = "0" ]]; then
 			rm -rf "$WINEPREFIX"
+			# Make sure our directories really exist
+			[[ -d "$HOME/.local/share/wineprefixes" ]] || {
+				mkdir -p "$HOME/.local/share/wineprefixes"
+			}
 			rwineboot
 			rwinetricks ddr=gdi		# Causes graphical problems in mutter/gala (GNOME Shell/Elementary OS)
 			[[ "$?" = 0 ]] || {
@@ -124,44 +128,6 @@ roblox-install () {
 		fi
 	fi
 	printf '%b\n' " > end roblox-install ()\n---"
-}
-
-wrapper-install () {
-	printf '%b\n' "> begin wrapper-install ()\n---"
-	cd "$WRAPPER_DIR"
-	[[ -d ".git" ]] && {
-		echo Updating Robox Linux Wrapper...
-		git pull
-	}
-	[[ -f "$HOME/.local/share/applications/roblox.desktop" ]] || {
-		spawndialog question "Roblox Linux Wrapper is not installed. This is optional, and allows you to launch the wrapper easily via your DE\'s application menu.\nWould you like to install it?"
-		if [[ "$?" = 0 ]]; then
-			printf '[Desktop Entry]
-Comment=Play Roblox
-Name=Roblox Linux Wrapper
-Exec=%s/rlw.sh
-Actions=Support;RFAGroup;
-GenericName=Building Game
-Icon=%s/roblox.png
-Categories=Game;
-Type=Application
-
-[Desktop Action Support]
-Name=GitHub Support Ticket
-Exec=xdg-open "https://github.com/alfonsojon/roblox-linux-wrapper/issues/new"
-
-[Desktop Action RFAGroup]
-Name=Roblox for All
-Exec=xdg-open "http://www.roblox.com/Groups/group.aspx?gid=292611"
-' "$WRAPPER_DIR" "$WRAPPER_DIR" > roblox.desktop
-			xdg-desktop-menu install --novendor "roblox.desktop"
-			xdg-desktop-menu forceupdate
-			[[ -f "$HOME/.local/share/applications/roblox.desktop" ]] || {
-				spawndialog error 'Roblox Linux Wrapper did not install successfully.'
-				exit 1
-			}
-		fi
-	}
 }
 
 playerwrapper () {
@@ -194,7 +160,6 @@ main () {
 	printf '%b\n' " > begin main ()\n---"
 	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
-	rm -rf "$HOME/.local/share/wineprefixes/roblox*" "$HOME/.local/share/wineprefixes/Roblox*"
 	sel=$(zenity \
 		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"' by alfonsojon' \
 		--window-icon="$RBXICON" \
@@ -230,7 +195,7 @@ main () {
 	'Uninstall Roblox')
 		spawndialog question 'Are you sure you would like to uninstall?'
 		if [[ "$?" = "0" ]]; then
-			xdg-desktop-menu uninstall "$WRAPPER_DIR/roblox.desktop"
+			xdg-desktop-menu uninstall "roblox.desktop"
 			[[ ! -f "$HOME/.local/share/icons/roblox.png" ]] || {
 				rm -rf "$HOME/.local/share/icons/roblox.png"
 			}
@@ -239,7 +204,7 @@ main () {
 			}
 			xdg-desktop-menu forceupdate
 			rm -rf "$WINEPREFIX"
-			rm -f "$WRAPPER_DIR/winetricks"
+			rm -rf "$HOME/.rlw"
 			spawndialog info 'Roblox has been uninstalled successfully.'
 			exit
 		else
@@ -250,10 +215,7 @@ main () {
 }
 
 # Define some variables
-source "$HOME/.bash_profile" # Fetch custom $PATH variable, if any
-WRAPPER_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-cd "$WRAPPER_DIR"
-export rlwversion=20150405
+export rlwversion=20150411
 export branch=$(git symbolic-ref --short -q HEAD)
 export WINEARCH=win32
 
@@ -263,14 +225,14 @@ printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
 export winebin="$(which wine)"
 export winebootbin="$(which wineboot)"
 export wineserverbin="$(which wineserver)"
-export WINEPREFIX="$WRAPPER_DIR/roblox-wine"
+export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
 
 # Uncomment these lines to use wine-staging (formerly wine-compholio)
 #[[ -x /opt/wine-staging/bin/wine ]] && {
 #	export winebin="/opt/wine-staging/bin/wine"
 #	export winebootbin="/opt/wine-staging/bin/wineboot"
 #	export wineserverbin="/opt/wine-staging/bin/wineserver"
-#	export WINEPREFIX="$WRAPPER_DIR/roblox-wine-staging"
+#	export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine-staging"
 #	WINEPREFIX="$HOME/.wine-staging" "/opt/wine-staging/bin/wineboot"
 #}
 
@@ -293,8 +255,8 @@ fi
 
 # Note: git is used for automatic updating, and is required.
 [[ -x "$(which git)" ]] || {
-	spawndialog error "Missing dependencies! Please install git."
-	exit 1
+	spawndialog error "git is not installed, or was not found. Please install git\nto enable automatic updates."
 }
 # Run dependency check & launch main function
-wrapper-install && roblox-install && main
+git pull
+roblox-install && main
