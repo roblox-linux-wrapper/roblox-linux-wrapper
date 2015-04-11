@@ -253,7 +253,7 @@ fi
 	exit 1
 }
 
-# Note: git is used for automatic updating, and is required.
+# Note: git is used for automatic updating, and is recommended.
 [[ -x "$(which git)" ]] || {
 	spawndialog error "git is not installed, or was not found. Please install git\nto enable automatic updates."
 }
