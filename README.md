@@ -15,6 +15,8 @@ cd roblox-linux-wrapper
 xdg-desktop-menu install --novendor --mode user roblox.desktop
 ```
 Alternatively, you can skip the `xdg-desktop-menu install` command and run the script manually every time.
+If you are saavy enough, you can install to a custom directory of your choice.
+
 
 ### Uninstallation
 To remove the wrapper, it's as simple as two commands:
@@ -22,7 +24,8 @@ To remove the wrapper, it's as simple as two commands:
 xdg-desktop-menu uninstall --mode user roblox.desktop
 rm -rf roblox-linux-wrapper ~/.local/share/wineprefixes/roblox*
 ```
-Note, you should have closed everything related to the Roblox Linux Wrapper first.
+* Close everything related to the Roblox Linux Wrapper before running this
+* If you installed to a custom folder, delete that folder instead of the `roblox-linux-wrapper` folder.
 
 ## Questions and Answers
 
