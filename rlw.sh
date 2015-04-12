@@ -159,7 +159,7 @@ playerwrapper () {
 main () {
 	printf '%b\n' " > begin main ()\n---"
 	[[ -x "gen-desktop.sh" ]] && {
-		gen-desktop.sh
+		./gen-desktop.sh
 		spawndialog question "Would you like to install the Roblox menu item on your system?"
 		[[ "$?" = "0" ]] && {
 			xdg-desktop-menu install --novendor --mode user "$WRAPPER_DIR/roblox.desktop"
