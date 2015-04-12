@@ -27,7 +27,7 @@ spawndialog () {
 		--window-icon="$RBXICON" \
 		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$branch" \
 		--"$1" \
-		--text="$2"
+		--text="$2" 2&> /dev/null
 }
 
 rwine () {
@@ -71,7 +71,7 @@ rwget () {
 			--auto-close \
 			--no-cancel \
 			--width=450 \
-			--height=120
+			--height=120 2&>/dev/null
 	[[ "$?" = "0" ]] || {
 		spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"
 		exit $?
@@ -119,7 +119,7 @@ roblox-install () {
 				--progress \
 				--pulsate \
 				--no-cancel \
-				--auto-close
+				--auto-close 2&>/dev/null
 			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
 			WINEDLLOVERRIDES="winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
 			rwine regsvr32 /i "$(find "$WINEPREFIX" -iname 'RobloxProxy.dll')"
@@ -142,7 +142,7 @@ playerwrapper () {
 				--text='Paste the URL for the game here.' \
 				--ok-label='Play' \
 				--width=450 \
-				--height=122)
+				--height=122 2&>/dev/null)
 			GAMEID=$(printf '%s' "$GAMEURL" | cut -d "=" -f 2)
 		if [[ -n "$GAMEID" ]]; then
 			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
@@ -186,7 +186,7 @@ main () {
 		TRUE 'Play Roblox' \
 		FALSE 'Play Roblox (Legacy Mode)' \
 		FALSE 'Roblox Studio' \
-		FALSE 'Reinstall Roblox' )
+		FALSE 'Reinstall Roblox' 2>/dev/null)
 	case $sel in
 	'Play Roblox')
 		playerwrapper; main;;
