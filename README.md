@@ -5,7 +5,13 @@ This script is not created nor supported officially by Roblox. It is unofficial 
 
 #### Usage
 
-To install Roblox on your Linux computer, run the command `bash <(wget -q https://raw.githubusercontent.com/alfonsojon/roblox-linux-wrapper/master/rlw.sh -O -)` in a terminal. The script will automatically generate a wine prefix with Roblox installed, along with the Microsoft Windows build of Mozilla Firefox for launching games.
+To install Roblox on your Linux computer, run the following commands in a terminal
+```
+git clone https://github.com/alfonsojon/roblox-linux-wrapper.git
+cd roblox-linux-wrapper
+xdg-desktop-menu install --novendor roblox.desktop
+```
+Alternatively, you can skip the `xdg-menu install` command and run the script manually every time.
 
 #### Questions and Answers
 
