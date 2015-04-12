@@ -3,6 +3,8 @@
 # This script generates a .desktop file based on the current path of the wrapper
 WRAPPER_DIR=$(pwd)
 
+printf '%b\n' 'Generating desktop file...\n'
+
 printf '[Desktop Entry]
 Comment=Play Roblox
 Name=Roblox Linux Wrapper
@@ -22,4 +24,4 @@ Name=Roblox for All
 Exec=xdg-open "http://www.roblox.com/Groups/group.aspx?gid=292611"
 ' "$WRAPPER_DIR" "$WRAPPER_DIR" | tee roblox.desktop
 
-printf '%b\n' 'Finished. You can now install this desktop file via the command: xdg-desktop-menu install --novendor --mode user roblox.desktop'
+printf '\n%b\n' 'Finished generating desktop file. You can now install this desktop file via the command: xdg-desktop-menu install --novendor --mode user roblox.desktop'
