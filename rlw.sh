@@ -171,7 +171,7 @@ main () {
 		TRUE 'Play Roblox' \
 		FALSE 'Play Roblox (Legacy Mode)' \
 		FALSE 'Roblox Studio' \
-		FALSE 'Reinstall Roblox' \
+		FALSE 'Reinstall Roblox' )
 	case $sel in
 	'Play Roblox')
 		playerwrapper; main;;
