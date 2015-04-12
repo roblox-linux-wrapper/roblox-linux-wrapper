@@ -158,6 +158,13 @@ playerwrapper () {
 
 main () {
 	printf '%b\n' " > begin main ()\n---"
+	[[ -x "gen-desktop.sh" ]] && {
+		gen-desktop.sh
+		spawndialog question "Would you like to install the Roblox menu item on your system?"
+		[[ "$?" = "0" ]] && {
+			xdg-desktop-menu install --novendor --mode user roblox.desktop
+		}
+	}
 	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
 	sel=$(zenity \
