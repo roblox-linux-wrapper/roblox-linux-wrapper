@@ -5,6 +5,8 @@ This script is not created nor supported officially by Roblox. It is unofficial 
 
 #### Usage
 
+##### Installation
+
 To install Roblox on your Linux computer, run the following commands in a terminal
 ```
 git clone https://github.com/alfonsojon/roblox-linux-wrapper.git
@@ -12,6 +14,14 @@ cd roblox-linux-wrapper
 xdg-desktop-menu install --novendor --mode user roblox.desktop
 ```
 Alternatively, you can skip the `xdg-menu install` command and run the script manually every time.
+
+##### Uninstallation
+To remove the wrapper, it's as simple as two commands:
+```
+xdg-desktop-menu uninstall --mode user roblox.desktop
+rm -rf ./roblox-linux-wrapper ~/.local/share/wineprefixes/roblox*
+```
+Note, you should have closed everything related to the Roblox Linux Wrapper first.
 
 #### Questions and Answers
 
