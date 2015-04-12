@@ -7,13 +7,14 @@ This script is not created nor supported officially by Roblox. It is unofficial 
 
 ### Installation
 
-To install Roblox on your Linux computer, run the following commands in a terminal
+To install Roblox on your Linux computer, run the following commands in a terminal:
 ```
 git clone https://github.com/alfonsojon/roblox-linux-wrapper.git
 cd roblox-linux-wrapper
+./gen-desktop.sh
 xdg-desktop-menu install --novendor --mode user roblox.desktop
 ```
-Alternatively, you can skip the `xdg-menu install` command and run the script manually every time.
+Alternatively, you can skip the `xdg-desktop-menu install` command and run the script manually every time.
 
 ### Uninstallation
 To remove the wrapper, it's as simple as two commands:
@@ -32,7 +33,7 @@ Note, you should have closed everything related to the Roblox Linux Wrapper firs
   * A: Download it again and retry. If the same thing occurs again, [open a new issue here][1]. If you report a bug, please be as informative as possible.
 
 * Q: Roblox isn't behaving like it should.
-  * A: Select the "Reinstall Roblox" option and press "Ok". If you contuinue having problems, [file a bug report here][1].
+  * A: Select the "Reinstall Roblox" option and press "Ok". If you continue having problems, [file a bug report here][1].
 
 * Q: What is the "Play Roblox (Legacy Mode)" option?
   * A: This is the old method used to launch games. Paste the game link in and click "Play" to launch the game.

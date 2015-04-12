@@ -14,6 +14,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Some internal functions to make wine more useful to the wrapper.
+# This allows the wrapper to know what went wrong and where, without excessive code.
+# Note: functions prefixed with "r" indicate wrappers that extend system functionality.
 spawndialog () {
 	[[ -x "$(which zenity)" ]] || {
 		printf '%b\n' "Missing dependency! Please install \"zenity\", then try again."
@@ -79,6 +82,7 @@ rwinetricks () {
 	printf '%b\n' " > begin rwinetricks ()\n---"
 	winetricksbin="$(which winetricks)"
 	[[ -x "$(which winetricks)" ]] || {
+		# Winetricks was not found, so we'll download our own copy.
 		rwget "http://winetricks.org/winetricks" -O "/tmp/winetricks"
 		chmod +x "/tmp/winetricks"
 		winetricksbin="/tmp/winetricks"
@@ -107,8 +111,8 @@ roblox-install () {
 				spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"
 				exit $?
 			}
-			rwget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.4.0esr/win32/en-US/Firefox%20Setup%2031.4.0esr.exe -O /tmp/Firefox-Setup-esr.exe
-			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup-esr.exe /SD | zenity \
+			wget -N -r --no-parent -Aexe http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/latest-esr/win32/en-US/ -nd -P /tmp/Firefox-Setup/
+			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup/*.exe /SD | zenity \
 				--window-icon="$RBXICON" \
 				--title='Installing Mozilla Firefox' \
 				--text='Installing Mozilla Firefox Browser ...' \
@@ -154,7 +158,13 @@ playerwrapper () {
 
 main () {
 	printf '%b\n' " > begin main ()\n---"
-	cd "$HOME"
+	[[ -x "gen-desktop.sh" ]] && {
+		gen-desktop.sh
+		spawndialog question "Would you like to install the Roblox menu item on your system?"
+		[[ "$?" = "0" ]] && {
+			xdg-desktop-menu install --novendor --mode user roblox.desktop
+		}
+	}
 	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
 	sel=$(zenity \
@@ -192,11 +202,9 @@ main () {
 	printf '%b\n' " > end main ()\n---"
 }
 
-cd "$HOME"
-
 # Define some variables
 export rlwversion=20150412
-export branch=master
+export branch=$(git symbolic-ref --short -q HEAD)
 export WINEARCH=win32
 
 printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
@@ -207,9 +215,11 @@ export winebootbin="$(which wineboot)"
 export wineserverbin="$(which wineserver)"
 export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
 
-# Some internal functions to make wine more useful to the wrapper.
-# This allows the wrapper to know what went wrong and where, without excessive code.
-# Note: the "r" prefix indicates a function that extends system functionality.
+# Don't allow running as root
+if [ "$(id -u)" == "0" ]; then
+   spawndialog error "RLW should not be ran as root."
+   exit 1
+fi
 
 # Check that everything is here
 [[ -x "$winebin" && -x "$winebootbin" && -x "$wineserverbin" ]] || {
