@@ -207,22 +207,13 @@ export winebootbin="$(which wineboot)"
 export wineserverbin="$(which wineserver)"
 export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
 
-# Uncomment these lines to use wine-staging (formerly wine-compholio)
-#[[ -x /opt/wine-staging/bin/wine ]] && {
-#	export winebin="/opt/wine-staging/bin/wine"
-#	export winebootbin="/opt/wine-staging/bin/wineboot"
-#	export wineserverbin="/opt/wine-staging/bin/wineserver"
-#	export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine-staging"
-#	WINEPREFIX="$HOME/.wine-staging" "/opt/wine-staging/bin/wineboot"
-#}
-
 # Some internal functions to make wine more useful to the wrapper.
 # This allows the wrapper to know what went wrong and where, without excessive code.
 # Note: the "r" prefix indicates a function that extends system functionality.
 
 # Check that everything is here
 [[ -x "$winebin" && -x "$winebootbin" && -x "$wineserverbin" ]] || {
-	spawndialog error "Missing dependencies! Please install wine and wine-staging."
+	spawndialog error "Missing dependencies! Please install wine and try again."
 	exit 1
 }
 
