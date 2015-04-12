@@ -1,6 +1,7 @@
 roblox-wine/
 roblox-wine-staging/
 roblox.desktop
+.rlw_epoch
 
 # Compiled Object files
 *.slo

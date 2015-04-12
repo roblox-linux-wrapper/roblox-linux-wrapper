@@ -160,10 +160,15 @@ main () {
 	printf '%b\n' " > begin main ()\n---"
 	[[ -x "gen-desktop.sh" ]] && {
 		./gen-desktop.sh
-		spawndialog question "Would you like to install the Roblox menu item on your system?"
-		[[ "$?" = "0" ]] && {
-			xdg-desktop-menu install --novendor --mode user "$WRAPPER_DIR/roblox.desktop"
-		}
+		if [[ $(cat .rlw_epoch) -eq "$rlw_epoch" ]]; then
+			printf '%b\n' "Not automatically overwriting the .desktop file; the epoch version seems up to date (rlw_epoch=$rlw_epoch)."
+		else
+			spawndialog question "Would you like to install the Roblox menu item on your system?"
+			[[ "$?" = "0" ]] && {
+				xdg-desktop-menu install --novendor --mode user "$WRAPPER_DIR/roblox.desktop"
+				echo "$rlw_epoch" > .rlw_epoch
+			}
+		fi
 	}
 	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
@@ -206,6 +211,7 @@ WRAPPER_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 cd "$WRAPPER_DIR"
 
 # Define some variables
+rlw_epoch=1 # This is used to track upgrades between .desktop file versions
 export rlwversion=20150412
 export branch=$(git symbolic-ref --short -q HEAD)
 export WINEARCH=win32
