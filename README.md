@@ -39,7 +39,7 @@ Note, you should have closed everything related to the Roblox Linux Wrapper firs
   * A: This is the old method used to launch games. Paste the game link in and click "Play" to launch the game.
 
 * Q: It keeps telling me "Missing Dependencies"!
-  * A: Then install it! If it tells you "Please install wine", then install Wine. It does not install these dependencies automatically. You need to install the dependencies manually.
+  * A: Then install it! If it tells you "Please install wine", then install Wine. It does not install these dependencies automatically. You need to install the dependencies manually. To install the latest version of Wine, visit https://www.winehq.org/download/.
 
 
 ## Required Dependencies
