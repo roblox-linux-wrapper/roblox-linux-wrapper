@@ -164,7 +164,7 @@ main () {
 		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"' by alfonsojon' \
 		--window-icon="$RBXICON" \
 		--width=480 \
-		--height=240 \
+		--height=230 \
 		--cancel-label='Quit' \
 		--list \
 		--text 'What option would you like?' \
@@ -174,8 +174,7 @@ main () {
 		TRUE 'Play Roblox' \
 		FALSE 'Play Roblox (Legacy Mode)' \
 		FALSE 'Roblox Studio' \
-		FALSE 'Reinstall Roblox' \
-		FALSE 'Uninstall Roblox')
+		FALSE 'Reinstall Roblox' )
 	case $sel in
 	'Play Roblox')
 		playerwrapper; main;;
@@ -192,30 +191,12 @@ main () {
 		else
 			main
 		fi;;
-	'Uninstall Roblox')
-		spawndialog question 'Are you sure you would like to uninstall?'
-		if [[ "$?" = "0" ]]; then
-			xdg-desktop-menu uninstall "roblox.desktop"
-			[[ ! -f "$HOME/.local/share/icons/roblox.png" ]] || {
-				rm -rf "$HOME/.local/share/icons/roblox.png"
-			}
-			[[ ! -f "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png" ]] || {
-				rm -rf "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"
-			}
-			xdg-desktop-menu forceupdate
-			rm -rf "$WINEPREFIX"
-			rm -rf "$HOME/.rlw"
-			spawndialog info 'Roblox has been uninstalled successfully.'
-			exit
-		else
-			main
-		fi;;
 	esac
 	printf '%b\n' " > end main ()\n---"
 }
 
 # Define some variables
-export rlwversion=20150411
+export rlwversion=20150412
 export branch=$(git symbolic-ref --short -q HEAD)
 export WINEARCH=win32
 
@@ -227,15 +208,6 @@ export winebootbin="$(which wineboot)"
 export wineserverbin="$(which wineserver)"
 export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
 
-# Uncomment these lines to use wine-staging (formerly wine-compholio)
-#[[ -x /opt/wine-staging/bin/wine ]] && {
-#	export winebin="/opt/wine-staging/bin/wine"
-#	export winebootbin="/opt/wine-staging/bin/wineboot"
-#	export wineserverbin="/opt/wine-staging/bin/wineserver"
-#	export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine-staging"
-#	WINEPREFIX="$HOME/.wine-staging" "/opt/wine-staging/bin/wineboot"
-#}
-
 # Don't allow running as root
 if [ "$(id -u)" == "0" ]; then
    spawndialog error "RLW should not be ran as root."
@@ -244,7 +216,7 @@ fi
 
 # Check that everything is here
 [[ -x "$winebin" && -x "$winebootbin" && -x "$wineserverbin" ]] || {
-	spawndialog error "Missing dependencies! Please install wine and/or wine-staging."
+	spawndialog error "Missing dependencies! Please install wine and try again."
 	exit 1
 }
 
