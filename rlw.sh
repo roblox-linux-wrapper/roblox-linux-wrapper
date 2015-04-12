@@ -162,7 +162,7 @@ main () {
 		gen-desktop.sh
 		spawndialog question "Would you like to install the Roblox menu item on your system?"
 		[[ "$?" = "0" ]] && {
-			xdg-desktop-menu install --novendor --mode user roblox.desktop
+			xdg-desktop-menu install --novendor --mode user "$WRAPPER_DIR/roblox.desktop"
 		}
 	}
 	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
@@ -202,6 +202,9 @@ main () {
 	printf '%b\n' " > end main ()\n---"
 }
 
+WRAPPER_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+cd "$WRAPPER_DIR"
+
 # Define some variables
 export rlwversion=20150412
 export branch=$(git symbolic-ref --short -q HEAD)
@@ -235,5 +238,6 @@ fi
 	spawndialog error "git is not installed, or was not found. Please install git\nto enable automatic updates."
 }
 # Run dependency check & launch main function
+
 git pull
 roblox-install && main
