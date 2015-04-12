@@ -121,7 +121,7 @@ roblox-install () {
 				--no-cancel \
 				--auto-close
 			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
-			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
+			WINEDLLOVERRIDES="winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
 			rwine regsvr32 /i "$(find "$WINEPREFIX" -iname 'RobloxProxy.dll')"
 		else
 			exit 1
@@ -206,18 +206,16 @@ main () {
 export rlwversion=20150412
 export branch=$(git symbolic-ref --short -q HEAD)
 export WINEARCH=win32
-
-printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
-
-# Uncomment these lines to use stock Wine (default)
 export winebin="$(which wine)"
 export winebootbin="$(which wineboot)"
 export wineserverbin="$(which wineserver)"
 export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
 
+printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
+
 # Don't allow running as root
 if [ "$(id -u)" == "0" ]; then
-   spawndialog error "RLW should not be ran as root."
+   spawndialog error "Roblox Linux Wrapper should not be ran with root permissions."
    exit 1
 fi
 
