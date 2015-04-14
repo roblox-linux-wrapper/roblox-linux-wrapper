@@ -47,7 +47,7 @@ rm -rf roblox-linux-wrapper ~/.local/share/wineprefixes/roblox*
 
 ## Required Dependencies
 
-    rlw.sh: cabextract git shasum wget wine wine-staging zenity
+    rlw.sh: cabextract git shasum wget wine zenity
 
   [1]: https://github.com/alfonsojon/roblox-linux-wrapper/issues
 
