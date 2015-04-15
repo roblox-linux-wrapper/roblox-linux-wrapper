@@ -158,7 +158,7 @@ playerwrapper () {
 
 main () {
 	printf '%b\n' " > begin main ()\n---"
-	[[ -x "gen-desktop.sh" && ! -e "$HOME/.local/share/applications/roblox.desktop" ]] && {
+	[[ -x "gen-desktop.sh" ]] && {
 		./gen-desktop.sh
 		if [[ $(cat .rlw_epoch) -eq "$rlw_epoch" ]]; then
 			printf '%b\n' "Not automatically overwriting the .desktop file; the epoch version seems up to date (rlw_epoch=$rlw_epoch)."
