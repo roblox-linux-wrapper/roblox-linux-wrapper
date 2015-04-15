@@ -27,7 +27,7 @@ spawndialog () {
 		--window-icon="$RBXICON" \
 		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$branch" \
 		--"$1" \
-		--text="$2"
+		--text="$2" 2&> /dev/null
 }
 
 rwine () {
@@ -71,7 +71,7 @@ rwget () {
 			--auto-close \
 			--no-cancel \
 			--width=450 \
-			--height=120
+			--height=120 2&>/dev/null
 	[[ "$?" = "0" ]] || {
 		spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"
 		exit $?
@@ -119,7 +119,7 @@ roblox-install () {
 				--progress \
 				--pulsate \
 				--no-cancel \
-				--auto-close
+				--auto-close 2&>/dev/null
 			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
 			WINEDLLOVERRIDES="winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
 			rwine regsvr32 /i "$(find "$WINEPREFIX" -iname 'RobloxProxy.dll')"
@@ -142,7 +142,7 @@ playerwrapper () {
 				--text='Paste the URL for the game here.' \
 				--ok-label='Play' \
 				--width=450 \
-				--height=122)
+				--height=122 2&>/dev/null)
 			GAMEID=$(printf '%s' "$GAMEURL" | cut -d "=" -f 2)
 		if [[ -n "$GAMEID" ]]; then
 			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
@@ -160,10 +160,15 @@ main () {
 	printf '%b\n' " > begin main ()\n---"
 	[[ -x "gen-desktop.sh" && ! -e "$HOME/.local/share/applications/roblox.desktop" ]] && {
 		./gen-desktop.sh
-		spawndialog question "Would you like to install the Roblox menu item on your system?"
-		[[ "$?" = "0" ]] && {
-			xdg-desktop-menu install --novendor --mode user "$WRAPPER_DIR/roblox.desktop"
-		}
+		if [[ $(cat .rlw_epoch) -eq "$rlw_epoch" ]]; then
+			printf '%b\n' "Not automatically overwriting the .desktop file; the epoch version seems up to date (rlw_epoch=$rlw_epoch)."
+		else
+			spawndialog question "Would you like to install the Roblox menu item on your system?"
+			[[ "$?" = "0" ]] && {
+				xdg-desktop-menu install --novendor --mode user "$WRAPPER_DIR/roblox.desktop"
+				echo "$rlw_epoch" > .rlw_epoch
+			}
+		fi
 	}
 	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
@@ -181,7 +186,7 @@ main () {
 		TRUE 'Play Roblox' \
 		FALSE 'Play Roblox (Legacy Mode)' \
 		FALSE 'Roblox Studio' \
-		FALSE 'Reinstall Roblox' )
+		FALSE 'Reinstall Roblox' 2>/dev/null)
 	case $sel in
 	'Play Roblox')
 		playerwrapper; main;;
@@ -206,6 +211,7 @@ WRAPPER_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 cd "$WRAPPER_DIR"
 
 # Define some variables
+rlw_epoch=1 # This is used to track upgrades between .desktop file versions
 export rlwversion=20150412
 export branch=$(git symbolic-ref --short -q HEAD)
 export WINEARCH=win32
