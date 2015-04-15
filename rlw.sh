@@ -158,7 +158,7 @@ playerwrapper () {
 
 main () {
 	printf '%b\n' " > begin main ()\n---"
-	[[ -x "gen-desktop.sh" ]] && {
+	[[ -x "gen-desktop.sh" && ! -e "$HOME/.local/share/applications/roblox.desktop" ]] && {
 		./gen-desktop.sh
 		spawndialog question "Would you like to install the Roblox menu item on your system?"
 		[[ "$?" = "0" ]] && {
@@ -188,7 +188,7 @@ main () {
 	'Play Roblox (Legacy Mode)')
 		playerwrapper legacy; main;;
 	'Roblox Studio')
-		WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b" rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
+		rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
 		main ;;
 	'Reinstall Roblox')
 		spawndialog question 'Are you sure you would like to reinstall?'
