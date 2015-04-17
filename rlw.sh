@@ -102,9 +102,7 @@ roblox-install () {
 		if [[ $? = "0" ]]; then
 			rm -rf "$WINEPREFIX"
 			# Make sure our directories really exist
-			[[ -d "$HOME/.local/share/wineprefixes" ]] || {
-				mkdir -p "$HOME/.local/share/wineprefixes"
-			}
+			mkdir -p "$WINEPREFIX"
 			rwineboot
 			rwinetricks ddr=gdi		# Causes graphical problems in mutter/gala (GNOME Shell/Elementary OS)
 			[[ "$?" = 0 ]] || {
@@ -186,7 +184,8 @@ main () {
 		TRUE 'Play Roblox' \
 		FALSE 'Play Roblox (Legacy Mode)' \
 		FALSE 'Roblox Studio' \
-		FALSE 'Reinstall Roblox' 2>/dev/null)
+		FALSE 'Reinstall Roblox' \
+		FALSE 'Uninstall Roblox' 2>/dev/null)
 	case $sel in
 	'Play Roblox')
 		playerwrapper; main;;
@@ -198,8 +197,22 @@ main () {
 	'Reinstall Roblox')
 		spawndialog question 'Are you sure you would like to reinstall?'
 		if [[ "$?" = "0" ]]; then
-			rm -rf "$WINEPREFIX";
+			rm -rf "$HOME/.rlw"
+			rm -rf "$WINEPREFIX"
 			roblox-install; main
+		else
+			main
+		fi;;
+	'Uninstall Roblox')
+		spawndialog question 'Are you sure you would like to uninstall?'
+		if [[ "$?" = "0" ]]; then
+			xdg-desktop-menu uninstall "roblox.desktop"
+			rm -rf "$HOME/.rlw"
+			rm -rf "$HOME/.local/share/icons/roblox.png"
+			rm -rf "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"
+			rm -rf "$WINEPREFIX"
+			spawndialog info 'Roblox has been uninstalled successfully.'
+			exit
 		else
 			main
 		fi;;
@@ -221,6 +234,11 @@ export wineserverbin="$(which wineserver)"
 export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
 
 printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
+
+[[ -d ".git" ]] || {
+	spawndialog error 'Roblox Linux Wrapper does not support running outside of its Git repository.\nPlease clone a copy via the command: git clone https://github.com/alfonsojon/roblox-linux-wrapper'
+	exit 1
+}
 
 # Don't allow running as root
 if [ "$(id -u)" == "0" ]; then
