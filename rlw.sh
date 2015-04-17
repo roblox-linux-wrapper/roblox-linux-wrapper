@@ -25,7 +25,7 @@ spawndialog () {
 	zenity \
 		--no-wrap \
 		--window-icon="$RBXICON" \
-		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$branch" \
+		--title='Roblox Linux Wrapper '"$rlwversion"'-'"$branch" \
 		--"$1" \
 		--text="$2" 2&> /dev/null
 }
@@ -171,7 +171,7 @@ main () {
 	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
 	sel=$(zenity \
-		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"' by alfonsojon' \
+		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"'' \
 		--window-icon="$RBXICON" \
 		--width=480 \
 		--height=230 \
@@ -225,7 +225,7 @@ cd "$WRAPPER_DIR"
 
 # Define some variables
 rlw_epoch=1 # This is used to track upgrades between .desktop file versions
-export rlwversion=20150412
+export rlwversion=$(git describe --tags)
 export branch=$(git symbolic-ref --short -q HEAD)
 export WINEARCH=win32
 export winebin="$(which wine)"
@@ -233,7 +233,7 @@ export winebootbin="$(which wineboot)"
 export wineserverbin="$(which wineserver)"
 export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
 
-printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
+printf '%b\n' 'Roblox Linux Wrapper '"$rlwversion"'-'"$branch"
 
 [[ -d ".git" ]] || {
 	spawndialog error 'Roblox Linux Wrapper does not support running outside of its Git repository.\nPlease clone a copy via the command: git clone https://github.com/alfonsojon/roblox-linux-wrapper'
