@@ -134,7 +134,7 @@ playerwrapper () {
 	if [[ "$1" = legacy ]]; then
 		export GAMEURL=$(\
 			zenity \
-				--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$branch" \
+				--title='Roblox Linux Wrapper '"$rlwversion"'-'"$branch" \
 				--window-icon="$RBXICON" \
 				--entry \
 				--text='Paste the URL for the game here.' \
@@ -171,7 +171,7 @@ main () {
 	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
 	sel=$(zenity \
-		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"'' \
+		--title='Roblox Linux Wrapper '"$rlwversion"'-'"$branch"'' \
 		--window-icon="$RBXICON" \
 		--width=480 \
 		--height=230 \
