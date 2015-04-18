@@ -102,7 +102,7 @@ roblox-install () {
 		if [[ $? = "0" ]]; then
 			rm -rf "$WINEPREFIX"
 			# Make sure our directories really exist
-			mkdir -p "$WINEPREFIX"
+			mkdir -p "$HOME/.local/share/wineprefixes"
 			rwineboot
 			rwinetricks ddr=gdi		# Causes graphical problems in mutter/gala (GNOME Shell/Elementary OS)
 			[[ "$?" = 0 ]] || {
