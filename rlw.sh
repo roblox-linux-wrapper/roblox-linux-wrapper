@@ -183,7 +183,7 @@ main () {
 		--column '' \
 		--column 'Options' \
 		TRUE 'Play Roblox' \
-		FALSE 'Play Roblox (Quick Mode)' \
+		FALSE 'Play Roblox (Basic Mode)' \
 		FALSE 'Develop on Roblox (Roblox Studio)' \
 		FALSE 'Reinstall Roblox' \
 		FALSE 'Uninstall Roblox' 2>/dev/null \
@@ -191,7 +191,7 @@ main () {
 	case $sel in
 	'Play Roblox')
 		playerwrapper; main;;
-	'Play Roblox (Quick Mode)')  # Legacy mode is an odd name when it is just as good as the browser mode, if not better. Much quicker. "Quick Mode" is a cheesy name lmao.
+	'Play Roblox (Basic Mode)')  # Legacy mode is an odd name when it is just as good as the browser mode, if not better. Much quicker.
 		playerwrapper legacy; main;;
 	'Develop on Roblox (Roblox Studio)') # ROBLOX's community throws around the term "develop" more than "ROBLOX Studio" sadly :C. Newcomers will know what's what.
 		rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
