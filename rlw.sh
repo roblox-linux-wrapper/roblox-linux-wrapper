@@ -242,10 +242,10 @@ export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
 
 printf '%b\n' 'Roblox Linux Wrapper '"$rlwversion"'-'"$branch"
 
-#[[ -d ".git" ]] || {
-#	spawndialog error 'Roblox Linux Wrapper does not support running outside of its Git repository.\nPlease clone a copy via the command: git clone https://github.com/alfonsojon/roblox-linux-wrapper'
-#	exit 1
-#}
+[[ -d ".git" ]] || {
+	spawndialog error 'Roblox Linux Wrapper does not support running outside of its Git repository.\nPlease clone a copy via the command: git clone https://github.com/alfonsojon/roblox-linux-wrapper'
+	exit 1
+}
 
 # Don't allow running as root
 if [ "$(id -u)" == "0" ]; then
