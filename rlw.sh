@@ -144,7 +144,7 @@ playerwrapper () {
 				--height=132 2&>/dev/null)
 			GAMEID=$(printf '%s' "$GAMEURL" | cut -d "=" -f 2)
 		if [[ -n "$GAMEID" ]]; then
-			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID" # ROBLOX is 
+			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID" 
 		else
 			spawndialog warning "There was an error finding that game, sorry! Try entering the game URL or ID again. "
 			return
