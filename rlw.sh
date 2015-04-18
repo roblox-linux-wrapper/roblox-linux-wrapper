@@ -67,7 +67,7 @@ rwget () {
 		zenity \
 			--progress \
 			--window-icon="$RBXICON" \
-			--title='Downloading Roblox Linux Wrapper necessities' \
+			--title='Downloading ...' \
 			--auto-close \
 			--no-cancel \
 			--width=450 \
@@ -98,7 +98,7 @@ rwinetricks () {
 roblox-install () {
 	printf '%b\n' " > begin roblox-install ()\n---"
 	if [[ ! -d "$WINEPREFIX/drive_c" ]]; then
-		spawndialog question 'Roblox Linux Wrapper doesnt seem to be installed.\nWould you like to install it?'
+		spawndialog question 'Roblox Linux Wrapper is not setup yet\nAre you sure you would like to install it?'
 		if [[ $? = "0" ]]; then
 			rm -rf "$WINEPREFIX"
 			# Make sure our directories really exist
@@ -112,8 +112,8 @@ roblox-install () {
 			wget -N -r --no-parent -Aexe http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/latest-esr/win32/en-US/ -nd -P /tmp/Firefox-Setup/
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup/*.exe /SD | zenity \
 				--window-icon="$RBXICON" \
-				--title='Installing (Windows) Mozilla Firefox' \
-				--text='This is so you can launch games.\nDo not worry, this will not mess up your current Linux FireFox installation.' \
+				--title='Installing Mozilla Firefox' \
+				--text='Installing Mozilla Firefox browser ...' \
 				--progress \
 				--pulsate \
 				--no-cancel \
@@ -130,23 +130,23 @@ roblox-install () {
 
 playerwrapper () {
 	printf '%b\n' " > begin playerwrapper ()\n---"
-	spawndialog warning "Make sure you've logged in to either Studio or Firefox.\nWithout being logged in, this will make you join as a guest."
+	#spawndialog warning "Make sure you've logged in to either Studio or Firefox.\nWithout being logged in, this will make you join as a guest."
 	rwine regsvr32 /i "$(find "$WINEPREFIX" -iname 'RobloxProxy.dll')"
-	if [[ "$1" = legacy ]]; then
+	if [[ "$1" = basic ]]; then
 		export GAMEURL=$(\
 			zenity \
 				--title='Roblox Linux Wrapper '"$rlwversion"'-'"$branch" \
 				--window-icon="$RBXICON" \
 				--entry \
-				--text='Paste the URL or ID for the game here.' \
+				--text='Paste the Roblox game URL or ID for the game here.' \
 				--ok-label='Play' \
 				--width=450 \
 				--height=132 2&>/dev/null)
 			GAMEID=$(printf '%s' "$GAMEURL" | cut -d "=" -f 2)
 		if [[ -n "$GAMEID" ]]; then
-			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
+			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID" # ROBLOX is 
 		else
-			spawndialog warning "There was an error finding that game, sorry! Try entering the URL/ID again. "
+			spawndialog warning "There was an error finding that game, sorry! Try entering the game URL or ID again. "
 			return
 		fi
 	else
@@ -162,7 +162,7 @@ main () {
 		if [[ $(cat .rlw_epoch) -eq "$rlw_epoch" ]]; then
 			printf '%b\n' "Not automatically overwriting the .desktop file; the epoch version seems up to date (rlw_epoch=$rlw_epoch)."
 		else
-			spawndialog question "Would you like to install the Roblox menu item on your system? /nThis will give you a ROBLOX icon so you don't have to run the script every time. "
+			spawndialog question "Would you like to install the Roblox menu item? /nThis will give you a ROBLOX icon so you don't have to use the terminal every time. "
 			[[ "$?" = "0" ]] && {
 				xdg-desktop-menu install --novendor --mode user "$WRAPPER_DIR/roblox.desktop"
 				echo "$rlw_epoch" > .rlw_epoch
@@ -176,7 +176,7 @@ main () {
 		--window-icon="$RBXICON" \
 		--width=480 \
 		--height=256 \
-		--cancel-label='Close' \
+		--cancel-label='Exit' \
 		--list \
 		--text 'What would you like to do on ROBLOX?' \
 		--radiolist \
@@ -191,13 +191,13 @@ main () {
 	case $sel in
 	'Play Roblox')
 		playerwrapper; main;;
-	'Play Roblox (Basic Mode)')  # Legacy mode is an odd name when it is just as good as the browser mode, if not better. Much quicker.
-		playerwrapper legacy; main;;
-	'Develop on Roblox (Roblox Studio)') # ROBLOX's community throws around the term "develop" more than "ROBLOX Studio" sadly :C. Newcomers will know what's what.
+	'Play Roblox (Basic Mode)') 
+		playerwrapper basic; main;;
+	'Develop on Roblox (Roblox Studio)')
 		rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
 		main ;;
 	'Reinstall Roblox')
-		spawndialog question 'Are you sure you want to reinstall ROBLOX Linux Wrapper?'
+		spawndialog question 'Are you sure you want to reinstall Roblox Linux Wrapper?'
 		if [[ "$?" = "0" ]]; then
 			rm -rf "$HOME/.rlw"
 			rm -rf "$WINEPREFIX"
@@ -222,7 +222,7 @@ main () {
 			URL='https://github.com/alfonsojon/roblox-linux-wrapper'
 			[[ -x $BROWSER ]] && exec "$BROWSER" "$URL" #Find default browser
 			path=$(which xdg-open || which gnome-open) && exec "$path" "$URL"
-			main
+			main ;;
 	esac
 	printf '%b\n' " > end main ()\n---"
 }
