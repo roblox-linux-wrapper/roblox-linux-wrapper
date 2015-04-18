@@ -222,7 +222,6 @@ main () {
 			URL='https://github.com/alfonsojon/roblox-linux-wrapper'
 			[[ -x $BROWSER ]] && exec "$BROWSER" "$URL" #Find default browser
 			path=$(which xdg-open || which gnome-open) && exec "$path" "$URL"
-			main ;;
 	esac
 	printf '%b\n' " > end main ()\n---"
 }
