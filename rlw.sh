@@ -170,7 +170,7 @@ main () {
 	}
 	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
-		sel=$(zenity \
+	sel=$(zenity \
 		--title='Roblox Linux Wrapper '"$rlwversion"'-'"$branch"'' \
 		--window-icon="$RBXICON" \
 		--width=480 \
