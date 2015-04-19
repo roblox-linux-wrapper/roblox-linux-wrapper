@@ -36,7 +36,7 @@ rwine () {
 		$winebin "${@:2}" && rwineserver --wait
 	else
 		$winebin "$@" && rwineserver --wait; [[ "$?" = "0" ]] || {
-			spawndialog error "Wine has sadly closed unsuccessfully.\nSee the terminal for details. (exit code $?)"
+			spawndialog error "wine closed unsuccessfully.\nSee terminal for details. (exit code $?)"
 			exit $?
 	}
 	fi
@@ -45,7 +45,7 @@ rwine () {
 rwineboot () {
 	printf '%b\n' " > begin rwineboot ()\n---"
 	$winebootbin; [[ "$?" = "0" ]] || {
-		spawndialog error "wineboot has sadly closed unsuccessfully.\nSee terminal for details. (exit code $?)"
+		spawndialog error "wineboot closed unsuccessfully.\nSee terminal for details. (exit code $?)"
 		exit $?
 	}
 	printf '%b\n' " > end rwineboot ()\n---"
@@ -53,7 +53,7 @@ rwineboot () {
 rwineserver () {
 	printf '%b\n' " > begin rwineserver ()\n---"
 	$wineserverbin "$@"; [[ "$?" = "0" ]] || {
-		spawndialog error "wineserver has sadly closed unsuccessfully.\nSee terminal for details. (exit code $?)"
+		spawndialog error "wineserver closed unsuccessfully.\nSee terminal for details. (exit code $?)"
 		exit $?
 	}
 	printf '%b\n' " > end rwineserver ()\n---"
@@ -67,7 +67,7 @@ rwget () {
 		zenity \
 			--progress \
 			--window-icon="$RBXICON" \
-			--title='Downloading ...' \
+			--title='Downloading' \
 			--auto-close \
 			--no-cancel \
 			--width=450 \
@@ -98,7 +98,7 @@ rwinetricks () {
 roblox-install () {
 	printf '%b\n' " > begin roblox-install ()\n---"
 	if [[ ! -d "$WINEPREFIX/drive_c" ]]; then
-		spawndialog question 'Roblox Linux Wrapper is not setup yet\nAre you sure you would like to install it?'
+		spawndialog question 'A working Roblox wineprefix was not found.\nWould you like to install one?'
 		if [[ $? = "0" ]]; then
 			rm -rf "$WINEPREFIX"
 			# Make sure our directories really exist
@@ -113,7 +113,7 @@ roblox-install () {
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup/*.exe /SD | zenity \
 				--window-icon="$RBXICON" \
 				--title='Installing Mozilla Firefox' \
-				--text='Installing Mozilla Firefox browser ...' \
+				--text='Installing Mozilla Firefox Browser ...' \
 				--progress \
 				--pulsate \
 				--no-cancel \
@@ -130,23 +130,22 @@ roblox-install () {
 
 playerwrapper () {
 	printf '%b\n' " > begin playerwrapper ()\n---"
-	#spawndialog warning "Make sure you've logged in to either Studio or Firefox.\nWithout being logged in, this will make you join as a guest."
 	rwine regsvr32 /i "$(find "$WINEPREFIX" -iname 'RobloxProxy.dll')"
-	if [[ "$1" = basic ]]; then
+	if [[ "$1" = legacy ]]; then
 		export GAMEURL=$(\
 			zenity \
 				--title='Roblox Linux Wrapper '"$rlwversion"'-'"$branch" \
 				--window-icon="$RBXICON" \
 				--entry \
-				--text='Paste the Roblox game URL or ID for the game here.' \
+				--text='Paste the URL for the game here.' \
 				--ok-label='Play' \
 				--width=450 \
-				--height=132 2&>/dev/null)
+				--height=122 2&>/dev/null)
 			GAMEID=$(printf '%s' "$GAMEURL" | cut -d "=" -f 2)
 		if [[ -n "$GAMEID" ]]; then
-			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID" 
+			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
 		else
-			spawndialog warning "There was an error finding that game, sorry! Try entering the game URL or ID again. "
+			spawndialog warning "Invalid game URL or ID."
 			return
 		fi
 	else
@@ -162,7 +161,7 @@ main () {
 		if [[ $(cat .rlw_epoch) -eq "$rlw_epoch" ]]; then
 			printf '%b\n' "Not automatically overwriting the .desktop file; the epoch version seems up to date (rlw_epoch=$rlw_epoch)."
 		else
-			spawndialog question "Would you like to install the Roblox menu item? /nThis will give you a ROBLOX icon so you don't have to use the terminal every time. "
+			spawndialog question "Would you like to install the Roblox menu item on your system?"
 			[[ "$?" = "0" ]] && {
 				xdg-desktop-menu install --novendor --mode user "$WRAPPER_DIR/roblox.desktop"
 				echo "$rlw_epoch" > .rlw_epoch
@@ -171,7 +170,7 @@ main () {
 	}
 	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
-	sel=$(zenity \
+		sel=$(zenity \
 		--title='Roblox Linux Wrapper '"$rlwversion"'-'"$branch"'' \
 		--window-icon="$RBXICON" \
 		--width=480 \
@@ -183,16 +182,16 @@ main () {
 		--column '' \
 		--column 'Options' \
 		TRUE 'Play Roblox' \
-		FALSE 'Play Roblox (Basic Mode)' \
+		FALSE 'Play Roblox (Legacy Mode)' \
 		FALSE 'Develop on Roblox (Roblox Studio)' \
 		FALSE 'Reinstall Roblox' \
-		FALSE 'Uninstall Roblox' 2>/dev/null \
-		FALSE 'Visit the GitHub page')
+		FALSE 'Uninstall Roblox'  \
+		FALSE 'Visit the GitHub page' 2>/dev/null )
 	case $sel in
 	'Play Roblox')
 		playerwrapper; main;;
-	'Play Roblox (Basic Mode)') 
-		playerwrapper basic; main;;
+	'Play Roblox (Legacy Mode)') 
+		playerwrapper legacy; main;;
 	'Develop on Roblox (Roblox Studio)')
 		rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
 		main ;;
@@ -219,12 +218,12 @@ main () {
 			main
 		fi;;
 		'Visit the GitHub page')
-			URL='https://github.com/alfonsojon/roblox-linux-wrapper'
-			[[ -x $BROWSER ]] && exec "$BROWSER" "$URL" #Find default browser
-			path=$(which xdg-open || which gnome-open) && exec "$path" "$URL"
-	esac
+			xdg-open https://github.com/alfonsojon/roblox-linux-wrapper
+			main  # Reopen the menu. Not sure if this should be kept or not. 
+		esac
 	printf '%b\n' " > end main ()\n---"
 }
+
 
 WRAPPER_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 cd "$WRAPPER_DIR"
@@ -248,7 +247,7 @@ printf '%b\n' 'Roblox Linux Wrapper '"$rlwversion"'-'"$branch"
 
 # Don't allow running as root
 if [ "$(id -u)" == "0" ]; then
-   spawndialog error "You're running as root (sudo)!\nThis could mess up Wine so please run this again when you're not in root."
+   spawndialog error "Roblox Linux Wrapper should not be ran with root permissions."
    exit 1
 fi
 
@@ -265,7 +264,7 @@ fi
 
 # Note: git is used for automatic updating, and is recommended.
 [[ -x "$(which git)" ]] || {
-	spawndialog error "git is not installed, or was not found. Please install git\nto enable automatic updates./nsudo apt-get install git "
+	spawndialog error "git is not installed, or was not found. Please install git\nto enable automatic updates."
 }
 # Run dependency check & launch main function
 
