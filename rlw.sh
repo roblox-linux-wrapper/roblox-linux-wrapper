@@ -177,7 +177,7 @@ main () {
 		--height=256 \
 		--cancel-label='Exit' \
 		--list \
-		--text 'What would you like to do on ROBLOX?' \
+		--text 'What option would you like?' \
 		--radiolist \
 		--column '' \
 		--column 'Options' \
