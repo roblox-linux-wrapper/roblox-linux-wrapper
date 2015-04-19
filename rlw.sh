@@ -174,8 +174,8 @@ main () {
 		--title='Roblox Linux Wrapper '"$rlwversion"'-'"$branch"'' \
 		--window-icon="$RBXICON" \
 		--width=480 \
-		--height=230 \
-		--cancel-label='Quit' \
+		--height=256 \
+		--cancel-label='Exit' \
 		--list \
 		--text 'What option would you like?' \
 		--radiolist \
@@ -185,7 +185,8 @@ main () {
 		FALSE 'Play Roblox (Legacy Mode)' \
 		FALSE 'Roblox Studio' \
 		FALSE 'Reinstall Roblox' \
-		FALSE 'Uninstall Roblox' 2>/dev/null)
+		FALSE 'Uninstall Roblox'  \
+		FALSE 'Visit the GitHub page' 2>/dev/null )
 	case $sel in
 	'Play Roblox')
 		playerwrapper; main;;
@@ -216,9 +217,13 @@ main () {
 		else
 			main
 		fi;;
-	esac
+		'Visit the GitHub page')
+			xdg-open https://github.com/alfonsojon/roblox-linux-wrapper
+			main  # Reopen the menu. Not sure if this should be kept or not. 
+		esac
 	printf '%b\n' " > end main ()\n---"
 }
+
 
 WRAPPER_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 cd "$WRAPPER_DIR"
