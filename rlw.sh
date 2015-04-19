@@ -183,7 +183,7 @@ main () {
 		--column 'Options' \
 		TRUE 'Play Roblox' \
 		FALSE 'Play Roblox (Legacy Mode)' \
-		FALSE 'Develop on Roblox (Roblox Studio)' \
+		FALSE 'Roblox Studio' \
 		FALSE 'Reinstall Roblox' \
 		FALSE 'Uninstall Roblox'  \
 		FALSE 'Visit the GitHub page' 2>/dev/null )
@@ -192,11 +192,11 @@ main () {
 		playerwrapper; main;;
 	'Play Roblox (Legacy Mode)') 
 		playerwrapper legacy; main;;
-	'Develop on Roblox (Roblox Studio)')
+	'Roblox Studio')
 		rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
 		main ;;
 	'Reinstall Roblox')
-		spawndialog question 'Are you sure you want to reinstall Roblox Linux Wrapper?'
+		spawndialog question 'Are you sure you would like to reinstall?'
 		if [[ "$?" = "0" ]]; then
 			rm -rf "$HOME/.rlw"
 			rm -rf "$WINEPREFIX"
