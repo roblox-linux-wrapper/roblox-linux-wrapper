@@ -190,7 +190,7 @@ main () {
 	case $sel in
 	'Play Roblox')
 		playerwrapper; main;;
-	'Play Roblox (Legacy Mode)') 
+	'Play Roblox (Legacy Mode)')
 		playerwrapper legacy; main;;
 	'Roblox Studio')
 		rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
