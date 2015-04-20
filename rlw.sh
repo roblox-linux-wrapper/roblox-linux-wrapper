@@ -141,11 +141,11 @@ playerwrapper () {
 				--ok-label='Play' \
 				--width=450 \
 				--height=122 2&>/dev/null)
-			GAMEID=$(printf '%s' "$GAMEURL" | cut -d "=" -f 2)
+			GAMEID=$(cut -f 5 -d '/' <<< "$GAMEURL")
 		if [[ -n "$GAMEID" ]]; then
 			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
 		else
-			spawndialog warning "Invalid game URL or ID."
+			spawndialog warning "Invalid game URL."
 			return
 		fi
 	else
