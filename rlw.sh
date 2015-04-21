@@ -132,15 +132,14 @@ playerwrapper () {
 	printf '%b\n' " > begin playerwrapper ()\n---"
 	rwine regsvr32 /i "$(find "$WINEPREFIX" -iname 'RobloxProxy.dll')"
 	if [[ "$1" = legacy ]]; then
-		export GAMEURL=$(\
-			zenity \
+		GAMEURL=$(zenity \
 				--title='Roblox Linux Wrapper '"$rlwversion"'-'"$branch" \
 				--window-icon="$RBXICON" \
 				--entry \
 				--text='Paste the URL for the game here.' \
 				--ok-label='Play' \
 				--width=450 \
-				--height=122 2&>/dev/null)
+				--height=122)
 			GAMEID=$(cut -f 5 -d '/' <<< "$GAMEURL")
 		if [[ -n "$GAMEID" ]]; then
 			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
