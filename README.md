@@ -11,11 +11,9 @@ To install Roblox on your Linux computer, run the following commands in a termin
 ```
 git clone https://github.com/alfonsojon/roblox-linux-wrapper.git
 cd roblox-linux-wrapper
-./gen-desktop.sh
-xdg-desktop-menu install --novendor --mode user roblox.desktop
+./rlw.sh
 ```
-Alternatively, you can skip the `xdg-desktop-menu install` command and run the script manually every time.
-If you are saavy enough, you can install to a custom directory of your choice.
+If you are saavy enough, you can also clone to a custom directory of your choice.
 
 ## Questions and Answers
 
