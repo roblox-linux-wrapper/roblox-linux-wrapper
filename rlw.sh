@@ -174,7 +174,7 @@ main () {
 		--title='Roblox Linux Wrapper '"$rlwversion"'-'"$branch"'' \
 		--window-icon="$RBXICON" \
 		--width=480 \
-		--height=256 \
+		--height=300 \
 		--cancel-label='Exit' \
 		--list \
 		--text 'What option would you like?' \
