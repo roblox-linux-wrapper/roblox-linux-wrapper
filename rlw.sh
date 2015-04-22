@@ -155,7 +155,7 @@ playerwrapper () {
 
 main () {
 	printf '%b\n' " > begin main ()\n---"
-	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
+	rm -f $HOME/Desktop/ROBLOX*.lnk
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
 	sel=$(zenity \
 		--title='Roblox Linux Wrapper '"$rlwversion"'-'"$branch"'' \
