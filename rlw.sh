@@ -155,18 +155,6 @@ playerwrapper () {
 
 main () {
 	printf '%b\n' " > begin main ()\n---"
-	[[ -x "gen-desktop.sh" ]] && {
-		./gen-desktop.sh
-		if [[ $(cat .rlw_epoch) -eq "$rlw_epoch" ]]; then
-			printf '%b\n' "Not automatically overwriting the .desktop file; the epoch version seems up to date (rlw_epoch=$rlw_epoch)."
-		else
-			spawndialog question "Would you like to install the Roblox menu item on your system?"
-			[[ "$?" = "0" ]] && {
-				xdg-desktop-menu install --novendor --mode user "$WRAPPER_DIR/roblox.desktop"
-				echo "$rlw_epoch" > .rlw_epoch
-			}
-		fi
-	}
 	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
 	sel=$(zenity \
@@ -266,6 +254,18 @@ fi
 	spawndialog error "git is not installed, or was not found. Please install git\nto enable automatic updates."
 }
 # Run dependency check & launch main function
+[[ -x "gen-desktop.sh" ]] && {
+	./gen-desktop.sh
+	if [[ $(cat .rlw_epoch) -eq "$rlw_epoch" ]]; then
+		printf '%b\n' "Not automatically overwriting the .desktop file; the epoch version seems up to date (rlw_epoch=$rlw_epoch)."
+	else
+		spawndialog question "Would you like to install the Roblox menu item on your system?"
+		[[ "$?" = "0" ]] && {
+			xdg-desktop-menu install --novendor --mode user "$WRAPPER_DIR/roblox.desktop"
+			echo "$rlw_epoch" > .rlw_epoch
+		}
+	fi
+}
 
 git pull
 roblox-install && main
