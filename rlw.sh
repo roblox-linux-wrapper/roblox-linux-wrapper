@@ -249,10 +249,6 @@ fi
 	exit 1
 }
 
-# Note: git is used for automatic updating, and is recommended.
-[[ -x "$(which git)" ]] || {
-	spawndialog error "git is not installed, or was not found. Please install git\nto enable automatic updates."
-}
 # Run dependency check & launch main function
 [[ -x "gen-desktop.sh" ]] && {
 	./gen-desktop.sh
@@ -267,5 +263,4 @@ fi
 	fi
 }
 
-git pull
 roblox-install && main
