@@ -15,6 +15,10 @@ cd roblox-linux-wrapper
 ```
 If you are saavy enough, you can also clone to a custom directory of your choice.
 
+### Updates
+
+Roblox Linux Wrapper is very volatile, and updates are released very often. In order to update the script, run `git pull` inside the folder that you cloned to via Git. Issues and bug reports will only be accepted if they can be reproduced with the newest version of RLW!
+
 ## Questions and Answers
 
 * Q: How do I install this?
