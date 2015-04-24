@@ -11,7 +11,7 @@ To install Roblox on your Linux computer, run the following commands in a termin
 ```
 git clone https://github.com/alfonsojon/roblox-linux-wrapper.git
 cd roblox-linux-wrapper
-./rlw.sh
+./rlw
 ```
 If you are saavy enough, you can also clone to a custom directory of your choice.
 
@@ -39,7 +39,7 @@ Roblox Linux Wrapper is very volatile, and updates are released very often. In o
 
 ## Required Dependencies
 
-    rlw.sh: git wget wine zenity
+    rlw: git wget wine zenity
 
   [1]: https://github.com/alfonsojon/roblox-linux-wrapper/issues
 
