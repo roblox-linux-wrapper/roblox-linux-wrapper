@@ -1,7 +1,7 @@
 [Desktop Entry]
 Comment=Play Roblox
 Name=Roblox Linux Wrapper
-Exec=rlw.sh
+Exec=rlw
 Actions=Support;RFAGroup;
 GenericName=Building Game
 Icon=roblox
