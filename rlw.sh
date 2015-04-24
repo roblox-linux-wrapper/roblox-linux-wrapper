@@ -25,7 +25,7 @@ spawndialog () {
 	zenity \
 		--no-wrap \
 		--window-icon="$RBXICON" \
-		--title='Roblox Linux Wrapper '"$rlwversion"'-'"$branch" \
+		--title='Roblox Linux Wrapper '"$rlwversion"'' \
 		--"$1" \
 		--text="$2" 2&> /dev/null
 }
@@ -133,7 +133,7 @@ playerwrapper () {
 	rwine regsvr32 /i "$(find "$WINEPREFIX" -iname 'RobloxProxy.dll')"
 	if [[ "$1" = legacy ]]; then
 		GAMEURL=$(zenity \
-				--title='Roblox Linux Wrapper '"$rlwversion"'-'"$branch" \
+				--title='Roblox Linux Wrapper '"$rlwversion"'' \
 				--window-icon="$RBXICON" \
 				--entry \
 				--text='Paste the URL for the game here.' \
@@ -158,7 +158,7 @@ main () {
 	rm -f $HOME/Desktop/ROBLOX*.lnk
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
 	sel=$(zenity \
-		--title='Roblox Linux Wrapper '"$rlwversion"'-'"$branch"'' \
+		--title='Roblox Linux Wrapper '"$rlwversion"'' \
 		--window-icon="$RBXICON" \
 		--width=480 \
 		--height=300 \
@@ -211,26 +211,24 @@ main () {
 	printf '%b\n' " > end main ()\n---"
 }
 
-
 WRAPPER_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 cd "$WRAPPER_DIR"
 
 # Define some variables
-rlw_epoch=1 # This is used to track upgrades between .desktop file versions
-export rlwversion=$(git describe --tags)
-export branch=$(git symbolic-ref --short -q HEAD)
+if [[ -d ".git" ]]; then
+	export rlwversion=$(git describe --tags)
+elif [[ -f "/usr/lib/roblox-linux-wrapper/version" ]]; then
+	export rlwversion=$(cat /usr/lib/roblox-linux-wrapper/version)
+else
+	export rlwversion='version-unknown'
+fi
 export WINEARCH=win32
 export winebin="$(which wine)"
 export winebootbin="$(which wineboot)"
 export wineserverbin="$(which wineserver)"
 export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
 
-printf '%b\n' 'Roblox Linux Wrapper '"$rlwversion"'-'"$branch"
-
-[[ -d ".git" ]] || {
-	spawndialog error 'Roblox Linux Wrapper does not support running outside of its Git repository.\nPlease clone a copy via the command: git clone https://github.com/alfonsojon/roblox-linux-wrapper'
-	exit 1
-}
+printf '%b\n' 'Roblox Linux Wrapper '"$rlwversion"'"'
 
 # Don't allow running as root
 if [ "$(id -u)" == "0" ]; then
@@ -247,20 +245,6 @@ fi
 [[ "$(wine --version | sed 's/.*-//')" > "1.7.27" ]] || {
 	spawndialog error "Your copy of Wine is too old. Please install version 1.7.28 or greater.\n(expected 1.7.28, got $(wine --version | sed 's/.*-//'))"
 	exit 1
-}
-
-# Run dependency check & launch main function
-[[ -x "gen-desktop.sh" ]] && {
-	./gen-desktop.sh
-	if [[ $(cat .rlw_epoch) -eq "$rlw_epoch" ]]; then
-		printf '%b\n' "Not automatically overwriting the .desktop file; the epoch version seems up to date (rlw_epoch=$rlw_epoch)."
-	else
-		spawndialog question "Would you like to install the Roblox menu item on your system?"
-		[[ "$?" = "0" ]] && {
-			xdg-desktop-menu install --novendor --mode user "$WRAPPER_DIR/roblox.desktop"
-			echo "$rlw_epoch" > .rlw_epoch
-		}
-	fi
 }
 
 roblox-install && main

@@ -1,0 +1,12 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+GIT_VERSION := $(shell git describe --tags)
+
+# Keep track of the version as a file in /usr/lib
+override_dh_auto_install:
+	mkdir -p debian/roblox-linux-wrapper/usr/lib/roblox-linux-wrapper/
+	echo $(GIT_VERSION) > debian/roblox-linux-wrapper/usr/lib/roblox-linux-wrapper/version
+	dh_auto_install

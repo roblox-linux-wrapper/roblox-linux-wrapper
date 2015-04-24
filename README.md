@@ -39,7 +39,7 @@ Roblox Linux Wrapper is very volatile, and updates are released very often. In o
 
 ## Required Dependencies
 
-    rlw.sh: cabextract git shasum wget wine zenity
+    rlw.sh: git wget wine zenity
 
   [1]: https://github.com/alfonsojon/roblox-linux-wrapper/issues
 
