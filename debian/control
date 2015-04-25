@@ -3,7 +3,7 @@ Section: games
 Priority: optional
 Maintainer: James Lu <glolol1@hotmail.com>
 Uploaders: Jonathan Alfonso <alfonsojon1997@gmail.com>
-Build-Depends: debhelper (>= 9)
+Build-Depends: debhelper (>= 9), git
 Standards-Version: 3.9.6
 Homepage: https://github.com/alfonsojon/roblox-linux-wrapper
 Vcs-Git: https://github.com/alfonsojon/roblox-linux-wrapper
