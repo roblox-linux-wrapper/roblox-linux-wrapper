@@ -104,7 +104,8 @@ roblox-install () {
 			# Make sure our directories really exist
 			mkdir -p "$HOME/.local/share/wineprefixes"
 			rwineboot
-			rwinetricks ddr=gdi		# Causes graphical problems in mutter/gala (GNOME Shell/Elementary OS)
+			# ddr=gdi: Causes graphical problems in mutter/gala (GNOME Shell/Elementary OS)
+			rwinetricks ddr=gdi sound=alsa # Fix for crackling under 14.04
 			[[ "$?" = 0 ]] || {
 				spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"
 				exit $?
@@ -227,6 +228,7 @@ export winebin="$(which wine)"
 export winebootbin="$(which wineboot)"
 export wineserverbin="$(which wineserver)"
 export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
+export PULSE_LATENCY_MSEC=60 # Workaround fix for crackling sound (variable used by wine)
 
 printf '%b\n' 'Roblox Linux Wrapper '"$rlwversion"'"'
 
