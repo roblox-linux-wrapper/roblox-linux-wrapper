@@ -3,9 +3,15 @@
 ## Information
 This script is not created nor supported officially by Roblox. It is unofficial and may be unstable. Use at your own risk.
 
-## Usage
+## Installation
 
-### Installation
+### .deb (Debian/Ubuntu)
+
+We provide `.deb` binaries for Debian / Ubuntu users on the [releases page](https://github.com/alfonsojon/roblox-linux-wrapper/releases). 
+
+A PPA will be available soon.
+
+### Installation via Git
 
 To install Roblox on your Linux computer, run the following commands in a terminal:
 ```
@@ -15,7 +21,7 @@ cd roblox-linux-wrapper
 ```
 If you are saavy enough, you can also clone to a custom directory of your choice.
 
-### Updates
+#### Updates
 
 Roblox Linux Wrapper is very volatile, and updates are released very often. In order to update the script, run `git pull` inside the folder that you cloned to via Git. Issues and bug reports will only be accepted if they can be reproduced with the newest version of RLW!
 
