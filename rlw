@@ -143,7 +143,7 @@ playerwrapper () {
 				--height=122)
 			GAMEID=$(cut -f 5 -d '/' <<< "$GAMEURL")
 		if [[ -n "$GAMEID" ]]; then
-			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
+			WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b" rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
 		else
 			spawndialog warning "Invalid game URL."
 			return
@@ -181,7 +181,7 @@ main () {
 	'Play Roblox (Legacy Mode)')
 		playerwrapper legacy; main;;
 	'Roblox Studio')
-		rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
+		WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b" rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
 		main ;;
 	'Reinstall Roblox')
 		spawndialog question 'Are you sure you would like to reinstall?'
