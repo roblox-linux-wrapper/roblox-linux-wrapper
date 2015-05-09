@@ -105,7 +105,7 @@ roblox-install () {
 			mkdir -p "$HOME/.local/share/wineprefixes"
 			rwineboot
 			# ddr=gdi: Causes graphical problems in mutter/gala (GNOME Shell/Elementary OS)
-			rwinetricks ddr=gdi sound=alsa # Fix for crackling under 14.04
+			rwinetricks ddr=gdi sound=alsa # Fix for crackling sound under Ubuntu 14.04
 			[[ "$?" = 0 ]] || {
 				spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"
 				exit $?
@@ -263,7 +263,7 @@ main () {
 		main;;
 	'Visit the GitHub page')
 		xdg-open https://github.com/alfonsojon/roblox-linux-wrapper
-		main  # Reopen the menu. Not sure if this should be kept or not.
+		main
 	esac
 	printf '%b\n' " > end main ()\n---"
 }
