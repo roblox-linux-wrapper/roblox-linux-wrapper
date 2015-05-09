@@ -171,7 +171,8 @@ winechooser () {
 			FALSE 'Enter custom Wine path...')
 	case $sel in
 		'Enter custom Wine path...')
-			winebin=$(zenity --text "Enter custom Wine path" --entry);;
+			winebin=$(zenity --title "Wine Version Selection" \
+					  --text "Enter custom Wine path:" --entry);;
 		'Automatic detection (via $PATH)')
 			# Here, we will literally save '$(which wine)' as the path
 			# so it changes dynamically and isn't immediately executed.
@@ -183,6 +184,8 @@ winechooser () {
 	if [[ -z "$winebin" ]]; then
 		printf "%b\n" "Clearing Wine choice..."
 		rm -f "$HOME/.rlw/wine_choice"
+		spawndialog error "You must enter a valid path."
+		winechooser
 	else
 		printf "%b\n" "Saving Wine choice to ~/.rlw/wine_choice"
 		echo "winebin=$winebin" > "$HOME/.rlw/wine_choice"
