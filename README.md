@@ -20,7 +20,7 @@ Alternatively, you can skip the `xdg-desktop-menu install` command and run the s
 To remove the wrapper, it's as simple as two commands:
 ```
 xdg-desktop-menu uninstall --mode user roblox.desktop
-rm -rf ~/roblox-linux-wrapper ~/.local/share/wineprefixes/roblox*
+rm -rf roblox-linux-wrapper ~/.local/share/wineprefixes/roblox*
 ```
 Note, you should have closed everything related to the Roblox Linux Wrapper first.
 
