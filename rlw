@@ -276,7 +276,7 @@ main () {
 		else
 			main
 		fi;;
-	'Select Wine Version')
+	'Select Wine Release')
 		winechooser
 		main;;
 	'Visit the GitHub page')
