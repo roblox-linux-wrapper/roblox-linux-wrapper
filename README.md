@@ -2,7 +2,7 @@
 This script is not created nor supported officially by Roblox. It is unofficial and may be unstable. Use at your own risk.
 
 ## Reporting Issues
-If you plan on reporting issues, please read reporting-issues.md before doing so. Thanks!
+If you plan on reporting issues, please read [reporting-issues.md](https://github.com/alfonsojon/roblox-linux-wrapper/blob/master/reporting-issues.md) before doing so. Thanks!
 
 ## Installation
 
