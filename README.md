@@ -41,10 +41,10 @@ Roblox Linux Wrapper is very volatile, and updates are released very often, so p
 ## Questions and Answers
 
 * Q: How do I install this?
-  * A: See the usage section.
+  * A: See the Installation section.
 
 * Q: It tells me there is a syntax error, or I'm having another problem.
-  * A: Download it again and retry. If the same thing occurs again, [open a new issue here][1]. If you report a bug, please be as informative as possible.
+  * A: Download it again and retry. If the same thing occurs again, [open a new issue here](https://github.com/alfonsojon/roblox-linux-wrapper/issues). If you report a bug, please be as informative as possible.
 
 * Q: Roblox isn't behaving like it should.
   * A: Select the "Reinstall Roblox" option and press "Ok". If you continue having problems, [file a bug report here](https://github.com/alfonsojon/roblox-linux-wrapper/issues).
