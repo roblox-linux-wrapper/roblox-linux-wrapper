@@ -47,7 +47,7 @@ Roblox Linux Wrapper is very volatile, and updates are released very often, so p
   * A: Download it again and retry. If the same thing occurs again, [open a new issue here][1]. If you report a bug, please be as informative as possible.
 
 * Q: Roblox isn't behaving like it should.
-  * A: Select the "Reinstall Roblox" option and press "Ok". If you continue having problems, [file a bug report here][1].
+  * A: Select the "Reinstall Roblox" option and press "Ok". If you continue having problems, [file a bug report here](https://github.com/alfonsojon/roblox-linux-wrapper/issues).
 
 * Q: What is the "Play Roblox (Legacy Mode)" option?
   * A: This is the old method used to launch games. Paste the game link in and click "Play" to launch the game.
@@ -59,8 +59,6 @@ Roblox Linux Wrapper is very volatile, and updates are released very often, so p
 ## Required Dependencies
 
     rlw: git wget wine zenity
-
-  [1]: https://github.com/alfonsojon/roblox-linux-wrapper/issues
 
 ## Licensing and copyright
 
