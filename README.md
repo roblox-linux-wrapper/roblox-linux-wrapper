@@ -9,10 +9,10 @@ If you plan on reporting issues, please read [reporting-issues.md](https://githu
 ### .deb (Debian/Ubuntu)
 
 We provide `.deb` binaries for Debian / Ubuntu users on the [releases page](https://github.com/alfonsojon/roblox-linux-wrapper/releases).
+A personal package archive (PPA) will be available shortly.
 
-`.rpm` packages will be available shortly
-
-A PPA and RPM repository will be available soon.
+### .rpm (Fedora/SUSE)
+`.rpm` packages will be available shortly.
 
 ### Installation via Git
 
