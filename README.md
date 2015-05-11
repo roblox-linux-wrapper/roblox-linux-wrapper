@@ -1,5 +1,5 @@
 ## Information
-This script is not created nor supported officially by Roblox. It is unofficial and may be unstable. Use at your own risk.
+This script is neither created nor officially supported by Roblox. It is unofficial and may be unstable. Use at your own risk.
 
 ## Reporting Issues
 If you plan on reporting issues, please read [reporting-issues.md](https://github.com/alfonsojon/roblox-linux-wrapper/blob/master/reporting-issues.md) before doing so. Thanks!
@@ -8,9 +8,11 @@ If you plan on reporting issues, please read [reporting-issues.md](https://githu
 
 ### .deb (Debian/Ubuntu)
 
-We provide `.deb` binaries for Debian / Ubuntu users on the [releases page](https://github.com/alfonsojon/roblox-linux-wrapper/releases). 
+We provide `.deb` binaries for Debian / Ubuntu users on the [releases page](https://github.com/alfonsojon/roblox-linux-wrapper/releases).
 
-A PPA will be available soon.
+`.rpm` packages will be available shortly
+
+A PPA and RPM repository will be available soon.
 
 ### Installation via Git
 
