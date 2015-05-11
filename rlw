@@ -25,9 +25,9 @@ spawndialog () {
 	zenity \
 		--no-wrap \
 		--window-icon="$RBXICON" \
-		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$branch" \
+		--title="$rlwversionstring" \
 		--"$1" \
-		--text="$2"
+		--text="$2" 2&> /dev/null
 }
 
 rwine () {
@@ -71,7 +71,7 @@ rwget () {
 			--auto-close \
 			--no-cancel \
 			--width=450 \
-			--height=120
+			--height=120 2&>/dev/null
 	[[ "$?" = "0" ]] || {
 		spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"
 		exit $?
@@ -102,11 +102,10 @@ roblox-install () {
 		if [[ $? = "0" ]]; then
 			rm -rf "$WINEPREFIX"
 			# Make sure our directories really exist
-			[[ -d "$HOME/.local/share/wineprefixes" ]] || {
-				mkdir -p "$HOME/.local/share/wineprefixes"
-			}
+			mkdir -p "$HOME/.local/share/wineprefixes"
 			rwineboot
-			rwinetricks ddr=gdi		# Causes graphical problems in mutter/gala (GNOME Shell/Elementary OS)
+			# ddr=gdi: Causes graphical problems in mutter/gala (GNOME Shell/Elementary OS)
+			rwinetricks ddr=gdi sound=alsa # Fix for crackling sound under Ubuntu 14.04
 			[[ "$?" = 0 ]] || {
 				spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"
 				exit $?
@@ -119,9 +118,9 @@ roblox-install () {
 				--progress \
 				--pulsate \
 				--no-cancel \
-				--auto-close
+				--auto-close 2&>/dev/null
 			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
-			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
+			WINEDLLOVERRIDES="winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
 			rwine regsvr32 /i "$(find "$WINEPREFIX" -iname 'RobloxProxy.dll')"
 		else
 			exit 1
@@ -134,20 +133,19 @@ playerwrapper () {
 	printf '%b\n' " > begin playerwrapper ()\n---"
 	rwine regsvr32 /i "$(find "$WINEPREFIX" -iname 'RobloxProxy.dll')"
 	if [[ "$1" = legacy ]]; then
-		export GAMEURL=$(\
-			zenity \
-				--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$branch" \
+		GAMEURL=$(zenity \
+				--title="$rlwversionstring" \
 				--window-icon="$RBXICON" \
 				--entry \
 				--text='Paste the URL for the game here.' \
 				--ok-label='Play' \
 				--width=450 \
 				--height=122)
-			GAMEID=$(printf '%s' "$GAMEURL" | cut -d "=" -f 2)
+			GAMEID=$(cut -f 5 -d '/' <<< "$GAMEURL")
 		if [[ -n "$GAMEID" ]]; then
-			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
+			WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b" rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
 		else
-			spawndialog warning "Invalid game URL or ID."
+			spawndialog warning "Invalid game URL."
 			return
 		fi
 	else
@@ -156,23 +154,86 @@ playerwrapper () {
 	printf '%b\n' " > end playerwrapper ()\n---"
 }
 
+wineinitialize () {
+	# Evaluate the Wine path selection, and base the wineboot/wineserver
+	# paths off that.
+	source "$HOME/.rlw/wine_choice"
+	winebootbin="$(dirname $winebin)/wineboot"
+	wineserverbin="$(dirname $winebin)/wineserver"
+	for x in "$winebin" "$winebootbin" "$wineserverbin"; do
+		if [[ -x "$x" ]]; then
+			printf "%b\n" "$(basename $x) path set to $x"
+		else
+			spawndialog error "Could not find $(basename $x) at $x. Are you sure a copy is installed there?"
+			winechooser
+			break
+		fi
+	done
+	[[ "$($winebin --version | sed 's/.*-//')" > "1.7.27" ]] || {
+		spawndialog error "Your copy of Wine is too old. Please install version 1.7.28 or greater.\n(expected 1.7.28, got $(wine --version | sed 's/.*-//'))"
+		exit 1
+	}
+}
+
+winechooser () {
+	sel=$(zenity \
+			--title "Wine Release Selection" \
+			--width=480 \
+			--height=250 \
+			--cancel-label='Exit' \
+			--list \
+			--text 'Select the version of Wine you want to use:' \
+			--radiolist \
+			--column '' \
+			--column 'Options' \
+			TRUE 'Automatic detection (via $PATH)' \
+			FALSE '/usr/bin/wine' \
+			FALSE '/opt/wine-staging/bin/wine' \
+			FALSE 'Enter custom Wine path...')
+	case $sel in
+		'Enter custom Wine path...')
+			winebin=$(zenity --title "Wine Release Selection" \
+					  --text "Enter custom Wine path:" --entry);;
+		'Automatic detection (via $PATH)')
+			# Here, we will literally save '$(which wine)' as the path
+			# so it changes dynamically and isn't immediately evaluated.
+			winebin='$(which wine)'
+			if [[ ! -x "$(eval "echo $winebin")" ]]; then
+				spawndialog error 'Missing dependencies! Please install wine somewhere in $PATH, or select a custom path instead.'
+				exit 1
+			fi;;
+		*)
+			winebin="$sel"
+	esac
+	printf "%b\n" "Wine path set to: $winebin"
+	if [[ -z "$winebin" ]]; then
+		printf "%b\n" "Clearing Wine choice..."
+		rm -f "$HOME/.rlw/wine_choice"
+		spawndialog error "You must enter a valid path."
+		winechooser
+	else
+		printf "%b\n" "Saving Wine choice to ~/.rlw/wine_choice"
+		echo "winebin=$winebin" > "$HOME/.rlw/wine_choice"
+		mkdir -p "$HOME/.rlw/"
+	fi
+	wineinitialize
+}
+
 main () {
 	printf '%b\n' " > begin main ()\n---"
-	[[ -x "gen-desktop.sh" ]] && {
-		gen-desktop.sh
-		spawndialog question "Would you like to install the Roblox menu item on your system?"
-		[[ "$?" = "0" ]] && {
-			xdg-desktop-menu install --novendor --mode user roblox.desktop
-		}
-	}
-	rm -rf "$HOME/Desktop/ROBLOX*desktop $HOME/Desktop/ROBLOX*.lnk"
+	rm -f $HOME/Desktop/ROBLOX*.lnk
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
+	if [[ ! -f "$HOME/.rlw/wine_choice" ]]; then
+		printf "%b\n" "No Wine path has been saved yet, starting winechooser..."
+		winechooser
+	fi
+	wineinitialize
 	sel=$(zenity \
-		--title='Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"' by alfonsojon' \
+		--title="$rlwversionstring" \
 		--window-icon="$RBXICON" \
 		--width=480 \
-		--height=230 \
-		--cancel-label='Quit' \
+		--height=300 \
+		--cancel-label='Exit' \
 		--list \
 		--text 'What option would you like?' \
 		--radiolist \
@@ -181,7 +242,10 @@ main () {
 		TRUE 'Play Roblox' \
 		FALSE 'Play Roblox (Legacy Mode)' \
 		FALSE 'Roblox Studio' \
-		FALSE 'Reinstall Roblox' )
+		FALSE 'Select Wine Version' \
+		FALSE 'Reinstall Roblox' \
+		FALSE 'Uninstall Roblox' \
+		FALSE 'Visit the GitHub page' 2>/dev/null )
 	case $sel in
 	'Play Roblox')
 		playerwrapper; main;;
@@ -193,49 +257,58 @@ main () {
 	'Reinstall Roblox')
 		spawndialog question 'Are you sure you would like to reinstall?'
 		if [[ "$?" = "0" ]]; then
-			rm -rf "$WINEPREFIX";
+			rm -rf "$HOME/.rlw"
+			rm -rf "$WINEPREFIX"
 			roblox-install; main
 		else
 			main
 		fi;;
+	'Uninstall Roblox')
+		spawndialog question 'Are you sure you would like to uninstall?'
+		if [[ "$?" = "0" ]]; then
+			xdg-desktop-menu uninstall "roblox.desktop"
+			rm -rf "$HOME/.rlw"
+			rm -rf "$HOME/.local/share/icons/roblox.png"
+			rm -rf "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"
+			rm -rf "$WINEPREFIX"
+			spawndialog info 'Roblox has been uninstalled successfully.'
+			exit
+		else
+			main
+		fi;;
+	'Select Wine Release')
+		winechooser
+		main;;
+	'Visit the GitHub page')
+		xdg-open https://github.com/alfonsojon/roblox-linux-wrapper
+		main
 	esac
 	printf '%b\n' " > end main ()\n---"
 }
 
+WRAPPER_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+cd "$WRAPPER_DIR"
+
 # Define some variables
-export rlwversion=20150412
-export branch=$(git symbolic-ref --short -q HEAD)
+if [[ -d ".git" ]]; then
+	export rlwversion=$(git describe --tags)
+elif [[ -f "/usr/lib/roblox-linux-wrapper/version" ]]; then
+	export rlwversion=$(cat /usr/lib/roblox-linux-wrapper/version)
+else
+	export rlwversion='version-unknown'
+fi
 export WINEARCH=win32
 
-printf '%b\n' 'Roblox Linux Wrapper v'"$rlwversion"'-'"$branch"
-
-# Uncomment these lines to use stock Wine (default)
-export winebin="$(which wine)"
-export winebootbin="$(which wineboot)"
-export wineserverbin="$(which wineserver)"
 export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
+export PULSE_LATENCY_MSEC=60 # Workaround fix for crackling sound (variable used by wine)
+
+rlwversionstring="Roblox Linux Wrapper $rlwversion"
+printf '%b\n' "$rlwversionstring"
 
 # Don't allow running as root
 if [ "$(id -u)" == "0" ]; then
-   spawndialog error "RLW should not be ran as root."
+   spawndialog error "Roblox Linux Wrapper should not be ran with root permissions."
    exit 1
 fi
 
-# Check that everything is here
-[[ -x "$winebin" && -x "$winebootbin" && -x "$wineserverbin" ]] || {
-	spawndialog error "Missing dependencies! Please install wine and try again."
-	exit 1
-}
-
-[[ "$(wine --version | sed 's/.*-//')" > "1.7.27" ]] || {
-	spawndialog error "Your copy of Wine is too old. Please install version 1.7.28 or greater.\n(expected 1.7.28, got $(wine --version | sed 's/.*-//'))"
-	exit 1
-}
-
-# Note: git is used for automatic updating, and is recommended.
-[[ -x "$(which git)" ]] || {
-	spawndialog error "git is not installed, or was not found. Please install git\nto enable automatic updates."
-}
-# Run dependency check & launch main function
-git pull
 roblox-install && main

@@ -1,6 +1,11 @@
 roblox-wine/
 roblox-wine-staging/
-roblox.desktop
+.rlw_epoch
+
+debian/files
+debian/roblox-linux-wrapper
+debian/*.log
+debian/*.substvars
 
 # Compiled Object files
 *.slo
