@@ -177,7 +177,7 @@ wineinitialize () {
 
 winechooser () {
 	sel=$(zenity \
-			--title "Wine Version Selection" \
+			--title "Wine Release Selection" \
 			--width=480 \
 			--height=250 \
 			--cancel-label='Exit' \
@@ -192,7 +192,7 @@ winechooser () {
 			FALSE 'Enter custom Wine path...')
 	case $sel in
 		'Enter custom Wine path...')
-			winebin=$(zenity --title "Wine Version Selection" \
+			winebin=$(zenity --title "Wine Release Selection" \
 					  --text "Enter custom Wine path:" --entry);;
 		'Automatic detection (via $PATH)')
 			# Here, we will literally save '$(which wine)' as the path
