@@ -1,5 +1,3 @@
-# Roblox Linux Wrapper
-
 ## Information
 This script is not created nor supported officially by Roblox. It is unofficial and may be unstable. Use at your own risk.
 
