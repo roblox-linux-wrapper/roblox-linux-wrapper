@@ -14,9 +14,9 @@ A personal package archive (PPA) will be available shortly.
 ### .rpm (Fedora/SUSE)
 `.rpm` packages will be available shortly.
 
-### Installation via Git
+### source (via `git clone`)
 
-To install Roblox on your Linux computer, run the following commands in a terminal:
+To install Roblox on your Linux computer from source, run the following commands in a terminal:
 ```
 git clone https://github.com/alfonsojon/roblox-linux-wrapper.git
 cd roblox-linux-wrapper
@@ -26,7 +26,17 @@ If you are saavy enough, you can also clone to a custom directory of your choice
 
 #### Updates
 
-Roblox Linux Wrapper is very volatile, and updates are released very often. In order to update the script, run `git pull` inside the folder that you cloned to via Git. Issues and bug reports will only be accepted if they can be reproduced with the newest version of RLW!
+Roblox Linux Wrapper is very volatile, and updates are released very often, so please check for updates frequently.
+
+##### `.deb` & `.rpm`
+* Note the version you have installed
+* If the version present here is newer, download it and install it via your package manager's GUI.
+* If you have enabled an RPM repository or Personal Package Archive (PPA), updates to the wrapper will come with system updates automatically.
+
+##### from source
+* Open a terminal, change to the directory you installed
+* Run `git pull` inside the terminal while in that directory
+
 
 ## Questions and Answers
 
@@ -79,6 +89,6 @@ Roblox Linux Wrapper is very volatile, and updates are released very often. In o
     made in this program. No proprietary files are bundled in this software.
 
 ## Spare change?
-If you like my work, help me pay for college! :)
+If you like my work, you can show your support with donations :)
 
 [![PayPal - The safer, easier way to pay online!](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4LPXB3QJWVFQ6)
