@@ -247,7 +247,7 @@ main () {
 		TRUE 'Play Roblox' \
 		FALSE 'Play Roblox (Legacy Mode)' \
 		FALSE 'Roblox Studio' \
-		FALSE 'Select Wine Version' \
+		FALSE 'Select Wine Release' \
 		FALSE 'Reinstall Roblox' \
 		FALSE 'Uninstall Roblox' \
 		FALSE 'Visit the GitHub page' 2>/dev/null )
