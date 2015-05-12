@@ -218,8 +218,8 @@ winechooser () {
 		winechooser
 	else
 		printf "%b\n" "Saving Wine choice to ~/.rlw/wine_choice"
-		echo "winebin=$winebin" > "$HOME/.rlw/wine_choice"
 		mkdir -p "$HOME/.rlw/"
+		echo "winebin=$winebin" > "$HOME/.rlw/wine_choice"
 	fi
 	wineinitialize
 }
