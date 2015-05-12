@@ -16,12 +16,13 @@ A personal package archive (PPA) will be available shortly.
 
 ### source (via `git clone`)
 
-To install Roblox on your Linux computer from source, run the following commands in a terminal:
+To install Roblox on your Linux computer from Git source, run the following commands in a terminal:
 ```
 git clone https://github.com/alfonsojon/roblox-linux-wrapper.git
 cd roblox-linux-wrapper
 ./rlw
 ```
+
 If you are saavy enough, you can also clone to a custom directory of your choice.
 
 ## Updates
@@ -29,14 +30,13 @@ If you are saavy enough, you can also clone to a custom directory of your choice
 Roblox Linux Wrapper is very volatile, and updates are released very often, so please check for updates frequently.
 
 ### `.deb` & `.rpm`
-* Note the version you have installed
+* Note the version you have installed.
 * If the version present here is newer, download it and install it via your package manager's GUI.
 * If you have enabled an RPM repository or Personal Package Archive (PPA), updates to the wrapper will come with system updates automatically.
 
-### from source
-* Open a terminal, change to the directory you installed
-* Run `git pull` inside the terminal while in that directory
-
+### from Git source
+* Open a terminal, change to the directory you installed.
+* Run `git pull` inside the terminal while in that directory.
 
 ## Questions and Answers
 
@@ -58,7 +58,10 @@ Roblox Linux Wrapper is very volatile, and updates are released very often, so p
 
 ## Required Dependencies
 
-    rlw: git wget wine zenity
+* git
+* wget
+* wine
+* zenity
 
 ## Licensing and copyright
 
