@@ -9,7 +9,25 @@ If you plan on reporting issues, please read [CONTRIBUTING.md](https://github.co
 ### .deb (Debian/Ubuntu)
 
 We provide `.deb` binaries for Debian / Ubuntu users on the [releases page](https://github.com/alfonsojon/roblox-linux-wrapper/releases).
-A personal package archive (PPA) will be available shortly.
+
+Debian/Ubuntu users can also use GLolol's repository at http://packages.overdrive.pw/:
+
+1) Add the following to `/etc/apt/sources.list`:
+
+```
+deb http://packages.overdrive.pw/ rlw main
+```
+
+2) Install the repository's PGP key (this will prevent unauthenticated package errors):
+
+```
+wget -O /tmp/sub.class1.server.ca.pem https://www.startssl.com/certs/sub.class1.server.ca.pem
+wget --ca-certificate=/tmp/sub.class1.server.ca.pem -O - https://secure.overdrive.pw/repo.gpg.key | sudo apt-key add -
+```
+
+3) Install the Roblox Linux Wrapper package. Dependencies will be automatically installed, and updates applied automatically when you upgrade your system:
+
+```sudo apt-get install roblox-linux-wrapper```
 
 ### .rpm (Fedora/SUSE)
 `.rpm` packages will be available shortly.
@@ -31,8 +49,8 @@ Roblox Linux Wrapper is very volatile, and updates are released very often, so p
 
 ### `.deb` & `.rpm`
 * Note the version you have installed.
-* If the version present here is newer, download it and install it via your package manager's GUI.
-* If you have enabled an RPM repository or Personal Package Archive (PPA), updates to the wrapper will come with system updates automatically.
+* If the version present [here](https://github.com/alfonsojon/roblox-linux-wrapper/releases) is newer, download it and install it via your package manager's GUI.
+* If you have enabled an APT or RPM repository, updates to the wrapper will come with system updates in the next release.
 
 ### from Git source
 * Open a terminal, change to the directory you installed.
@@ -53,7 +71,7 @@ Roblox Linux Wrapper is very volatile, and updates are released very often, so p
   * A: This is the old method used to launch games. Paste the game link in and click "Play" to launch the game.
 
 * Q: It keeps telling me "Missing Dependencies"!
-  * A: Then install it! If it tells you "Please install wine", then install Wine. It does not install these dependencies automatically. You need to install the dependencies manually. To install the latest version of Wine, visit https://www.winehq.org/download/.
+  * A: Then install it! If it tells you "Please install wine", then install Wine. It does not install these dependencies automatically. To install the latest version of Wine, visit https://www.winehq.org/download/.
 
 
 ## Required Dependencies
