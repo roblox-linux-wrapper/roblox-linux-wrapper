@@ -14,10 +14,11 @@ Architecture: all
 Depends: ${misc:Depends},
 # wine-dummy is a dummy package that I use because I run a custom
 # installation of Wine. It shouldn't affect anyone else since the
-# package isn't present for their dependency chain. -James Lu
+# package isn't present for their dependency chain. -James
  wine (>= 1.7.28) | wine1.7 (>= 1.7.28) | wine-dummy,
  zenity,
- wget
+ wget,
+ xdg-utils
 Description: Linux Wrapper for Roblox using Wine
  This package provides Roblox Linux Wrapper, an installer for ROBLOX
  on Linux systems using Wine.
