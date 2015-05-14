@@ -79,7 +79,7 @@ Roblox Linux Wrapper is very volatile, and updates are released very often, so p
 
 * git
 * wget
-* wine
+* wine or wine-staging (whichever works best for you)
 * zenity
 
 ## Licensing and copyright
