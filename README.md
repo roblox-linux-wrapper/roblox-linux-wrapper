@@ -1,5 +1,5 @@
 ## Information
-This script is neither created nor officially supported by Roblox. It is unofficial and may be unstable. Use at your own risk. To install wine, please (see the official WineHQ documentation)[https://www.winehq.org/download/] on how to install the appropriate version of Wine for your system. This program does not install Wine for you.
+This script is neither created nor officially supported by Roblox. It is unofficial and may be unstable. Use at your own risk. To install wine, please [see the official WineHQ documentation](https://www.winehq.org/download/) on how to install the appropriate version of Wine for your system. This program does not install Wine for you.
 
 
 ## Reporting Issues
