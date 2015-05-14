@@ -12,10 +12,10 @@ We provide `.deb` binaries for Debian / Ubuntu users on the [releases page](http
 
 Debian/Ubuntu users can also use GLolol's repository at http://packages.overdrive.pw/:
 
-1) Add the following to `/etc/apt/sources.list`:
+1) Run the following command to add the repository:
 
 ```
-deb http://packages.overdrive.pw/ rlw main
+echo 'deb http://packages.overdrive.pw/ rlw main' | sudo tee --append /etc/apt/sources.list > /dev/null 
 ```
 
 2) Install the repository's PGP key (this will prevent unauthenticated package errors):
@@ -30,7 +30,7 @@ wget --ca-certificate=/tmp/sub.class1.server.ca.pem -O - https://secure.overdriv
 ```sudo apt-get install roblox-linux-wrapper```
 
 ### .rpm (Fedora/SUSE)
-`.rpm` packages will be available shortly.
+`.rpm` packages will be available as soon as reasonably possible..
 
 ### source (via `git clone`)
 
