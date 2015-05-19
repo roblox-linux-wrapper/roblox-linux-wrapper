@@ -15,20 +15,22 @@ Debian/Ubuntu users can also use GLolol's repository at http://packages.overdriv
 
 1) Run the following command to add the repository:
 
-```
+```shell
 echo 'deb http://packages.overdrive.pw/ rlw main' | sudo tee --append /etc/apt/sources.list > /dev/null 
 ```
 
 2) Install the repository's PGP key (this will prevent unauthenticated package errors):
 
-```
+```shell
 wget -O /tmp/sub.class1.server.ca.pem https://www.startssl.com/certs/sub.class1.server.ca.pem
 wget --ca-certificate=/tmp/sub.class1.server.ca.pem -O - https://secure.overdrive.pw/repo.gpg.key | sudo apt-key add -
 ```
 
 3) Install the Roblox Linux Wrapper package. Dependencies will be automatically installed, and updates applied automatically when you upgrade your system:
 
-```sudo apt-get install roblox-linux-wrapper```
+```shell
+sudo apt-get install roblox-linux-wrapper
+```
 
 ### .rpm (Fedora/SUSE)
 `.rpm` packages will be available as soon as reasonably possible..
@@ -36,7 +38,7 @@ wget --ca-certificate=/tmp/sub.class1.server.ca.pem -O - https://secure.overdriv
 ### source (via `git clone`)
 
 To install Roblox on your Linux computer from Git source, run the following commands in a terminal:
-```
+```shell
 git clone https://github.com/alfonsojon/roblox-linux-wrapper.git
 cd roblox-linux-wrapper
 ./rlw
