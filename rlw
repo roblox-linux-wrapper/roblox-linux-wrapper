@@ -104,8 +104,10 @@ roblox-install () {
 			# Make sure our directories really exist
 			mkdir -p "$HOME/.local/share/wineprefixes"
 			rwineboot
-			# ddr=gdi: Causes graphical problems in mutter/gala (GNOME Shell/Elementary OS)
-			rwinetricks ddr=gdi sound=alsa # Fix for crackling sound under Ubuntu 14.04
+			rwinetricks \
+				ddr=gdi \			# Vastly improves performance, may cause graphical problems in mutter/gala
+				sound=alsa \			# Fix for crackling sound under Ubuntu 14.04
+				w_override_dlls d3dx11 disabled	# Disable D3DX11 support until it works in wine
 			[[ "$?" = 0 ]] || {
 				spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"
 				exit $?
