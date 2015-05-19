@@ -56,6 +56,12 @@ Roblox Linux Wrapper is very volatile, and updates are released very often, so p
 ### from Git source
 * Open a terminal, change to the directory you installed.
 * Run `git pull` inside the terminal while in that directory.
+* 
+
+## Diagnosing the game
+Often times, a Roblox update breaks compatibility with the Roblox Linux Wrapper. Many of these changes will require an update to wine, which may come out months after the issue is introduced. In order to circumvent this issue, the wrapper now allows you to choose either wine or wine-staging, to allow you to use the release of wine that works best for you. It will ask you upon launching, and there is also an option labelled "Select Wine Release" in the launcher.
+* If wine works fine, keep using wine.
+* If wine-staging works, keep using it. Do note that wine-staging is pre-release software - you may encounter issues.
 
 ## Questions and Answers
 
