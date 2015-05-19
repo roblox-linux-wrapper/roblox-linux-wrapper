@@ -200,7 +200,7 @@ winechooser () {
 		'Automatic detection (via $PATH)')
 			# Here, we will literally save '$(which wine)' as the path
 			# so it changes dynamically and isn't immediately evaluated.
-			WINE="$(which wine)"
+			WINE='$(which wine)'
 			real_wine="$(eval "echo $WINE")"
 			winebootbin="$(dirname "$real_wine")/wineboot"
 			wineserverbin="$(dirname "$real_wine")/wineserver"
@@ -229,7 +229,7 @@ winechooser () {
 
 main () {
 	printf '%b\n' " > begin main ()\n---"
-	rm -f "$HOME/Desktop/ROBLOX*.lnk"
+	rm -f $HOME/Desktop/ROBLOX*.lnk
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
 	sel=$(zenity \
 		--title="$rlwversionstring" \
