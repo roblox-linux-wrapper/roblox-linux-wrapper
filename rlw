@@ -104,14 +104,15 @@ roblox-install () {
 			# Make sure our directories really exist
 			mkdir -p "$HOME/.local/share/wineprefixes"
 			rwineboot
-			rwinetricks \
-				ddr=gdi \				# Vastly improves performance, may cause graphical problems in mutter/gala
-				sound=alsa				# Fix for crackling sound under Ubuntu 14.04
+			rwinetricks ddr=gdi sound=alsa			
+				# ddr=gdi:	Vastly improves performance, may cause graphical problems in mutter/gala
+				# sound=alsa:	Fix for crackling sound under Ubuntu 14.04
 			[[ "$?" = 0 ]] || {
 				spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"
 				exit $?
 			}
 			wget -N -r --no-parent -Aexe http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/latest-esr/win32/en-US/ -nd -P /tmp/Firefox-Setup/
+			chmod +x /tmp/Firefox-Setup/*.exe
 			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup/*.exe /SD | zenity \
 				--window-icon="$RBXICON" \
 				--title='Installing Mozilla Firefox' \
@@ -121,6 +122,7 @@ roblox-install () {
 				--no-cancel \
 				--auto-close 2&>/dev/null
 			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
+			chmod +x /tmp/RobloxPlayerLauncher.exe
 			WINEDLLOVERRIDES="winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
 			rwine regsvr32 /i "$(find "$WINEPREFIX" -iname 'RobloxProxy.dll')"
 		else
