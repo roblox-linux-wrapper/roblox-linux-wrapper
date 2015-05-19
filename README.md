@@ -15,20 +15,22 @@ Debian/Ubuntu users can also use GLolol's repository at http://packages.overdriv
 
 1) Run the following command to add the repository:
 
-```
+```shell
 echo 'deb http://packages.overdrive.pw/ rlw main' | sudo tee --append /etc/apt/sources.list > /dev/null 
 ```
 
 2) Install the repository's PGP key (this will prevent unauthenticated package errors):
 
-```
+```shell
 wget -O /tmp/sub.class1.server.ca.pem https://www.startssl.com/certs/sub.class1.server.ca.pem
 wget --ca-certificate=/tmp/sub.class1.server.ca.pem -O - https://secure.overdrive.pw/repo.gpg.key | sudo apt-key add -
 ```
 
 3) Install the Roblox Linux Wrapper package. Dependencies will be automatically installed, and updates applied automatically when you upgrade your system:
 
-```sudo apt-get install roblox-linux-wrapper```
+```shell
+sudo apt-get install roblox-linux-wrapper
+```
 
 ### .rpm (Fedora/SUSE)
 `.rpm` packages will be available as soon as reasonably possible..
@@ -36,7 +38,7 @@ wget --ca-certificate=/tmp/sub.class1.server.ca.pem -O - https://secure.overdriv
 ### source (via `git clone`)
 
 To install Roblox on your Linux computer from Git source, run the following commands in a terminal:
-```
+```shell
 git clone https://github.com/alfonsojon/roblox-linux-wrapper.git
 cd roblox-linux-wrapper
 ./rlw
@@ -56,6 +58,11 @@ Roblox Linux Wrapper is very volatile, and updates are released very often, so p
 ### from Git source
 * Open a terminal, change to the directory you installed.
 * Run `git pull` inside the terminal while in that directory.
+
+## Diagnosing the game
+Often times, a Roblox update breaks compatibility with the Roblox Linux Wrapper. Many of these changes will require an update to wine, which may come out months after the issue is introduced. In order to circumvent this issue, the wrapper now allows you to choose either wine or wine-staging, to allow you to use the release of wine that works best for you. It will ask you upon launching, and there is also an option labelled "Select Wine Release" in the launcher.
+* If wine works fine, keep using wine.
+* If wine-staging works, keep using it. Do note that wine-staging is pre-release software - you may encounter issues.
 
 ## Questions and Answers
 
