@@ -107,7 +107,6 @@ roblox-install () {
 			rwinetricks \
 				ddr=gdi \				# Vastly improves performance, may cause graphical problems in mutter/gala
 				sound=alsa				# Fix for crackling sound under Ubuntu 14.04
-			rwinetricks w_override_dlls d3d11 disabled	# Disable D3DX11 support until it works in wine
 			[[ "$?" = 0 ]] || {
 				spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"
 				exit $?
@@ -145,13 +144,13 @@ playerwrapper () {
 				--height=122)
 			GAMEID=$(cut -f 5 -d '/' <<< "$GAMEURL")
 		if [[ -n "$GAMEID" ]]; then
-			rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
+			WINEDLLOVERRIDES="d3d11.dll=" rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
 		else
 			spawndialog warning "Invalid game URL."
 			return
 		fi
 	else
-		rwine "$WINEPREFIX/drive_c/Program Files/Mozilla Firefox/firefox.exe" "http://www.roblox.com/Games.aspx"
+		WINEDLLOVERRIDES="d3d11.dll=" rwine "$WINEPREFIX/drive_c/Program Files/Mozilla Firefox/firefox.exe" "http://www.roblox.com/Games.aspx"
 	fi
 	printf '%b\n' " > end playerwrapper ()\n---"
 }
@@ -259,7 +258,7 @@ main () {
 	'Play Roblox (Legacy Mode)')
 		playerwrapper legacy; main;;
 	'Roblox Studio')
-		WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b" rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
+		WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b;d3d11.dll=" rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
 		main ;;
 	'Reinstall Roblox')
 		spawndialog question 'Are you sure you would like to reinstall?'
