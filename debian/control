@@ -7,17 +7,19 @@ Build-Depends: debhelper (>= 9), git
 Standards-Version: 3.9.6
 Homepage: https://github.com/alfonsojon/roblox-linux-wrapper
 Vcs-Git: https://github.com/alfonsojon/roblox-linux-wrapper
-Vcs-Browser: https://github.com/alfonsojon/roblox-linux-wrappery
+Vcs-Browser: https://github.com/alfonsojon/roblox-linux-wrapper
 
 Package: roblox-linux-wrapper
 Architecture: all
 Depends: ${misc:Depends},
 # wine-dummy is a dummy package that I use because I run a custom
 # installation of Wine. It shouldn't affect anyone else since the
-# package isn't present for their dependency chain. -James Lu
- wine (>= 1.7.28) | wine1.7 (>= 1.7.28) | wine-dummy,
+# package isn't present for their dependency chain. -James
+ wine (>= 1.7.28) | wine1.7 (>= 1.7.28) | wine-staging-compat | wine-dummy,
  zenity,
- wget
+ wget,
+ xdg-utils
+Recommends: winetricks
 Description: Linux Wrapper for Roblox using Wine
  This package provides Roblox Linux Wrapper, an installer for ROBLOX
  on Linux systems using Wine.

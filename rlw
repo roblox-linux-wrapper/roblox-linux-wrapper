@@ -198,10 +198,15 @@ winechooser () {
 			# Here, we will literally save '$(which wine)' as the path
 			# so it changes dynamically and isn't immediately evaluated.
 			winebin='$(which wine)'
-			if [[ ! -x "$(eval "echo $winebin")" ]]; then
-				spawndialog error 'Missing dependencies! Please install wine somewhere in $PATH, or select a custom path instead.'
-				exit 1
-			fi;;
+			real_winebin="$(eval "echo $winebin")"
+			winebootbin="$(dirname $real_winebin)/wineboot"
+			wineserverbin="$(dirname $real_winebin)/wineserver"
+			for x in "$real_winebin" "$winebootbin" "$wineserverbin"; do
+				if [[ ! -x "$x" ]]; then
+					spawndialog error "Missing dependencies! Please install wine somewhere in "'$PATH'", or select a custom path instead.\nDetails: Could not find $(basename $x) at $x. Are you sure a copy is installed there?"
+					exit 1
+				fi
+			done;;
 		*)
 			winebin="$sel"
 	esac
@@ -213,8 +218,8 @@ winechooser () {
 		winechooser
 	else
 		printf "%b\n" "Saving Wine choice to ~/.rlw/wine_choice"
-		echo "winebin=$winebin" > "$HOME/.rlw/wine_choice"
 		mkdir -p "$HOME/.rlw/"
+		echo "winebin=$winebin" > "$HOME/.rlw/wine_choice"
 	fi
 	wineinitialize
 }
@@ -242,7 +247,7 @@ main () {
 		TRUE 'Play Roblox' \
 		FALSE 'Play Roblox (Legacy Mode)' \
 		FALSE 'Roblox Studio' \
-		FALSE 'Select Wine Version' \
+		FALSE 'Select Wine Release' \
 		FALSE 'Reinstall Roblox' \
 		FALSE 'Uninstall Roblox' \
 		FALSE 'Visit the GitHub page' 2>/dev/null )
@@ -271,7 +276,10 @@ main () {
 			rm -rf "$HOME/.local/share/icons/roblox.png"
 			rm -rf "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"
 			rm -rf "$WINEPREFIX"
-			spawndialog info 'Roblox has been uninstalled successfully.'
+			text='Roblox has been uninstalled successfully.'
+			[[ "$WRAPPER_DIR" == "/usr/bin" ]] && text+="\nTo uninstall Roblox Linux Wrapper and not just the Roblox Wineprefix, please use your package manager."
+			spawndialog info "$text"
+
 			exit
 		else
 			main

@@ -1,27 +1,47 @@
 ## Information
-This script is neither created nor officially supported by Roblox. It is unofficial and may be unstable. Use at your own risk.
+This script is neither created nor officially supported by Roblox. It is unofficial and may be unstable. Use at your own risk. To install wine, please [see the official WineHQ documentation](https://www.winehq.org/download/) on how to install the appropriate version of Wine for your system. This program does not install Wine for you.
+
 
 ## Reporting Issues
-If you plan on reporting issues, please read [reporting-issues.md](https://github.com/alfonsojon/roblox-linux-wrapper/blob/master/reporting-issues.md) before doing so. Thanks!
+If you plan on reporting issues, please read [CONTRIBUTING.md](https://github.com/alfonsojon/roblox-linux-wrapper/blob/master/CONTRIBUTING.md) before doing so. Thanks!
 
 ## Installation
 
 ### .deb (Debian/Ubuntu)
 
 We provide `.deb` binaries for Debian / Ubuntu users on the [releases page](https://github.com/alfonsojon/roblox-linux-wrapper/releases).
-A personal package archive (PPA) will be available shortly.
+
+Debian/Ubuntu users can also use GLolol's repository at http://packages.overdrive.pw/:
+
+1) Run the following command to add the repository:
+
+```
+echo 'deb http://packages.overdrive.pw/ rlw main' | sudo tee --append /etc/apt/sources.list > /dev/null 
+```
+
+2) Install the repository's PGP key (this will prevent unauthenticated package errors):
+
+```
+wget -O /tmp/sub.class1.server.ca.pem https://www.startssl.com/certs/sub.class1.server.ca.pem
+wget --ca-certificate=/tmp/sub.class1.server.ca.pem -O - https://secure.overdrive.pw/repo.gpg.key | sudo apt-key add -
+```
+
+3) Install the Roblox Linux Wrapper package. Dependencies will be automatically installed, and updates applied automatically when you upgrade your system:
+
+```sudo apt-get install roblox-linux-wrapper```
 
 ### .rpm (Fedora/SUSE)
-`.rpm` packages will be available shortly.
+`.rpm` packages will be available as soon as reasonably possible..
 
 ### source (via `git clone`)
 
-To install Roblox on your Linux computer from source, run the following commands in a terminal:
+To install Roblox on your Linux computer from Git source, run the following commands in a terminal:
 ```
 git clone https://github.com/alfonsojon/roblox-linux-wrapper.git
 cd roblox-linux-wrapper
 ./rlw
 ```
+
 If you are saavy enough, you can also clone to a custom directory of your choice.
 
 ## Updates
@@ -29,14 +49,13 @@ If you are saavy enough, you can also clone to a custom directory of your choice
 Roblox Linux Wrapper is very volatile, and updates are released very often, so please check for updates frequently.
 
 ### `.deb` & `.rpm`
-* Note the version you have installed
-* If the version present here is newer, download it and install it via your package manager's GUI.
-* If you have enabled an RPM repository or Personal Package Archive (PPA), updates to the wrapper will come with system updates automatically.
+* Note the version you have installed.
+* If the version present [here](https://github.com/alfonsojon/roblox-linux-wrapper/releases) is newer, download it and install it via your package manager's GUI.
+* If you have enabled an APT or RPM repository, updates to the wrapper will come with system updates in the next release.
 
-### from source
-* Open a terminal, change to the directory you installed
-* Run `git pull` inside the terminal while in that directory
-
+### from Git source
+* Open a terminal, change to the directory you installed.
+* Run `git pull` inside the terminal while in that directory.
 
 ## Questions and Answers
 
@@ -53,12 +72,15 @@ Roblox Linux Wrapper is very volatile, and updates are released very often, so p
   * A: This is the old method used to launch games. Paste the game link in and click "Play" to launch the game.
 
 * Q: It keeps telling me "Missing Dependencies"!
-  * A: Then install it! If it tells you "Please install wine", then install Wine. It does not install these dependencies automatically. You need to install the dependencies manually. To install the latest version of Wine, visit https://www.winehq.org/download/.
+  * A: Then install it! If it tells you "Please install wine", then install Wine. It does not install these dependencies automatically. To install the latest version of Wine, visit https://www.winehq.org/download/.
 
 
 ## Required Dependencies
 
-    rlw: git wget wine zenity
+* git
+* wget
+* wine or wine-staging (whichever works best for you)
+* zenity
 
 ## Licensing and copyright
 
