@@ -19,7 +19,8 @@ Depends: ${misc:Depends},
  zenity,
  wget,
  xdg-utils
-Recommends: winetricks
+Recommends: winetricks,
+ winbind
 Description: Linux Wrapper for Roblox using Wine
  This package provides Roblox Linux Wrapper, an installer for ROBLOX
  on Linux systems using Wine.
