@@ -14,11 +14,17 @@ In order to even have a chance of fixing issues, we need to know what's causing 
 
 Wine is very dynamic, volatile code - hefty changes are made almost every version. Roblox Linux Wrapper currently requires the 1.7 (development) branch of Wine, as the stable (1.6) branch is simply too old for the game to run. When posting issues on the issue tracker, please tell us what Wine version you are using. You can often find the latest version for your distro here: https://www.winehq.org/download
 
+#### Roblox Linux Wrapper version
+Roblox Linux Wrapper is also very volatile, and updates are released very often. Please check for updates frequently, and **make sure you are on the latest version of the wrapper** before submitting any issues!
+
 #### OS Version
 Same with the above. Knowing the OS distro + version can help us eliminate system-specific bugs and give the best possible support.
 
 #### Graphics card model and driver used
 Roblox requires 3D graphics to run. Implementations vary between different graphics card models, and can be the deciding point for whether your game runs or not.
+
+#### CPU architecture (32 or 64-bit)
+Wine has different setups for 32-bit and 64-bit operating systems. Roblox Linux Wrapper *should* automatically set up ROBLOX regardless of the architecture, but the more information, the better.
 
 #### Posting Error Logs
 As for posting error logs - if you have a very large error log you wish to post, please submit the error log in a pastebin such as GitHub's [Gist](https://gist.github.com/), and paste a link to it in your issue. This prevents long logs from clogging up the issue tracker comments.
