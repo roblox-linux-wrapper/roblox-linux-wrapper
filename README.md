@@ -3,13 +3,13 @@ This script is neither created nor officially supported by Roblox. It is unoffic
 
 
 ## Reporting Issues
-If you plan on reporting issues, please read [CONTRIBUTING.md](https://github.com/alfonsojon/roblox-linux-wrapper/blob/master/CONTRIBUTING.md) before doing so. Thanks!
+If you plan on reporting issues, please read [CONTRIBUTING.md](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/blob/master/CONTRIBUTING.md) before doing so. Thanks!
 
 ## Installation
 
 ### .deb (Debian/Ubuntu)
 
-We provide `.deb` binaries for Debian / Ubuntu users on the [releases page](https://github.com/alfonsojon/roblox-linux-wrapper/releases).
+We provide `.deb` binaries for Debian / Ubuntu users on the [releases page](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/releases).
 
 Debian/Ubuntu users can also use GLolol's repository at http://packages.overdrive.pw/:
 
@@ -39,7 +39,7 @@ sudo apt-get install roblox-linux-wrapper
 
 To install Roblox on your Linux computer from Git source, run the following commands in a terminal:
 ```shell
-git clone https://github.com/alfonsojon/roblox-linux-wrapper.git
+git clone https://github.com/aroblox-linux-wrapper/roblox-linux-wrapper.git
 cd roblox-linux-wrapper
 ./rlw
 ```
@@ -52,7 +52,7 @@ Roblox Linux Wrapper is very volatile, and updates are released very often, so p
 
 ### `.deb` & `.rpm`
 * Note the version you have installed.
-* If the version present [here](https://github.com/alfonsojon/roblox-linux-wrapper/releases) is newer, download it and install it via your package manager's GUI.
+* If the version present [here](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/releases) is newer, download it and install it via your package manager's GUI.
 * If you have enabled an APT or RPM repository, updates to the wrapper will come with system updates in the next release.
 
 ### from Git source
@@ -73,10 +73,10 @@ Often times, a Roblox update breaks compatibility with the Roblox Linux Wrapper.
   * A: Open Roblox Studio settings, change `renderMode` to `OpenGL`.
 
 * Q: It tells me there is a syntax error, or I'm having another problem.
-  * A: Download it again and retry. If the same thing occurs again, [open a new issue here](https://github.com/alfonsojon/roblox-linux-wrapper/issues). If you report a bug, please be as informative as possible.
+  * A: Download it again and retry. If the same thing occurs again, [open a new issue here](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/issues). If you report a bug, please be as informative as possible.
 
 * Q: Roblox isn't behaving like it should.
-  * A: Select the "Reinstall Roblox" option and press "Ok". If you continue having problems, [file a bug report here](https://github.com/alfonsojon/roblox-linux-wrapper/issues).
+  * A: Select the "Reinstall Roblox" option and press "Ok". If you continue having problems, [file a bug report here](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/issues).
 
 * Q: What is the "Play Roblox (Legacy Mode)" option?
   * A: This is the old method used to launch games. Paste the game link in and click "Play" to launch the game.
