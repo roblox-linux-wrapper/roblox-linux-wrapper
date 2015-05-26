@@ -80,13 +80,13 @@ rwget () {
 }
 rwinetricks () {
 	printf '%b\n' " > begin rwinetricks ()\n---"
-	winetricksbin="$(which winetricks)"
-	[[ -x "$(which winetricks)" ]] || {
-		# Winetricks was not found, so we'll download our own copy.
-		rwget "http://winetricks.org/winetricks" -O "/tmp/winetricks"
-		chmod +x "/tmp/winetricks"
-		winetricksbin="/tmp/winetricks"
-	}
+
+	# For consistency purposes, we'll use our own bundled winetricks version.
+	if [[ "$WRAPPER_DIR" == "/usr/bin" ]]; then
+		winetricksbin="/usr/lib/roblox-linux-wrapper/winetricks"
+	else
+		winetricksbin="thirdparty/winetricks/src/winetricks"
+	fi
 	$winetricksbin "$@"
 	[[ "$?" = "0" ]] || {
 		spawndialog error "winetricks failed. \nSee terminal for details. (exit code $?)"
