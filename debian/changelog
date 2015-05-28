@@ -1,3 +1,9 @@
+roblox-linux-wrapper (2015.05.28) unstable; urgency=medium
+
+  * Build Git branch master revision 2015.05.28.
+
+ -- James Lu <glolol1@hotmail.com>  Thu, 28 May 2015 10:48:38 -0700
+
 roblox-linux-wrapper (2015.05.11+25+gd154d23) unstable; urgency=medium
 
   * Build Git branch master revision 2015.05.11+25+gd154d23.
