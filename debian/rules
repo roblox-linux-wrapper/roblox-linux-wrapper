@@ -3,6 +3,10 @@
 %:
 	dh $@
 
+override_dh_auto_configure:
+	git submodule init
+	git submodule update
+
 GIT_VERSION := $(shell git describe --tags)
 
 # Keep track of the version as a file in /usr/lib
