@@ -1,4 +1,4 @@
 rlw usr/bin
 roblox.desktop usr/share/applications
 roblox.png usr/share/icons/hicolor/512x512/apps/
-thirdparty/winetricks/src/winetricks /usr/lib/roblox-linux-wrapper
+thirdparty/winetricks/src/winetricks usr/lib/roblox-linux-wrapper
