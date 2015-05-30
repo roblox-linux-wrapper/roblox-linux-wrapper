@@ -9,8 +9,8 @@ Categories=Game;
 Type=Application
 
 [Desktop Action Support]
-Name=GitHub Support Ticket
-Exec=xdg-open "https://github.com/alfonsojon/roblox-linux-wrapper/issues/new"
+Name=GitHub Issue Tracker
+Exec=xdg-open "https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/issues/new"
 
 [Desktop Action RFAGroup]
 Name=Roblox for All
