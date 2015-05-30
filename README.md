@@ -29,6 +29,7 @@ wget --ca-certificate=/tmp/sub.class1.server.ca.pem -O - https://secure.overdriv
 3) Install the Roblox Linux Wrapper package. Dependencies will be automatically installed, and updates applied automatically when you upgrade your system:
 
 ```shell
+sudo apt-get update
 sudo apt-get install roblox-linux-wrapper
 ```
 
