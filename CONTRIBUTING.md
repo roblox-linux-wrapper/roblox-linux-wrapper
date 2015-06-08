@@ -14,6 +14,12 @@ In order to even have a chance of fixing issues, we need to know what's causing 
 
 Wine is very dynamic, volatile code - hefty changes are made almost every version. Roblox Linux Wrapper currently requires the 1.7 (development) branch of Wine, as the stable (1.6) branch is simply too old for the game to run. When posting issues on the issue tracker, please tell us what Wine version you are using. You can often find the latest version for your distro here: https://www.winehq.org/download
 
+You can find the Wine version of your system by running the following in a terminal:
+
+```
+wine --version
+```
+
 #### Roblox Linux Wrapper version
 Roblox Linux Wrapper is also very volatile, and updates are released very often. Please check for updates frequently, and **make sure you are on the latest version of the wrapper** before submitting any issues!
 
