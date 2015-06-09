@@ -298,13 +298,13 @@ cd "$WRAPPER_DIR"
 
 # Define some variables
 if [[ -d ".git" ]]; then
-	export rlwversion=$(git describe --tags)
+	rlwversion=$(git describe --tags)
 	git submodule init
 	git submodule update
 elif [[ -f "/usr/lib/roblox-linux-wrapper/version" ]]; then
-	export rlwversion=$(cat /usr/lib/roblox-linux-wrapper/version)
+	rlwversion=$(cat /usr/lib/roblox-linux-wrapper/version)
 else
-	export rlwversion='version-unknown'
+	rlwversion='version-unknown'
 fi
 export WINEARCH=win32
 
