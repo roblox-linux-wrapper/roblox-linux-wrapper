@@ -33,9 +33,6 @@ sudo apt-get update
 sudo apt-get install roblox-linux-wrapper
 ```
 
-### .rpm (Fedora/SUSE)
-`.rpm` packages will be available as soon as reasonably possible..
-
 ### source (via `git clone`)
 
 To install Roblox on your Linux computer from Git source, run the following commands in a terminal:
