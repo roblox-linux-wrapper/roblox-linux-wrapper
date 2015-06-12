@@ -42,7 +42,7 @@ rwine () {
 	fi
 }
 rwineboot () {
-	printf '%b\n' " > Calling wineboot...\n---"
+	printf '%b\n' " > Calling wineboot..."
 	$winebootbin; [[ "$?" = "0" ]] || {
 		spawndialog error "wineboot closed unsuccessfully.\nSee terminal for details. (exit code $?)"
 		exit $?
@@ -92,7 +92,6 @@ rwinetricks () {
 }
 
 roblox-install () {
-	printf '%b\n' " > begin roblox-install ()\n---"
 	if [[ ! -d "$WINEPREFIX/drive_c" ]]; then
 		spawndialog question 'A working Roblox wineprefix was not found.\nWould you like to install one?'
 		if [[ $? = "0" ]]; then
@@ -124,11 +123,9 @@ roblox-install () {
 			exit 1
 		fi
 	fi
-	printf '%b\n' " > end roblox-install ()\n---"
 }
 
 playerwrapper () {
-	printf '%b\n' " > begin playerwrapper ()\n---"
 	# More than one version of RobloxProxy.dll can be installed in one Wineprefix at the same time
 	# due to ROBLOX's auto-updating system. The old method of loading RobloxProxy.dll using globs
 	# was incorrect, and would pass multiple DLL paths to regsvr32 if there were more than
@@ -165,7 +162,6 @@ playerwrapper () {
 	else
 		WINEDLLOVERRIDES="d3d11.dll=" rwine "$WINEPREFIX/drive_c/Program Files/Mozilla Firefox/firefox.exe" "http://www.roblox.com/Games.aspx"
 	fi
-	printf '%b\n' " > end playerwrapper ()\n---"
 }
 
 wineinitialize () {
@@ -239,7 +235,6 @@ winechooser () {
 }
 
 main () {
-	printf '%b\n' " > begin main ()\n---"
 	rm -f $HOME/Desktop/ROBLOX*.lnk
 	rm -rf "$HOME/.local/share/applications/wine/Programs/Roblox"
 	sel=$(zenity \
@@ -301,7 +296,6 @@ main () {
 		xdg-open https://github.com/roblox-linux-wrapper/roblox-linux-wrapper
 		main
 	esac
-	printf '%b\n' " > end main ()\n---"
 }
 
 WRAPPER_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
