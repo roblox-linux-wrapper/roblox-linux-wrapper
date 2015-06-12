@@ -303,11 +303,11 @@ cd "$WRAPPER_DIR"
 
 # Define some variables
 if [[ -d ".git" ]]; then
-	rlwversion=$(git describe --tags)
+	rlwversion="$(git describe --tags)"
 	git submodule init
 	git submodule update
-elif [[ -f "/usr/lib/roblox-linux-wrapper/version" ]]; then
-	rlwversion=$(cat /usr/lib/roblox-linux-wrapper/version)
+elif [[ "$WRAPPER_DIR" == "/usr/bin" ]]; then
+	rlwversion="$(cat /usr/lib/roblox-linux-wrapper/version)"
 else
 	rlwversion='version-unknown'
 fi
