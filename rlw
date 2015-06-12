@@ -120,7 +120,6 @@ roblox-install () {
 			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
 			chmod +x /tmp/RobloxPlayerLauncher.exe
 			WINEDLLOVERRIDES="winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
-			rwine regsvr32 /i "$(find "$WINEPREFIX" -iname 'RobloxProxy.dll')"
 		else
 			exit 1
 		fi
@@ -130,7 +129,19 @@ roblox-install () {
 
 playerwrapper () {
 	printf '%b\n' " > begin playerwrapper ()\n---"
-	rwine regsvr32 /i "$(find "$WINEPREFIX" -iname 'RobloxProxy.dll')"
+	# More than one version of RobloxProxy.dll can be installed in one Wineprefix at the same time
+	# due to ROBLOX's auto-updating system. The old method of loading RobloxProxy.dll using globs
+	# was incorrect, and would pass multiple DLL paths to regsvr32 if there were more than
+	# one on the system. Here, we'll use a bit of timestamp hackery and sorting to find the NEWEST
+	# RobloxProxy.dll, and load that instead.
+
+	# The old, incorrect behavior, would've passed something like this to regsvr32 (paths separated
+	# by a newline), which would obviously raise errors.
+	# regsvr32 /i '/home/glolol/.local/share/wineprefixes/roblox-wine/drive_c/users/glolol/Local Settings/Application Data/RobloxVersions/version-7c0f71fde5c44113/RobloxProxy.dll'
+	# '/home/glolol/.local/share/wineprefixes/roblox-wine/drive_c/users/glolol/Local Settings/Application Data/RobloxVersions/version-e7d5859bbf11477d/RobloxProxy.dll'
+
+	DLL="$(find "$WINEPREFIX" -iname 'RobloxProxy.dll' -printf "%T+\t%p\n" | sort -nr | cut -f 2 | head -n 1)"
+	rwine regsvr32 /i "$DLL"
 	if [[ "$1" = legacy ]]; then
 		GAMEURL=$(zenity \
 				--title="$rlwversionstring" \
