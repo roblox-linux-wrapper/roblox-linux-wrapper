@@ -31,7 +31,7 @@ spawndialog () {
 }
 
 rwine () {
-	printf '%b\n' " > begin rwine ()\n---"
+	printf '%b\n' "> rwine: calling wine with arguments \"$(printf "%s " "$@")\""
 	if [[ "$1" = "--silent" ]]; then
 		$WINE "${@:2}" && rwineserver --wait
 	else
@@ -40,26 +40,23 @@ rwine () {
 			exit $?
 	}
 	fi
-	printf '%b\n' " > end rwine ()\n---"
 }
 rwineboot () {
-	printf '%b\n' " > begin rwineboot ()\n---"
+	printf '%b\n' " > Calling wineboot...\n---"
 	$winebootbin; [[ "$?" = "0" ]] || {
 		spawndialog error "wineboot closed unsuccessfully.\nSee terminal for details. (exit code $?)"
 		exit $?
 	}
-	printf '%b\n' " > end rwineboot ()\n---"
 }
 rwineserver () {
-	printf '%b\n' " > begin rwineserver ()\n---"
+	printf '%b\n' "> rwineserver: calling wineserver with arguments \"$(printf "%s " "$@")\""
 	$wineserverbin "$@"; [[ "$?" = "0" ]] || {
 		spawndialog error "wineserver closed unsuccessfully.\nSee terminal for details. (exit code $?)"
 		exit $?
 	}
-	printf '%b\n' " > end rwineserver ()\n---"
 }
 rwget () {
-	printf '%b\n' " > begin rwget ()\n---"
+	printf '%b\n' "> rwget: calling wget with arguments \"$(printf "%s " "$@")\""
 	[[ -x "$(which wget)" ]] || {
 		spawndialog error "Missing dependency! Please install wget, then try again."
 	}
@@ -76,10 +73,9 @@ rwget () {
 		spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"
 		exit $?
 	}
-	printf '%b\n' " > end rwget ()\n---"
 }
 rwinetricks () {
-	printf '%b\n' " > begin rwinetricks ()\n---"
+	printf '%b\n' "> rwinetricks: calling winetricks with arguments \"$(printf "%s " "$@")\""
 
 	# For consistency purposes, we'll use our own bundled winetricks version.
 	if [[ "$WRAPPER_DIR" == "/usr/bin" ]]; then
@@ -87,12 +83,12 @@ rwinetricks () {
 	else
 		winetricksbin="thirdparty/winetricks/src/winetricks"
 	fi
+	printf '%b\n' "> rwinetricks: winetricks path set to $winetricksbin"
 	$winetricksbin "$@"
 	[[ "$?" = "0" ]] || {
 		spawndialog error "winetricks failed. \nSee terminal for details. (exit code $?)"
 		exit $?
 	}
-	printf '%b\n' " > end rwinetricks ()\n---"
 }
 
 roblox-install () {
@@ -104,7 +100,7 @@ roblox-install () {
 			# Make sure our directories really exist
 			mkdir -p "$HOME/.local/share/wineprefixes"
 			rwineboot
-			rwinetricks ddr=gdi sound=alsa			
+			rwinetricks ddr=gdi sound=alsa
 				# ddr=gdi:	Vastly improves performance, may cause graphical problems in mutter/gala
 				# sound=alsa:	Fix for crackling sound under Ubuntu 14.04
 			[[ "$?" = 0 ]] || {
@@ -316,8 +312,8 @@ printf '%b\n' "$rlwversionstring"
 
 # Don't allow running as root
 if [ "$(id -u)" == "0" ]; then
-   spawndialog error "Roblox Linux Wrapper should not be ran with root permissions."
-   exit 1
+	spawndialog error "Roblox Linux Wrapper should not be ran with root permissions."
+	exit 1
 fi
 
 # Make sure wine release is defined before continuing
