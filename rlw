@@ -141,6 +141,10 @@ playerwrapper () {
 	# '/home/glolol/.local/share/wineprefixes/roblox-wine/drive_c/users/glolol/Local Settings/Application Data/RobloxVersions/version-e7d5859bbf11477d/RobloxProxy.dll'
 
 	DLL="$(find "$WINEPREFIX" -iname 'RobloxProxy.dll' -printf "%T+\t%p\n" | sort -nr | cut -f 2 | head -n 1)"
+	if [[ -z "$DLL" ]]; then
+		spawndialog error 'Could not find RobloxProxy.dll in the wineprefix. Please make sure ROBLOX is installed correctly by running "Reinstall ROBLOX".\n\nIf this message reappears, it is probably a bug (report it to us!).'
+		exit 1
+	fi
 	rwine regsvr32 /i "$DLL"
 	if [[ "$1" = legacy ]]; then
 		GAMEURL=$(zenity \
