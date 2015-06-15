@@ -71,10 +71,10 @@ rwget () {
 			--height=120 2&>/dev/null
 	case $? in
 		2)
-			spawndialog error "Internal error while running wget"
+			spawndialog error "Internal error while running wget."
 			exit 2;;
 		3)
-			spawndialog error "I/O error while downloading"
+			spawndialog error "I/O error while downloading."
 			exit 3;;
 		4)
 			spawndialog error "Unable to reach host. Check your connection and try again."
