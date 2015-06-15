@@ -33,9 +33,6 @@ sudo apt-get update
 sudo apt-get install roblox-linux-wrapper
 ```
 
-### .rpm (Fedora/SUSE)
-`.rpm` packages will be available as soon as reasonably possible..
-
 ### source (via `git clone`)
 
 To install Roblox on your Linux computer from Git source, run the following commands in a terminal:
@@ -71,7 +68,7 @@ Often times, a Roblox update breaks compatibility with the Roblox Linux Wrapper.
   * A: See the Installation section.
 
 * Q: What do I do if the game is very slow?
-  * A: Open Roblox Studio settings, change `renderMode` to `OpenGL`.
+  * A: Open Roblox Studio settings, change `graphicsMode` to `OpenGL`.
 
 * Q: It tells me there is a syntax error, or I'm having another problem.
   * A: Download it again and retry. If the same thing occurs again, [open a new issue here](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/issues). If you report a bug, please be as informative as possible.

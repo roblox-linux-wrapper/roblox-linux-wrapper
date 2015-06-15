@@ -1,0 +1,29 @@
+matrix:
+    fast_finish: true
+    allow_failures:
+        - env: SHELLCHECK_EXEMPTIONS=""
+
+before_install:
+    # Add my repository's PGP key. -GLolol
+    - sudo apt-key adv --keyserver pgp.mit.edu --recv-keys F953726C
+    - echo 'deb http://packages.overdrive.pw/ precise-backports main' | sudo tee --append /etc/apt/sources.list
+
+install:
+    - sudo apt-get update -q
+    - sudo apt-get install -y shellcheck
+
+env:
+    - SHELLCHECK_EXEMPTIONS=""
+    # SC2016: Expressions don't expand in single quotes, use double quotes for that.
+    #   False positive; here are times where we want to literally print '$PATH'.
+    # SC2086: Double quote to prevent globbing and word splitting.
+    #   Globs don't expand when quoted, which we need
+    - SHELLCHECK_EXEMPTIONS="-e 2016,2086"
+
+script:
+    - shellcheck $SHELLCHECK_EXEMPTIONS ./rlw
+
+sudo: required
+
+notifications:
+    email: false
