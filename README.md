@@ -48,10 +48,10 @@ If you are saavy enough, you can also clone to a custom directory of your choice
 
 Roblox Linux Wrapper is very volatile, and updates are released very often, so please check for updates frequently.
 
-### `.deb` & `.rpm`
+### `.deb
 * Note the version you have installed.
-* If the version present [here](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/releases) is newer, download it and install it via your package manager's GUI.
-* If you have enabled an APT or RPM repository, updates to the wrapper will come with system updates in the next release.
+* If the version present [here](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/releases) is newer, download it and install it via your package manager.
+* If you have enabled the APT repository, updates to the wrapper will come with system updates in the next release.
 
 ### from Git source
 * Open a terminal, change to the directory you installed.
@@ -71,7 +71,7 @@ Often times, a Roblox update breaks compatibility with the Roblox Linux Wrapper.
   * A: Open Roblox Studio settings, change `graphicsMode` to `OpenGL`.
 
 * Q: It tells me there is a syntax error, or I'm having another problem.
-  * A: Download it again and retry. If the same thing occurs again, [open a new issue here](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/issues). If you report a bug, please be as informative as possible.
+  * A: Download the script again and retry. If the same thing occurs, [open a new issue here](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/issues).
 
 * Q: Roblox isn't behaving like it should.
   * A: Select the "Reinstall Roblox" option and press "Ok". If you continue having problems, [file a bug report here](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/issues).
