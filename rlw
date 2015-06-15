@@ -69,10 +69,29 @@ rwget () {
 			--no-cancel \
 			--width=450 \
 			--height=120 2&>/dev/null
-	[[ "$?" = "0" ]] || {
-		spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"
-		exit $?
-	}
+	case $? in
+		2)
+			spawndialog error "Internal error while running wget"
+			exit 2;;
+		3)
+			spawndialog error "I/O error while downloading"
+			exit 3;;
+		4)
+			spawndialog error "Unable to reach host. Check your connection and try again."
+			exit 4;;
+		5)
+			spawndialog error "Unable to establish a secure connection."
+			exit 5;;
+		6)
+			spawndialog error "Incorrect credentials given, please try again."
+			exit 6;;
+		7)
+			spawndialog error "Undefined protocol error."
+			exit 7;;
+		1,*)
+			spawndialog error "Download failed. See terminal for details.\n(exit code $?)"
+			exit $?;;
+	esac
 }
 rwinetricks () {
 	printf '%b\n' "> rwinetricks: calling winetricks with arguments \"$(printf "%s " "$@")\""
