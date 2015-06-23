@@ -302,12 +302,14 @@ WRAPPER_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 cd "$WRAPPER_DIR"
 
 # Define some variables
+man_args="-l rlw.6"
 if [[ -d ".git" ]]; then
 	rlwversion="$(git describe --tags)"
 	git submodule init
 	git submodule update
 elif [[ "$WRAPPER_DIR" == "/usr/bin" ]]; then
 	rlwversion="$(cat /usr/lib/roblox-linux-wrapper/version)"
+	man_args="rlw"
 else
 	rlwversion='version-unknown'
 fi
@@ -318,6 +320,14 @@ export PULSE_LATENCY_MSEC=60 # Workaround fix for crackling sound (variable used
 
 rlwversionstring="Roblox Linux Wrapper $rlwversion"
 printf '%b\n' "$rlwversionstring"
+
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+	man $man_args
+	exit 0
+elif [[ "$1" == "--version" || "$1" == "-v" ]]; then
+	# We already print the version above, so we're okay
+	exit 0
+fi
 
 # Don't allow running as root
 if [ "$(id -u)" == "0" ]; then

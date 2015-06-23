@@ -23,6 +23,14 @@ wine --version
 #### Roblox Linux Wrapper version
 Roblox Linux Wrapper is also very volatile, and updates are released very often. Please check for updates frequently, and **make sure you are on the latest version of the wrapper** before submitting any issues!
 
+You can find the RLW version by running:
+
+```
+rlw --version
+```
+
+or `./rlw --version` if you cloned via Git.
+
 #### OS Version
 Same with the above. Knowing the OS distro + version can help us eliminate system-specific bugs and give the best possible support.
 
