@@ -37,8 +37,7 @@ sudo apt-get install roblox-linux-wrapper
 To install Roblox on your Linux computer from Git source, run the following commands in a terminal:
 ```shell
 git clone https://github.com/roblox-linux-wrapper/roblox-linux-wrapper.git
-cd roblox-linux-wrapper
-./rlw
+roblox-linux-wrapper/rlw
 ```
 
 If you are saavy enough, you can also clone to a custom directory of your choice.
