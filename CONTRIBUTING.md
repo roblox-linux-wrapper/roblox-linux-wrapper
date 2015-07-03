@@ -8,7 +8,7 @@ Currently, the game is experiencing issues. As a result, we have been getting bu
 
 ### Information needed in a bug report
 
-In order to even have a chance of fixing issues, we need to know what's causing the problem. **Please include the following in any issues you open, it will be closed as lacking information!**
+In order to even have a chance of fixing issues, we need to know what's causing the problem. **Please include the following in any issues you open, or it will be closed as lacking information!**
 
 #### Wine Version
 
