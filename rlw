@@ -278,10 +278,23 @@ main () {
 	'Reinstall Roblox')
 		spawndialog question 'Are you sure you would like to reinstall?'
 		if [[ "$?" = "0" ]]; then
+			spawndialog question 'Would you like to save Firefox'\''s profile data?'
+			save_profile="$?"
+			if [[ "$save_profile" = "0" ]]; then
+				mkdir -p "/tmp/roblox-linux-wrapper"
+				printf '%b\n' "running: cp $WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/Mozilla/Firefox/" "/tmp/roblox-linux-wrapper/firefox-bak"
+				cp -R "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/Mozilla/Firefox/" "/tmp/roblox-linux-wrapper/firefox-bak"
+			fi
 			rm -rf "$HOME/.rlw"
 			$WINESERVER -k
 			rm -rf "$WINEPREFIX"
-			roblox-install; main
+			roblox-install
+			if [[ "$save_profile" = "0" ]]; then
+				mkdir -p "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/Mozilla/Firefox/"
+				mv /tmp/roblox-linux-wrapper/firefox-bak/* "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/Mozilla/Firefox"
+				rmdir "/tmp/roblox-linux-wrapper/firefox-bak/"
+			fi
+			main
 		else
 			main
 		fi;;
