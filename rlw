@@ -50,7 +50,7 @@ rwineboot () {
 }
 rwineserver () {
 	printf '%b\n' "> rwineserver: calling wineserver with arguments \"$(printf "%s " "$@")\""
-	$wineserverbin "$@"; [[ "$?" = "0" ]] || {
+	$WINESERVER "$@"; [[ "$?" = "0" ]] || {
 		spawndialog error "wineserver closed unsuccessfully.\nSee terminal for details. (exit code $?)"
 		exit $?
 	}
@@ -173,13 +173,13 @@ wineinitialize () {
 		winebin_suffix="-development"
 	fi
 	winebootbin="$(dirname "$WINE")/wineboot${winebin_suffix}"
-	wineserverbin="$(dirname "$WINE")/wineserver${winebin_suffix}"
-	if [[ ! -x "$wineserverbin" && "$(lsb_release -is)" == "Debian" ]]; then
+	WINESERVER="$(dirname "$WINE")/wineserver${winebin_suffix}"
+	if [[ ! -x "$WINESERVER" && "$(lsb_release -is)" == "Debian" ]]; then
 		# Debian also sticks wineserver in /usr/lib, not /usr/bin or anywhere remote accessible via $PATH, ugh...
 		# I really don't like hardcoding the architecture here, but it's the best we can do for now.
-		wineserverbin="/usr/lib/i386-linux-gnu/wine${winebin_suffix}/wineserver"
+		WINESERVER="/usr/lib/i386-linux-gnu/wine${winebin_suffix}/wineserver"
 	fi
-	for x in "$WINE" "$winebootbin" "$wineserverbin"; do
+	for x in "$WINE" "$winebootbin" "$WINESERVER"; do
 		if [[ -x "$x" ]]; then
 			printf "%b\n" "$(basename "$x") path set to $x"
 		else
@@ -188,6 +188,8 @@ wineinitialize () {
 			break
 		fi
 	done
+	export WINE
+	export WINESERVER
 	[[ "$($WINE --version | sed 's/.*-//')" > "1.7.27" ]] || {
 		spawndialog error "Your copy of Wine is too old. Please install version 1.7.28 or greater.\n(expected 1.7.28, got $(wine --version | sed 's/.*-//'))"
 		exit 1
@@ -220,8 +222,8 @@ winechooser () {
 			WINE='$(which wine)'
 			real_wine="$(eval "echo $WINE")"
 			winebootbin="$(dirname "$real_wine")/wineboot"
-			wineserverbin="$(dirname "$real_wine")/wineserver"
-			for x in "$real_wine" "$winebootbin" "$wineserverbin"; do
+			WINESERVER="$(dirname "$real_wine")/wineserver"
+			for x in "$real_wine" "$winebootbin" "$WINESERVER"; do
 				if [[ ! -x "$x" ]]; then
 					spawndialog error "Missing dependencies! Please install wine somewhere in "'$PATH'", or select a custom path instead.\nDetails: Could not find $(basename "$x") at $x. Are you sure a copy is installed there?"
 					exit 1
@@ -277,7 +279,7 @@ main () {
 		spawndialog question 'Are you sure you would like to reinstall?'
 		if [[ "$?" = "0" ]]; then
 			rm -rf "$HOME/.rlw"
-			$wineserverbin -k
+			$WINESERVER -k
 			rm -rf "$WINEPREFIX"
 			roblox-install; main
 		else
