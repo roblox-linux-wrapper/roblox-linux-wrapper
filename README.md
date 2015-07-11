@@ -46,7 +46,7 @@ If you are saavy enough, you can also clone to a custom directory of your choice
 
 Roblox Linux Wrapper is very volatile, and updates are released very often, so please check for updates frequently.
 
-### `.deb
+### .deb
 * Note the version you have installed.
 * If the version present [here](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/releases) is newer, download it and install it via your package manager.
 * If you have enabled the APT repository, updates to the wrapper will come with system updates in the next release.
