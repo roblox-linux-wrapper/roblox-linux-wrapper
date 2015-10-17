@@ -25,7 +25,7 @@ Debian/Ubuntu users can also use GLolol's repository at http://packages.overdriv
 1) Run the following command to add the repository:
 
 ```shell
-echo 'deb http://packages.overdrive.pw/ rlw main' | sudo tee --append /etc/apt/sources.list > /dev/null 
+echo 'deb http://packages.overdrivenetworks.com/ rlw main' | sudo tee --append /etc/apt/sources.list > /dev/null 
 ```
 
 2) Install the repository's PGP key (this will prevent unauthenticated package errors):
