@@ -20,7 +20,7 @@ If you plan on reporting issues, please read [CONTRIBUTING.md](https://github.co
 
 We provide `.deb` binaries for Debian / Ubuntu users on the [releases page](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/releases).
 
-Debian/Ubuntu users can also use GLolol's repository at http://packages.overdrive.pw/:
+Debian/Ubuntu users can also use GLolol's repository at http://packages.overdrivenetworks.com/:
 
 1) Run the following command to add the repository:
 
