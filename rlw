@@ -106,9 +106,11 @@ roblox-install () {
 				spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"
 				exit $?
 			}
-			wget -N -r --no-parent -Aexe http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/latest-esr/win32/en-US/ -nd -P /tmp/Firefox-Setup/
-			chmod +x /tmp/Firefox-Setup/*.exe
-			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup/*.exe /SD | zenity \
+
+			# Download the latest Firefox ESR for Windows.
+			wget "https://download.mozilla.org/?product=firefox-esr-latest&os=win&lang=en-US" -O /tmp/Firefox-Setup.exe
+			chmod +x /tmp/Firefox-Setup.exe
+			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup.exe /SD | zenity \
 				--window-icon="$RBXICON" \
 				--title='Installing Mozilla Firefox' \
 				--text='Installing Mozilla Firefox Browser ...' \
