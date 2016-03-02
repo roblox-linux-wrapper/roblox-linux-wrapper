@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-#    Copyright 2015 Jonathan Alfonso <alfonsojon1997@gmail.com>
+#    Copyright 2016 Jonathan Alfonso <alfonsojon1997@gmail.com>
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -99,7 +99,7 @@ roblox-install () {
 			# Make sure our directories really exist
 			mkdir -p "$HOME/.local/share/wineprefixes"
 			rwineboot
-			rwinetricks ddr=gdi sound=alsa
+			rwinetricks vcrun2013 ddr=gdi sound=alsa
 				# ddr=gdi:	Vastly improves performance, may cause graphical problems in mutter/gala
 				# sound=alsa:	Fix for crackling sound under Ubuntu 14.04
 			[[ "$?" = 0 ]] || {
@@ -162,7 +162,7 @@ playerwrapper () {
 			return
 		fi
 	else
-		WINEDLLOVERRIDES="d3d11.dll=" rwine "$WINEPREFIX/drive_c/Program Files/Mozilla Firefox/firefox.exe" "http://www.roblox.com/Games.aspx"
+		 WINEDLLOVERRIDES="d3d11.dll=" rwine "$WINEPREFIX/drive_c/Program Files/Mozilla Firefox/firefox.exe" "http://www.roblox.com/Games.aspx"
 	fi
 }
 
