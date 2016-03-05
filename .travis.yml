@@ -5,7 +5,7 @@ matrix:
 
 before_install:
     # Add my repository's PGP key. -GLolol
-    - sudo apt-key adv --keyserver pgp.mit.edu --recv-keys F953726C
+    - sudo apt-key adv --keyserver pgp.mit.edu --recv-keys E71C0B9D
     - echo 'deb http://packages.overdrivenetworks.com/ precise-backports main' | sudo tee --append /etc/apt/sources.list
 
 install:

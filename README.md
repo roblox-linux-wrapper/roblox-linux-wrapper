@@ -3,8 +3,6 @@
 <br>
 <br>
 <br>
-<br>
-<br>
 <hr>
 
 ## Information
@@ -31,7 +29,7 @@ echo 'deb http://packages.overdrivenetworks.com/ rlw main' | sudo tee --append /
 2) Install the repository's PGP key (this will prevent unauthenticated package errors):
 
 ```shell
-sudo apt-key adv --keyserver pool.sks-keyservers.net --recv-key F953726C
+sudo apt-key adv --keyserver pool.sks-keyservers.net --recv-key E71C0B9D
 ```
 
 3) Install the Roblox Linux Wrapper package. Dependencies will be automatically installed, and updates applied automatically when you upgrade your system:
