@@ -15,9 +15,9 @@ install:
 env:
     - SHELLCHECK_EXEMPTIONS=""
     # SC2016: Expressions don't expand in single quotes, use double quotes for that.
-    #   False positive; here are times where we want to literally print '$PATH'.
+    #   False positive; there are times where we want to literally print '$PATH'.
     # SC2086: Double quote to prevent globbing and word splitting.
-    #   Globs don't expand when quoted, which we need
+    #   Globs don't expand when quoted, which we rely on
     - SHELLCHECK_EXEMPTIONS="-e 2016,2086"
 
 script:
