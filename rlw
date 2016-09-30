@@ -184,8 +184,8 @@ wineinitialize () {
 	done
 	export WINE
 	export WINESERVER
-	[[ "$($WINE --version | sed 's/.*-//')" > "1.7.27" ]] || {
-		spawndialog error "Your copy of Wine is too old. Please install version 1.7.28 or greater.\n(expected 1.7.28, got $(wine --version | sed 's/.*-//'))"
+	[[ "$($WINE --version | cut -f 1 -d ' ' | sed 's/.*?-//')" > "1.7.27" ]] || {
+		spawndialog error "Your copy of Wine is too old. Please install version 1.7.28 or greater.\n(expected 1.7.28, got $(wine --version | cut -f 1 -d ' ' | sed 's/.*-//'))"
 		exit 1
 	}
 }
