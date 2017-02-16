@@ -285,8 +285,8 @@ main () {
 		if [[ "$?" = "0" ]]; then
 			xdg-desktop-menu uninstall "roblox.desktop"
 			rm -rf "$HOME/.rlw"
-			rm -rf "$HOME/.local/share/icons/roblox.png"
-			rm -rf "$HOME/.local/share/icons/hicolor/512x512/apps/roblox.png"
+			rm -rf "$HOME/.local/share/icons/roblox.svg"
+			rm -rf "$HOME/.local/share/icons/hicolor/scalable/apps/roblox.svg"
 			rm -rf "$WINEPREFIX"
 			text='Roblox has been uninstalled successfully.'
 			[[ "$WRAPPER_DIR" == "/usr/bin" ]] && text+="\nTo uninstall Roblox Linux Wrapper and not just the Roblox Wineprefix, please use your package manager."
