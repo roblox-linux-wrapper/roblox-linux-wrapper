@@ -294,7 +294,7 @@ main () {
 	case $sel in
 	'Play Roblox')
 		playerwrapper; main;;
-	"Play Roblox (Legacy Mode)")
+	'Play Roblox (Legacy Mode)')
 		playerwrapper legacy; main;;
 	'Roblox Studio')
 		WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b;d3d11.dll=" rwine "$WINEPREFIX/drive_c/Program Files/Roblox/Versions/RobloxStudioLauncherBeta.exe" -ide
