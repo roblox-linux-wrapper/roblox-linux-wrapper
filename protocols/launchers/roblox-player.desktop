@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Roblox Player Launcher
+Exec=bash -c $HOME/.rlw/handlers/roblox-player.sh %u
+Icon=$HOME/roblox-linux-wrapper/roblox.svg
+Type=Application
+StartupNotify=true
+Categories=Game;
+Terminal=false
+MimeType=x-scheme-handler/roblox-player;

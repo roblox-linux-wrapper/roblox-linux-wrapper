@@ -92,6 +92,8 @@ roblox-install () {
 			mkdir -p "$HOME/.local/share/wineprefixes"
 			rwineboot
 			rwinetricks vcrun2013 ddr=opengl sound=alsa
+			rwinetricks wininet
+			rwinetricks winhttp
 				# ddr=opengl:	Fix black game window per https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/issues/156
 				#		(this used to be set to ddr=gdi)
 				# sound=alsa:	Fix for crackling sound under Ubuntu 14.04
@@ -100,17 +102,44 @@ roblox-install () {
 				exit $?
 			}
 
-			# Download the latest Firefox ESR for Windows.
-			wget "https://download.mozilla.org/?product=firefox-esr-latest&os=win&lang=en-US" -O /tmp/Firefox-Setup.exe
-			chmod +x /tmp/Firefox-Setup.exe
-			WINEDLLOVERRIDES="winebrowser.exe,winemenubuilder.exe=" rwine /tmp/Firefox-Setup.exe /SD | zenity \
-				--window-icon="$RBXICON" \
-				--title='Installing Mozilla Firefox' \
-				--text='Installing Mozilla Firefox Browser ...' \
-				--progress \
-				--pulsate \
-				--no-cancel \
-				--auto-close 2&>/dev/null
+			# Rewmoved firefox installation since it doesn't work anymore.
+
+			# Associate roblox-player and roblox-studio protocols
+			# Works for chromium based browsers only atm.
+			# TODO add install in case of deb file
+			printf "Installing Roblox protocols, so you can simply click play on any game page to enter the game!\n"
+
+			launchers_dest_dir="$HOME/.local/share/applications"
+			mkdir -p "$HOME/.rlw/handlers"
+			handlers_dest_dir="$HOME/.rlw/handlers"
+
+			if [ ! -d "$launchers_dir" ]; then
+				spawndialog error "Missing launchers directory is it located where the main script is?\n"
+				exit 0
+			fi
+
+			#DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+			BASEDIR=$(dirname "$0")
+
+			handlers_dir="$BASEDIR/handlers"
+			launchers_dir="$BASEDIR/launchers"
+
+			xdg-mime default "roblox-player.desktop" x-scheme-handler/roblox-player
+			xdg-mime default "roblox-studio.desktop" x-scheme-handler/roblox-studio
+
+			# Copy all the files
+			if [ ! -f "$handlers_dest_dir/roblox-player.sh" ]; then
+  			install -m 755 $handlers_dir/* $handlers_dest_dir/
+  			install -m 755 $launchers_dir/* $launchers_dest_dir/
+			else
+  			printf "Files already copied. Skipping ...\n"
+			fi
+
+			[[ "$?" = 0 ]] || {
+				spawndialog error "An error has occured during protocol installation\nSee terminal for more details (exit code $?)"
+			}
+			printf "Installing protocols finished. Hopefuly it was succesfull\n"
+
 			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
 			chmod +x /tmp/RobloxPlayerLauncher.exe
 			WINEDLLOVERRIDES="winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
@@ -155,7 +184,7 @@ playerwrapper () {
 			return
 		fi
 	else
-		 WINEDLLOVERRIDES="d3d11.dll=" rwine "$WINEPREFIX/drive_c/Program Files/Mozilla Firefox/firefox.exe" "http://www.roblox.com/Games.aspx"
+		 xdg-open "http://www.roblox.com/games"
 	fi
 }
 
@@ -265,10 +294,10 @@ main () {
 	case $sel in
 	'Play Roblox')
 		playerwrapper; main;;
-	'Play Roblox (Legacy Mode)')
+	"Play Roblox (Legacy Mode)")
 		playerwrapper legacy; main;;
 	'Roblox Studio')
-		WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b;d3d11.dll=" rwine "$WINEPREFIX/drive_c/users/$USER/Local Settings/Application Data/RobloxVersions/RobloxStudioLauncherBeta.exe" -ide
+		WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b;d3d11.dll=" rwine "$WINEPREFIX/drive_c/Program Files/Roblox/Versions/RobloxStudioLauncherBeta.exe" -ide
 		main ;;
 	'Reinstall Roblox')
 		spawndialog question 'Are you sure you would like to reinstall?'
@@ -288,6 +317,8 @@ main () {
 			rm -rf "$HOME/.local/share/icons/roblox.svg"
 			rm -rf "$HOME/.local/share/icons/hicolor/scalable/apps/roblox.svg"
 			rm -rf "$WINEPREFIX"
+			rm -f "$HOME/.local/share/applications/roblox-player.desktop"
+			rm -f "$HOME/.local/share/applications/roblox-studio.desktop"
 			text='Roblox has been uninstalled successfully.'
 			[[ "$WRAPPER_DIR" == "/usr/bin" ]] && text+="\nTo uninstall Roblox Linux Wrapper and not just the Roblox Wineprefix, please use your package manager."
 			spawndialog info "$text"
