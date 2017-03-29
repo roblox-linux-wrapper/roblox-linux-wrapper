@@ -178,7 +178,7 @@ playerwrapper () {
 				--height=122)
 			GAMEID=$(cut -f 5 -d '/' <<< "$GAMEURL")
 		if [[ -n "$GAMEID" ]]; then
-			WINEDLLOVERRIDES="d3d11.dll=" rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --id "$GAMEID"
+			WINEDLLOVERRIDES="d3d11.dll=" rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --play "$GAMEID"
 		else
 			spawndialog warning "Invalid game URL."
 			return

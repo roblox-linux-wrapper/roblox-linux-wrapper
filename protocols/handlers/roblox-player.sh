@@ -1,12 +1,20 @@
 #!/bin/bash
-export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
-export WINEDLLOVERRIDES="winhttp.dll=b,n;wininet.dll=n,b;d3d11.dll="
 
-rwine () {
-    /usr/bin/wine "$@" && /usr/bin/wineserver --wait
-}
+BASEDIR=$(dirname "$0")
+if [ -f "$BASEDIR/vars.sh" ]; then
+  printf "Sourcing vars.sh ..."
+  source "$BASEDIR/vars.sh"
+else
+  zenity \
+		--no-wrap \
+		--window-icon="$RBXICON" \
+		--title="version-unknown" \
+		--error \
+		--text="Critical error when launching the game, please reinstall Roblox using rlw, if the problem presists after that please report the issue on github page\n" 2&> /dev/null
+    exit 1
+fi
 
 DLL="$(find "$WINEPREFIX" -iname 'RobloxProxy.dll' -printf "%T+\t%p\n" | sort -nr | cut -f 2 | head -n 1)"
 rwine regsvr32 /i "$DLL"
 
-rwine "$(find "$HOME/.local/share/wineprefixes/roblox-wine" -name RobloxPlayerLauncher.exe)" "$1"
+WINEDLLOVERRIDES="winhttp.dll=b,n;wininet.dll=n,b;d3d11.dll=" rwine "$(find "$HOME/.local/share/wineprefixes/roblox-wine" -name RobloxPlayerLauncher.exe)" "$1"
