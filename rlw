@@ -94,6 +94,7 @@ roblox-install () {
 			rwinetricks vcrun2013 ddr=opengl sound=alsa
 			rwinetricks wininet
 			rwinetricks winhttp
+			rwinetricks d3dx9_43
 				# ddr=opengl:	Fix black game window per https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/issues/156
 				#		(this used to be set to ddr=gdi)
 				# sound=alsa:	Fix for crackling sound under Ubuntu 14.04
@@ -102,10 +103,9 @@ roblox-install () {
 				exit $?
 			}
 
-			# Rewmoved firefox installation since it doesn't work anymore.
+			# Rewmoved firefox installation since it doesn't work with roblox anymore.
 
 			# Associate roblox-player and roblox-studio protocols
-			# Works for chromium based browsers only atm.
 			# TODO add install in case of deb file
 			printf "Installing Roblox protocols, so you can simply click play on any game page to enter the game!\n"
 
@@ -304,7 +304,7 @@ main () {
 			rm -rf "$HOME/.rlw"
 			$WINESERVER -k
 			rm -rf "$WINEPREFIX"
-			roblox-install; main
+			roblox-install; winechooser; main
 		else
 			main
 		fi;;
