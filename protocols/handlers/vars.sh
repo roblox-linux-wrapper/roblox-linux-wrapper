@@ -34,6 +34,18 @@
   export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
 
 # Functions (Yep, they are copied from rlw script)
+spawndialog () {
+	[[ -x "$(which zenity)" ]] || {
+		printf '%b\n' "Missing dependency! Please install \"zenity\", then try again."
+		exit 1
+	}
+	zenity \
+		--no-wrap \
+		--window-icon="$RBXICON" \
+		--title="$rlwversionstring" \
+		--"$1" \
+		--text="$2" 2&> /dev/null
+}
 
 rwine () {
   printf '%b\n' "> rwine: calling wine with arguments \"$(printf "%s " "$@")\""
