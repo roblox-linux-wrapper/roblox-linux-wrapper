@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
  # Since rlw script can be cloned anywhere we don't want to assume where the script is so I just copied and pasted the wineinitialize function.
 
