@@ -134,6 +134,11 @@ roblox-install () {
   			printf "Files already copied. Skipping ...\n"
 			fi
 
+			if [[ "$WRAPPER_DIR" != "/usr/bin" ]]; then
+				mkdir -p "$HOME/.local/share/icons/hicolor/scalable/apps"
+				install -m 755 "$BASEDIR/roblox.svg" "$HOME/.local/share/icons/hicolor/scalable/apps/"
+			fi
+
 			[[ "$?" = 0 ]] || {
 				spawndialog error "An error has occured during protocol installation\nSee terminal for more details (exit code $?)"
 			}

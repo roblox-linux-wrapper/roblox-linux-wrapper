@@ -2,6 +2,7 @@
 Name=Roblox Player Launcher
 Exec=bash -c "$HOME/.rlw/handlers/roblox-player.sh %u"
 Type=Application
+Icon=roblox
 StartupNotify=true
 Categories=Game;
 Terminal=false

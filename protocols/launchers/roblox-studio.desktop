@@ -1,7 +1,8 @@
 [Desktop Entry]
-Name=Roblox Player Launcher
+Name=Roblox Studio Launcher
 Exec=bash -c "$HOME/.rlw/handlers/roblox-studio.sh %u"
 Type=Application
+Icon=roblox
 StartupNotify=true
 Categories=Game;
 Terminal=false

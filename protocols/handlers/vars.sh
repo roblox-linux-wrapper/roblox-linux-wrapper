@@ -5,6 +5,7 @@
  	# Evaluate the Wine path selection, and base the wineboot/wineserver
  	# paths off that.
  	source "$HOME/.rlw/wine_choice"
+  BASEDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
  	if [[ "$WINE" == *"-development" ]]; then
  		# Debian uses different paths for their packaging of Wine 1.7 (namely, the binaries have a -development suffix)...
  		winebin_suffix="-development"

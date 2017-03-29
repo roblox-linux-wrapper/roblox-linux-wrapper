@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASEDIR=$(dirname "$0")
+BASEDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 if [ -f "$BASEDIR/vars.sh" ]; then
   printf "Sourcing vars.sh ..."
   source "$BASEDIR/vars.sh"
