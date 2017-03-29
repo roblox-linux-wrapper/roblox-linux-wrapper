@@ -109,6 +109,7 @@ roblox-install () {
 			# TODO add install in case of deb file
 			printf "Installing Roblox protocols, so you can simply click play on any game page to enter the game!\n"
 
+			BASEDIR=$(dirname "$0")
 			launchers_dest_dir="$HOME/.local/share/applications"
 			mkdir -p "$HOME/.rlw/handlers"
 			handlers_dest_dir="$HOME/.rlw/handlers"
@@ -121,7 +122,6 @@ roblox-install () {
 			fi
 
 			#DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-			BASEDIR=$(dirname "$0")
 
 			xdg-mime default "roblox-player.desktop" x-scheme-handler/roblox-player
 			xdg-mime default "roblox-studio.desktop" x-scheme-handler/roblox-studio
