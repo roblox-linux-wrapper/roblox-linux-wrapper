@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-#    Copyright 2016 Jonathan Alfonso <alfonsojon1997@gmail.com>
+#    Copyright 2017 Jonathan Alfonso <alfonsojon1997@gmail.com>
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -18,10 +18,6 @@
 # This allows the wrapper to know what went wrong and where, without excessive code.
 # Note: functions prefixed with "r" indicate wrappers that extend system functionality.
 spawndialog () {
-	[[ -x "$(which zenity)" ]] || {
-		printf '%b\n' "Missing dependency! Please install \"zenity\", then try again."
-		exit 1
-	}
 	zenity \
 		--no-wrap \
 		--window-icon="$RBXICON" \
@@ -55,17 +51,7 @@ rwineserver () {
 		exit $?
 	}
 }
-rwget () {
-	printf '%b\n' "> rwget: calling wget with arguments \"$(printf "%s " "$@")\""
-	[[ -x "$(which wget)" ]] || {
-		spawndialog error "Missing dependency! Please install wget, then try again."
-	}
-	wget "$@"
-	[[ "$?" = "0" ]] || {
-		spawndialog error "wget download failed. \nSee terminal for details. (exit code $?)"
-		exit $?
-	}
-}
+
 rwinetricks () {
 	printf '%b\n' "> rwinetricks: calling winetricks with arguments \"$(printf "%s " "$@")\""
 
@@ -91,10 +77,7 @@ roblox-install () {
 			# Make sure our directories really exist
 			mkdir -p "$HOME/.local/share/wineprefixes"
 			rwineboot
-			rwinetricks vcrun2013 ddr=opengl sound=alsa
-			rwinetricks wininet
-			rwinetricks winhttp
-			rwinetricks d3dx9_43
+			rwinetricks vcrun2013 ddr=opengl sound=alsa wininet rwinetricks winhttp d3dx9_43
 				# ddr=opengl:	Fix black game window per https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/issues/156
 				#		(this used to be set to ddr=gdi)
 				# sound=alsa:	Fix for crackling sound under Ubuntu 14.04
@@ -103,7 +86,7 @@ roblox-install () {
 				exit $?
 			}
 
-			# Rewmoved firefox installation since it doesn't work with roblox anymore.
+			# Removed firefox installation since it doesn't work with roblox anymore.
 
 			# Associate roblox-player and roblox-studio protocols
 			# TODO add install in case of deb file
@@ -117,7 +100,7 @@ roblox-install () {
 			launchers_dir="$BASEDIR/protocols/launchers"
 
 			if [ ! -d "$launchers_dir" ]; then
-				spawndialog error "Missing launchers directory is it located where the main script is?\n"
+				spawndialog error "Missing launchers directory. is it located where the main script is?\n"
 				exit 0
 			fi
 
@@ -144,51 +127,12 @@ roblox-install () {
 			}
 			printf "Installing protocols finished. Hopefuly it was succesfull\n"
 
-			rwget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
+			wget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
 			chmod +x /tmp/RobloxPlayerLauncher.exe
 			WINEDLLOVERRIDES="winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
 		else
 			exit 1
 		fi
-	fi
-}
-
-playerwrapper () {
-	# More than one version of RobloxProxy.dll can be installed in one Wineprefix at the same time
-	# due to ROBLOX's auto-updating system. The old method of loading RobloxProxy.dll using globs
-	# was incorrect, and would pass multiple DLL paths to regsvr32 if there were more than
-	# one on the system. Here, we'll use a bit of timestamp hackery and sorting to find the NEWEST
-	# RobloxProxy.dll, and load that instead.
-
-	# The old, incorrect behavior, would've passed something like this to regsvr32 (paths separated
-	# by a newline), which would obviously raise errors.
-	# regsvr32 /i '/home/glolol/.local/share/wineprefixes/roblox-wine/drive_c/users/glolol/Local Settings/Application Data/RobloxVersions/version-7c0f71fde5c44113/RobloxProxy.dll'
-	# '/home/glolol/.local/share/wineprefixes/roblox-wine/drive_c/users/glolol/Local Settings/Application Data/RobloxVersions/version-e7d5859bbf11477d/RobloxProxy.dll'
-
-	DLL="$(find "$WINEPREFIX" -iname 'RobloxProxy.dll' -printf "%T+\t%p\n" | sort -nr | cut -f 2 | head -n 1)"
-	if [[ -z "$DLL" ]]; then
-		spawndialog error 'Could not find RobloxProxy.dll in the wineprefix. Please make sure ROBLOX is installed correctly by running "Reinstall ROBLOX".\n\nIf this message reappears, it is probably a bug (report it to us!).'
-		exit 1
-	fi
-	rwine regsvr32 /i "$DLL"
-	if [[ "$1" = legacy ]]; then
-		GAMEURL=$(zenity \
-				--title="$rlwversionstring" \
-				--window-icon="$RBXICON" \
-				--entry \
-				--text='Paste the URL for the game here.' \
-				--ok-label='Play' \
-				--width=450 \
-				--height=122)
-			GAMEID=$(cut -f 5 -d '/' <<< "$GAMEURL")
-		if [[ -n "$GAMEID" ]]; then
-			WINEDLLOVERRIDES="d3d11.dll=" rwine "$(find "$WINEPREFIX" -name RobloxPlayerBeta.exe)" --play "$GAMEID"
-		else
-			spawndialog warning "Invalid game URL."
-			return
-		fi
-	else
-		 xdg-open "http://www.roblox.com/games"
 	fi
 }
 
@@ -297,9 +241,7 @@ main () {
 		FALSE 'Visit the GitHub page' 2>/dev/null )
 	case $sel in
 	'Play Roblox')
-		playerwrapper; main;;
-	'Play Roblox (Legacy Mode)')
-		playerwrapper legacy; main;;
+		xdg-open "http://www.roblox.com/games"; main;;
 	'Roblox Studio')
 		WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b;d3d11.dll=" rwine "$WINEPREFIX/drive_c/Program Files/Roblox/Versions/RobloxStudioLauncherBeta.exe" -ide
 		main ;;
@@ -373,7 +315,7 @@ fi
 
 # Don't allow running as root
 if [ "$(id -u)" == "0" ]; then
-	spawndialog error "Roblox Linux Wrapper should not be ran with root permissions."
+	spawndialog error "Roblox Linux Wrapper will not run as superuser. Exiting."
 	exit 1
 fi
 
