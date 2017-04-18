@@ -12,10 +12,8 @@ Vcs-Browser: https://github.com/roblox-linux-wrapper/roblox-linux-wrapper
 Package: roblox-linux-wrapper
 Architecture: all
 Depends: ${misc:Depends},
-# wine-dummy is a dummy package that I use because I run a custom
-# installation of Wine. It shouldn't affect anyone else since the
-# package isn't present for their dependency chain. -James
- wine (>= 1.7.28) | wine1.7 (>= 1.7.28) | wine-staging-compat (>= 1.7.28) | wine-development (>= 1.7.28) | wine-dummy,
+ wine (>= 1.7.28) | wine1.7 (>= 1.7.28) | wine-staging-compat (>= 1.7.28) | wine-development (>= 1.7.28),
+ winetricks,
  zenity,
  wget,
  xdg-utils
