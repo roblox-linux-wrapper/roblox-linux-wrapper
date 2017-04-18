@@ -1,3 +1,0 @@
-[submodule "winetricks"]
-	path = thirdparty/winetricks
-	url = https://github.com/winetricks/winetricks

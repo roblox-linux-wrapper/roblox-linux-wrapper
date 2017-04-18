@@ -66,23 +66,6 @@ rwget () {
 		exit $?
 	}
 }
-rwinetricks () {
-	printf '%b\n' "> rwinetricks: calling winetricks with arguments \"$(printf "%s " "$@")\""
-
-	# For consistency purposes, we'll use our own bundled winetricks version.
-	if [[ "$WRAPPER_DIR" == "/usr/bin" ]]; then
-		winetricksbin="/usr/lib/roblox-linux-wrapper/winetricks"
-	else
-		winetricksbin="thirdparty/winetricks/src/winetricks"
-	fi
-	printf '%b\n' "> rwinetricks: winetricks path set to $winetricksbin"
-	$winetricksbin "$@"
-	[[ "$?" = "0" ]] || {
-		spawndialog error "winetricks failed. \nSee terminal for details. (exit code $?)"
-		exit $?
-	}
-}
-
 roblox-install () {
 	if [[ ! -d "$WINEPREFIX/drive_c" ]]; then
 		spawndialog question 'A working Roblox wineprefix was not found.\nWould you like to install one?'
@@ -91,10 +74,10 @@ roblox-install () {
 			# Make sure our directories really exist
 			mkdir -p "$HOME/.local/share/wineprefixes"
 			rwineboot
-			rwinetricks vcrun2013 ddr=opengl sound=alsa
-			rwinetricks wininet
-			rwinetricks winhttp
-			rwinetricks d3dx9_43
+			winetricks vcrun2013 ddr=opengl sound=alsa
+			winetricks wininet
+			winetricks winhttp
+			winetricks d3dx9_43
 				# ddr=opengl:	Fix black game window per https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/issues/156
 				#		(this used to be set to ddr=gdi)
 				# sound=alsa:	Fix for crackling sound under Ubuntu 14.04
