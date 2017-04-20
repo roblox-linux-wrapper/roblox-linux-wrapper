@@ -23,7 +23,9 @@ wineinitialize () {
 		if [[ -x "$x" ]]; then
 			printf "%b\n" "$(basename "$x") path set to $x"
 		else
-			spawndialog error "Could not find $(basename "$x") at $x. Are you sure a copy is installed there?"
+			if [[ ! -z "$x" ]]; then
+				spawndialog error "Could not find $(basename "$x") at $x. Are you sure a copy is installed there?"
+			fi
 			winechooser
 			break
 		fi
