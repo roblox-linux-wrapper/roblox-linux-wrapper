@@ -1,10 +1,10 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: roblox-linux-wrapper
-Source: https://github.com/alfonsojon/roblox-linux-wrapper
+Source: https://github.com/roblox-linux-wrapper/roblox-linux-wrapper
 
 Files: *
 Copyright: 2015 Jonathan Alfonso <alfonsojon1997@gmail.com>
-           2015 James Lu <glolol1@hotmail.com>
+           2015,2017 James Lu <james@overdrivenetworks.com>
 License: GPL-3.0+
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by

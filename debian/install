@@ -1,3 +1,5 @@
 rlw usr/bin
+data/*.sh usr/share/roblox-linux-wrapper/data
+data/*.desktop usr/share/applications
 roblox.desktop usr/share/applications
 roblox.svg usr/share/icons/hicolor/scalable/apps/

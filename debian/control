@@ -1,10 +1,10 @@
 Source: roblox-linux-wrapper
-Section: games
+Section: contrib/games
 Priority: optional
-Maintainer: James Lu <glolol1@hotmail.com>
+Maintainer: James Lu <bitflip3@gmail.com>
 Uploaders: Jonathan Alfonso <alfonsojon1997@gmail.com>
 Build-Depends: debhelper (>= 9), git
-Standards-Version: 3.9.6
+Standards-Version: 3.9.8
 Homepage: https://github.com/roblox-linux-wrapper/roblox-linux-wrapper
 Vcs-Git: https://github.com/roblox-linux-wrapper/roblox-linux-wrapper
 Vcs-Browser: https://github.com/roblox-linux-wrapper/roblox-linux-wrapper
