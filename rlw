@@ -178,11 +178,4 @@ if [ "$(id -u)" == "0" ]; then
 	exit 1
 fi
 
-# Make sure wine release is defined before continuing
-if [[ ! -f "$HOME/.rlw/wine_choice" ]]; then
-	printf "%b\n" "No Wine path has been saved yet, starting winechooser..."
-	winechooser
-fi
-wineinitialize
-
 roblox-install && main
