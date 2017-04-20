@@ -63,54 +63,32 @@ roblox-install () {
 				#		(this used to be set to ddr=gdi)
 				# sound=alsa:	Fix for crackling sound under Ubuntu 14.04
 			winetricks vcrun2013 ddr=opengl sound=alsa
-			winetricks wininet
-			winetricks winhttp
-			winetricks d3dx9_43
+			#winetricks wininet
+			#winetricks winhttp
+			#winetricks d3dx9_43
 			[[ "$?" = 0 ]] || {
 				spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"
 				exit $?
 			}
 
-			# Removed firefox installation since it doesn't work with roblox anymore.
-
-			# Associate roblox-player and roblox-studio protocols
-			# TODO add install in case of deb file
-			printf "Installing Roblox protocols, so you can simply click play on any game page to enter the game!\n"
-
-			BASEDIR=$(dirname "$0")
-			launchers_dest_dir="$HOME/.local/share/applications"
-			mkdir -p "$HOME/.rlw/handlers"
-			handlers_dest_dir="$HOME/.rlw/handlers"
-			handlers_dir="$BASEDIR/protocols/handlers"
-			launchers_dir="$BASEDIR/protocols/launchers"
-
-			if [ ! -d "$launchers_dir" ]; then
-				spawndialog error "Missing launchers directory. is it located where the main script is?\n"
-				exit 0
-			fi
-
-			#DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
 			xdg-mime default "roblox-player.desktop" x-scheme-handler/roblox-player
 			xdg-mime default "roblox-studio.desktop" x-scheme-handler/roblox-studio
 
-			# Copy all the files
-			if [ ! -f "$handlers_dest_dir/roblox-player.sh" ]; then
-  			install -m 755 $handlers_dir/* $handlers_dest_dir/
-  			install -m 755 $launchers_dir/* $launchers_dest_dir/
-			else
-  			printf "Files already copied. Skipping ...\n"
-			fi
-
-			if [[ "$WRAPPER_DIR" != "/usr/bin" ]]; then
+			# Copy all our data files over, provided we're not being installed globally
+			if [[ "$WRAPPER_DIR" != /usr/* ]]; then
+				# Associate roblox-player and roblox-studio protocols
+				printf "Installing Roblox protocols...\n"
+				launchers_dest_dir="$HOME/.local/share/applications"
+				handlers_dest_dir="$HOME/.rlw/handlers"
+				mkdir -p "$handlers_dest_dir"
+				install -v -m 755 $LIB_DIR/data/*.sh $handlers_dest_dir/
+				install -v -m 755 $LIB_DIR/data/*.desktop $launchers_dest_dir/
 				mkdir -p "$HOME/.local/share/icons/hicolor/scalable/apps"
-				install -m 755 "$BASEDIR/roblox.svg" "$HOME/.local/share/icons/hicolor/scalable/apps/"
+				install -v -m 755 "$LIB_DIR/roblox.svg" "$HOME/.local/share/icons/hicolor/scalable/apps/"
+				[[ "$?" = 0 ]] || {
+					spawndialog error "An error occurred during protocol installation.\nSee terminal for more details (exit code $?)"
+				}
 			fi
-
-			[[ "$?" = 0 ]] || {
-				spawndialog error "An error has occured during protocol installation\nSee terminal for more details (exit code $?)"
-			}
-			printf "Installing protocols finished. Hopefuly it was succesfull\n"
 
 			wget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
 			chmod +x /tmp/RobloxPlayerLauncher.exe
@@ -250,7 +228,7 @@ main () {
 			rm -f "$HOME/.local/share/applications/roblox-player.desktop"
 			rm -f "$HOME/.local/share/applications/roblox-studio.desktop"
 			text='Roblox has been uninstalled successfully.'
-			[[ "$WRAPPER_DIR" == "/usr/bin" ]] && text+="\nTo uninstall Roblox Linux Wrapper and not just the Roblox Wineprefix, please use your package manager."
+			[[ "$WRAPPER_DIR" == /usr/* ]] && text+="\nTo uninstall Roblox Linux Wrapper and not just the Roblox Wineprefix, please use your package manager."
 			spawndialog info "$text"
 
 			exit
@@ -268,6 +246,12 @@ main () {
 
 WRAPPER_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 cd "$WRAPPER_DIR"
+if [[ "$WRAPPER_DIR" == /usr/* ]]; then
+	# If we're in a path like /usr/bin, /usr/local/bin, etc., data resides in the corresponding share folder
+	LIB_DIR=$(readlink -f "$WRAPPER_DIR/../share/roblox-linux-wrapper")
+else
+	LIB_DIR="$WRAPPER_DIR"
+fi
 
 # Define some variables
 man_args="-l rlw.6"
@@ -275,8 +259,8 @@ if [[ -d ".git" ]]; then
 	rlwversion="$(git describe --tags)"
 	git submodule init
 	git submodule update
-elif [[ "$WRAPPER_DIR" == "/usr/bin" ]]; then
-	rlwversion="$(cat /usr/lib/roblox-linux-wrapper/version)"
+elif [[ "$WRAPPER_DIR" == /usr/* ]]; then
+	rlwversion="$(cat $LIB_DIR/version)"
 	man_args="rlw"
 else
 	rlwversion='version-unknown'
