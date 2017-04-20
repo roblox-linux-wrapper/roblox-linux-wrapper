@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 
-BASEDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-if [ -f "$BASEDIR/vars.sh" ]; then
-  printf "Sourcing vars.sh ..."
-  source "$BASEDIR/vars.sh"
+# Change to the handler script's directory
+cd "$(dirname "${BASH_SOURCE[0]}")"
+if [ -f "rlw-core.sh" ]; then
+	printf "Sourcing rlw-core.sh\n"
+	source "rlw-core.sh"
 else
-  zenity \
+	zenity \
 		--no-wrap \
 		--window-icon="$RBXICON" \
 		--title="version-unknown" \
 		--error \
-		--text="Critical error when launching the game, please reinstall Roblox using rlw, if the problem presists after that please report the issue on github page\n" 2&> /dev/null
+		--text="Missing rlw-core: try reinstalling rlw using the main script. If this problem presists, please report an issue to our GitHub page.\n" 2&> /dev/null
     exit 1
 fi
 
