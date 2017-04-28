@@ -14,7 +14,7 @@ if [[ -d ".git" ]]; then
 	BUILD_MESSAGE="Build Git branch ${BRANCH} revision ${VERSION}."
 	dch -v "${VERSION}" --distribution unstable "${BUILD_MESSAGE}"
 	if [[ "$1" == "commit" ]]; then
-		git commit --author="RLW Automatic Builder <packages-admin@overdrive.pw>" debian/changelog -m "${BUILD_MESSAGE}"
+		git commit --author="RLW Automatic Builder <webmaster@overdrivenetworks.com>" debian/changelog -m "${BUILD_MESSAGE}"
 		printf '%b\n' "Tagging as ${VERSION}."
 		git tag -f "${VERSION}"
 	fi
