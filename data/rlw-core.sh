@@ -42,7 +42,7 @@ winechooser () {
 	sel=$(zenity \
 			--title "Wine Release Selection" \
 			--width=480 \
-			--height=250 \
+			--height=300 \
 			--cancel-label='Exit' \
 			--list \
 			--text 'Select the version of Wine you want to use:' \
@@ -53,6 +53,7 @@ winechooser () {
 			FALSE '/usr/bin/wine' \
 			FALSE '/opt/wine-staging/bin/wine' \
 			FALSE '/usr/bin/wine-development' \
+			FALSE '/opt/cxoffice/bin/wine' \
 			FALSE 'Enter custom Wine path...')
 	case $sel in
 		'Enter custom Wine path...')
