@@ -15,7 +15,4 @@ else
     exit 1
 fi
 
-DLL="$(find "$WINEPREFIX" -iname 'RobloxProxy.dll' -printf "%T+\t%p\n" | sort -nr | cut -f 2 | head -n 1)"
-rwine regsvr32 /i "$DLL"
-
 WINEDLLOVERRIDES="winhttp.dll=b,n;wininet.dll=n,b;d3d11.dll=" rwine "$(find "$HOME/.local/share/wineprefixes/roblox-wine" -name RobloxPlayerLauncher.exe)" "$1"
