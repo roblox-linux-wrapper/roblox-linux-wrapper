@@ -25,10 +25,10 @@ roblox-install () {
 				# ddr=opengl:	Fix black game window per https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/issues/156
 				#		(this used to be set to ddr=gdi)
 				# sound=alsa:	Fix for crackling sound under Ubuntu 14.04
-			winetricks vcrun2013 ddr=opengl sound=alsa
-			winetricks wininet
-			winetricks winhttp
-			winetricks d3dx9_43
+			./winetricks vcrun2013 ddr=opengl sound=alsa
+			./winetricks wininet
+			./winetricks winhttp
+			./winetricks d3dx9_43
 			[[ "$?" = 0 ]] || {
 				spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"
 				exit $?
