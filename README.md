@@ -1,3 +1,7 @@
+### After a few years of attempting to maintain this script, I'll be archiving this project. It is not possible to even use the Roblox Studio in Wine anymore. If there is a hope for running Roblox on Linux, I'll gladly unarchive this project, but until then, this project is on hiatus. Thank you, everyone, for your support over the years!
+
+
+
 ### As of September 2015, this script does *not* work with the latest versions of ROBLOX. No ETA for a fix is available.
 
 <br>
