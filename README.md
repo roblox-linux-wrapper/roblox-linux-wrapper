@@ -14,6 +14,10 @@ If you plan on reporting issues, please read [CONTRIBUTING.md](https://github.co
 
 ## Installation
 
+### Prerequisites
+
+You should have Wine installed already. Install the appropriate version of `wine` from [this page](https://wiki.winehq.org/Download). I recommend wine-staging as it has the latest fixes and highest probability of working.
+
 ### .deb (Debian/Ubuntu)
 
 We provide `.deb` binaries for Debian / Ubuntu users on the [releases page](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/releases).
