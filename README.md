@@ -17,31 +17,6 @@ If you plan on reporting issues, please read [CONTRIBUTING.md](https://github.co
 
 You should have Wine installed already. Install the appropriate version of `wine` from [this page](https://wiki.winehq.org/Download). I recommend wine-staging as it has the latest fixes and highest probability of working.
 
-### .deb (Debian/Ubuntu)
-
-We provide `.deb` binaries for Debian / Ubuntu users on the [releases page](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/releases).
-
-Debian/Ubuntu users can also use GLolol's repository at http://packages.overdrivenetworks.com/:
-
-1) Run the following command to add the repository:
-
-```shell
-echo 'deb http://packages.overdrivenetworks.com/ rlw main' | sudo tee --append /etc/apt/sources.list > /dev/null 
-```
-
-2) Install the repository's PGP key (this will prevent unauthenticated package errors):
-
-```shell
-sudo apt-key adv --keyserver pool.sks-keyservers.net --recv-key E71C0B9D
-```
-
-3) Install the Roblox Linux Wrapper package. Dependencies will be automatically installed, and updates applied automatically when you upgrade your system:
-
-```shell
-sudo apt-get update
-sudo apt-get install roblox-linux-wrapper
-```
-
 ### source (via `git clone`)
 
 To install Roblox on your Linux computer from Git source, run the following commands in a terminal:
@@ -55,11 +30,6 @@ If you are saavy enough, you can also clone to a custom directory of your choice
 ## Updates
 
 Roblox Linux Wrapper is very volatile, and updates are released very often, so please check for updates frequently.
-
-### .deb
-* Note the version you have installed.
-* If the version present [here](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/releases) is newer, download it and install it via your package manager.
-* If you have enabled the APT repository, updates to the wrapper will come with system updates in the next release.
 
 ### from Git source
 * Open a terminal, change to the directory you installed.
@@ -102,7 +72,7 @@ Often times, a Roblox update breaks compatibility with the Roblox Linux Wrapper.
 
 #### MIT License
 
-##### Copyright © 2016 Jonathan Alfonso
+##### Copyright © 2020 Jonathan Alfonso
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation file (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
