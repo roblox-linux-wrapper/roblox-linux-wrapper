@@ -1,8 +1,6 @@
-### After a few years of attempting to maintain this script, I'll be archiving this project. It is not possible to even use the Roblox Studio in Wine anymore. If there is a hope for running Roblox on Linux, I'll gladly unarchive this project, but until then, this project is on hiatus. Thank you, everyone, for your support over the years!
+### As of March of 2020, this script does *not* work with the latest versions of Roblox Player
 
-
-
-### As of September 2015, this script does *not* work with the latest versions of ROBLOX. No ETA for a fix is available.
+This is because the game uses VMProtect anti cheat, which Wine causes it to detect tampering. No ETA for a fix is available. The only way for this to be fixed is if Wine upstream is able to support VMProtect to a high enough degree, or if Roblox themselves release a Linux build. The script itself will still install Roblox on Linux, but do not expect to be able to play online.
 
 <br>
 <br>
