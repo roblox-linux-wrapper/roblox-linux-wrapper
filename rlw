@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-#    Copyright 2018 Jonathan Alfonso <alfonsojon1997@gmail.com>
+#    Copyright 2020 Jonathan Alfonso <alfonsojon1997@gmail.com>
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -15,51 +15,56 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 roblox-install () {
-	if [[ ! -d "$WINEPREFIX/drive_c" ]]; then
-		spawndialog question 'A working Roblox wineprefix was not found.\nWould you like to install one?'
-		if [[ $? = "0" ]]; then
-			rm -rf "$WINEPREFIX"
-			# Make sure our directories really exist
-			mkdir -p "$HOME/.local/share/wineprefixes"
-			rwineboot
-			# winetricks vcrun2013 ddr=opengl sound=alsa wininet winhttp d3dx9_43
-			#	
-			# 	ddr=opengl:	Fix black game window per https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/issues/156
-			#			(this used to be set to ddr=gdi)
-			# 	sound=alsa:	Fix for crackling sound under Ubuntu 14.04
-
-
-			[[ "$?" = 0 ]] || {
-				spawndialog error "Wine prefix not generated successfully.\nSee terminal for more details. (exit code $?)"
-				exit $?
-			}
-
-			xdg-mime default "roblox-player.desktop" x-scheme-handler/roblox-player
-			xdg-mime default "roblox-studio.desktop" x-scheme-handler/roblox-studio
-
-			# Copy all our data files over, provided we're not being installed globally
-			if [[ "$WRAPPER_DIR" != /usr/* ]]; then
-				# Associate roblox-player and roblox-studio protocols
-				printf "Installing Roblox protocols...\n"
-				launchers_dest_dir="$HOME/.local/share/applications"
-				handlers_dest_dir="$HOME/.rlw/handlers"
-				mkdir -p "$handlers_dest_dir"
-				install -v -m 755 $LIB_DIR/data/*.sh $handlers_dest_dir/
-				install -v -m 755 $LIB_DIR/data/*.desktop $launchers_dest_dir/
-				mkdir -p "$HOME/.local/share/icons/hicolor/scalable/apps"
-				install -v -m 755 "$LIB_DIR/roblox.svg" "$HOME/.local/share/icons/hicolor/scalable/apps/"
-				[[ "$?" = 0 ]] || {
-					spawndialog error "An error occurred during protocol installation.\nSee terminal for more details (exit code $?)"
-				}
+	case $@ in
+	install)
+		if [[ ! -d "$WINEPREFIX/drive_c" ]]; then
+			spawndialog question 'A working Roblox wineprefix was not found.\nWould you like to install one?'
+			if [[ $? = "0" ]]; then
+				rm -rf "$WINEPREFIX"
+				# Make sure our directories really exist
+				mkdir -p "$HOME/.local/share/wineprefixes"
+				xdg-mime default "roblox-player.desktop" x-scheme-handler/roblox-player
+				xdg-mime default "roblox-studio.desktop" x-scheme-handler/roblox-studio
+				# Copy all our data files over, provided we're not being installed globally
+				if [[ "$WRAPPER_DIR" != /usr/* ]]; then
+					# Associate roblox-player and roblox-studio protocols
+					printf "Installing Roblox protocols...\n"
+					launchers_dest_dir="$HOME/.local/share/applications"
+					handlers_dest_dir="$HOME/.rlw/handlers"
+					mkdir -p "$handlers_dest_dir"
+					install -v -m 755 $LIB_DIR/data/*.sh $handlers_dest_dir/
+					install -v -m 755 $LIB_DIR/data/*.desktop $launchers_dest_dir/
+					mkdir -p "$HOME/.local/share/icons/hicolor/scalable/apps"
+					install -v -m 755 "$LIB_DIR/roblox.svg" "$HOME/.local/share/icons/hicolor/scalable/apps/"
+					[[ "$?" = 0 ]] || {
+						spawndialog error "An error occurred during protocol installation.\nSee terminal for more details (exit code $?)"
+					}
+				fi
+				wget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
+				chmod +x /tmp/RobloxPlayerLauncher.exe
+				WINEDLLOVERRIDES="winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
+			else
+				exit 1
 			fi
-
-			wget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
-			chmod +x /tmp/RobloxPlayerLauncher.exe
-			WINEDLLOVERRIDES="winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
-		else
-			exit 1
-		fi
-	fi
+		fi;;
+	uninstall)
+		spawndialog question 'This will remove Roblox entirely. Are you sure?'
+		if [[ "$?" = "0" ]]; then
+			xdg-desktop-menu uninstall "roblox.desktop"
+			rm -f "$HOME/.local/share/applications/roblox-player.desktop"
+			rm -f "$HOME/.local/share/applications/roblox-studio.desktop"
+			rm -rf "$HOME/.local/share/icons/roblox.svg"
+			rm -rf "$HOME/.local/share/icons/hicolor/scalable/apps/roblox.svg"
+			rm -rf "$HOME/.rlw"
+			"$WINESERVER" -k
+			rm -rf "$WINEPREFIX"
+			text='Roblox has been uninstalled successfully.'
+			[[ "$WRAPPER_DIR" == /usr/* ]] && text+="\nTo uninstall Roblox Linux Wrapper and not just the Roblox Wineprefix, please use your package manager."
+			spawndialog info "$text"
+		fi;;
+	*)
+		spawndialog error 'How did you get here?';;
+	esac
 }
 
 
@@ -77,52 +82,45 @@ main () {
 		--radiolist \
 		--column '' \
 		--column 'Options' \
-		TRUE 'Play Roblox' \
-		FALSE 'Roblox Studio' \
 		FALSE 'Select Wine Release' \
+		FALSE 'Wine Configuration' \
+		FALSE 'Kill all Roblox processes' \
 		FALSE 'Reinstall Roblox' \
 		FALSE 'Uninstall Roblox' \
 		FALSE 'Visit the GitHub page' 2>/dev/null )
 	case $sel in
-	'Play Roblox')
-		xdg-open "http://www.roblox.com/games"; main;;
-	'Roblox Studio')
-		WINEDLLOVERRIDES="msvcp110.dll,msvcr110.dll=n,b;d3d11.dll=" rwine "$WINEPREFIX/drive_c/Program Files/Roblox/Versions/RobloxStudioLauncherBeta.exe" -ide
-		main ;;
+	'Select Wine Release')
+		printf '%b\n' "> rwineserver: killing wineserver"
+		rwineserver -k
+		winechooser
+		main;;
+	'Wine Configuration')
+		rwine winecfg
+		main;;
+	'Kill all Roblox processes')
+		spawndialog question 'This will forcefully close any game open. Are you sure?'
+		if [[ $? -eq 0 ]]; then
+			rwineserver -k
+			if [[ $? -eq 0 ]]; then
+				spawndialog info "Closed successfully."
+			else
+				spawndialog error "Could not close due to an error.\nThe game may already have been shut down."
+			fi
+		fi
+		main;;
 	'Reinstall Roblox')
 		spawndialog question 'Are you sure you would like to reinstall?'
 		if [[ "$?" = "0" ]]; then
-			rm -rf "$HOME/.rlw"
-			$WINESERVER -k
-			rm -rf "$WINEPREFIX"
-			roblox-install; winechooser; main
+			roblox-install uninstall; winechooser; roblox-install install; main
 		else
 			main
 		fi;;
 	'Uninstall Roblox')
-		spawndialog question 'Are you sure you would like to uninstall?'
-		if [[ "$?" = "0" ]]; then
-			xdg-desktop-menu uninstall "roblox.desktop"
-			rm -rf "$HOME/.rlw"
-			rm -rf "$HOME/.local/share/icons/roblox.svg"
-			rm -rf "$HOME/.local/share/icons/hicolor/scalable/apps/roblox.svg"
-			rm -rf "$WINEPREFIX"
-			rm -f "$HOME/.local/share/applications/roblox-player.desktop"
-			rm -f "$HOME/.local/share/applications/roblox-studio.desktop"
-			text='Roblox has been uninstalled successfully.'
-			[[ "$WRAPPER_DIR" == /usr/* ]] && text+="\nTo uninstall Roblox Linux Wrapper and not just the Roblox Wineprefix, please use your package manager."
-			spawndialog info "$text"
-
-			exit
-		else
-			main
-		fi;;
-	'Select Wine Release')
-		winechooser
-		main;;
+		roblox-install uninstall
+		exit;;
 	'Visit the GitHub page')
 		xdg-open https://github.com/roblox-linux-wrapper/roblox-linux-wrapper
-		main
+		main;;
 	esac
 }
 
@@ -136,7 +134,7 @@ else
 fi
 
 if [ -f "$LIB_DIR/data/rlw-core.sh" ]; then
-	printf "Sourcing $LIB_DIR/data/rlw-core.sh\n"
+	printf "> main: Sourcing $LIB_DIR/data/rlw-core.sh\n"
 	source "$LIB_DIR/data/rlw-core.sh"
 else
 	zenity \
@@ -178,4 +176,4 @@ if [ "$(id -u)" == "0" ]; then
 	exit 1
 fi
 
-roblox-install && main
+roblox-install install && main

@@ -15,4 +15,4 @@ else
     exit 1
 fi
 
-WINEDLLOVERRIDES="winhttp.dll=b,n;wininet.dll=n,b;msvcp110.dll,msvcr110.dll=n,b;d3d11.dll=" rwine "$WINEPREFIX/drive_c/Program Files/Roblox/Versions/RobloxStudioLauncherBeta.exe" "$1"
+rwine "$WINEPREFIX/drive_c/Program Files/Roblox/Versions/RobloxStudioLauncherBeta.exe" "$1"

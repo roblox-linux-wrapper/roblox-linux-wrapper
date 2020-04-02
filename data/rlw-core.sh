@@ -5,23 +5,13 @@ export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
 export PULSE_LATENCY_MSEC=60 # Workaround fix for crackling sound (variable used by wine)
 
 wineinitialize () {
-	# Evaluate the Wine path selection, and base the wineboot/wineserver
+	# Evaluate the Wine path selection, and base the wineserver
 	# paths off that.
-	source "$HOME/.rlw/wine_choice"
-	if [[ "$WINE" == *"-development" ]]; then
-		# Debian uses different paths for their packaging of Wine 1.7 (namely, the binaries have a -development suffix)...
-		winebin_suffix="-development"
-	fi
-	winebootbin="$(dirname "$WINE")/wineboot${winebin_suffix}"
-	WINESERVER="$(dirname "$WINE")/wineserver${winebin_suffix}"
-	if [[ ! -x "$WINESERVER" && "$(lsb_release -is)" == "Debian" ]]; then
-		# Debian also sticks wineserver in /usr/lib, not /usr/bin or anywhere remote accessible via $PATH, ugh...
-		# I really don't like hardcoding the architecture here, but it's the best we can do for now.
-		WINESERVER="/usr/lib/i386-linux-gnu/wine${winebin_suffix}/wineserver"
-	fi
-	for x in "$WINE" "$winebootbin" "$WINESERVER"; do
+	printf "%b\n" "> wineinitialize: sourcing $HOME/.rlw/wine_choice"
+	[[ -e "$HOME"/.rlw/wine_choice ]] && source "$HOME/.rlw/wine_choice" &&	printf "%b\n" "> wineinitialize: source complete" || printf "%b\n" "> wineinitialize: source failed"
+	for x in "$WINE" "$WINESERVER"; do
 		if [[ -x "$x" ]]; then
-			printf "%b\n" "$(basename "$x") path set to $x"
+			printf "%b\n" "> wineinitialize: $(basename "$x") path set to $x"
 		else
 			if [[ ! -z "$x" ]]; then
 				spawndialog error "Could not find $(basename "$x") at $x. Are you sure a copy is installed there?"
@@ -32,10 +22,7 @@ wineinitialize () {
 	done
 	export WINE
 	export WINESERVER
-	[[ "$($WINE --version | cut -f 1 -d ' ' | sed 's/.*?-//')" > "1.7.27" ]] || {
-		spawndialog error "Your copy of Wine is too old. Please install version 1.7.28 or greater.\n(expected 1.7.28, got $(wine --version | cut -f 1 -d ' ' | sed 's/.*-//'))"
-		exit 1
-	}
+	printf "%b\n" "> wineinitialize: Wine version $("$WINE" --version) is installed"
 }
 
 winechooser () {
@@ -54,37 +41,36 @@ winechooser () {
 			FALSE '/opt/wine-staging/bin/wine' \
 			FALSE '/usr/bin/wine-development' \
 			FALSE '/opt/cxoffice/bin/wine' \
-			FALSE 'Enter custom Wine path...')
+			FALSE 'Browse for Wine binaries...')
 	case $sel in
-		'Enter custom Wine path...')
-			WINE=$(zenity --title "Wine Release Selection" \
-					  --text "Enter custom Wine path:" --entry);;
+		'Browse for Wine binaries...')
+			BIN=$(zenity --title "Select folder containing wine binaries (usually named bin)" --file-selection --directory)
+			WINE="$BIN"/wine
+			WINESERVER="$BIN"/wineserver;;
 		'Automatic detection (via $PATH)')
 			# Here, we will literally save '$(which wine)' as the path
 			# so it changes dynamically and isn't immediately evaluated.
-			WINE='$(which wine)'
-			real_wine="$(eval "echo $WINE")"
-			winebootbin="$(dirname "$real_wine")/wineboot"
-			WINESERVER="$(dirname "$real_wine")/wineserver"
-			for x in "$real_wine" "$winebootbin" "$WINESERVER"; do
+			WINE="$(which wine)"
+			WINESERVER="$(which wineserver)"
+			for x in "$WINE" "$WINESERVER"; do
 				if [[ ! -x "$x" ]]; then
-					spawndialog error "Missing dependencies! Please install wine somewhere in "'$PATH'", or select a custom path instead.\nDetails: Could not find $(basename "$x") at $x. Are you sure a copy is installed there?"
+					spawndialog error "Missing dependencies! Please install wine somewhere in \"$PATH\", or select a custom path instead.\nDetails: Could not find $(basename \"$x\") at \"$x\".\nAre you sure a copy is installed there?"
 					exit 1
 				fi
 			done;;
 		*)
 			WINE="$sel"
 	esac
-	printf "%b\n" "Wine path set to: $WINE"
-	if [[ -z "$WINE" ]]; then
+	if [[ ! -x "$WINE" ]]; then
 		printf "%b\n" "Clearing Wine choice..."
 		rm -f "$HOME/.rlw/wine_choice"
 		spawndialog error "You must enter a valid path."
 		winechooser
 	else
-		printf "%b\n" "Saving Wine choice to ~/.rlw/wine_choice"
+		printf "%b\n" "> winechooser: Wine path set to: $WINE"
+		printf "%b\n" "> winechooser: Saving Wine choice to ~/.rlw/wine_choice"
 		mkdir -p "$HOME/.rlw/"
-		echo "WINE=$WINE" > "$HOME/.rlw/wine_choice"
+		printf "%b\n" "WINE=\"$WINE\"" "WINESERVER=\"$WINESERVER\"" > "$HOME/.rlw/wine_choice"
 	fi
 	wineinitialize
 }
@@ -101,28 +87,31 @@ spawndialog () {
 rwine () {
 	printf '%b\n' "> rwine: calling wine with arguments \"$(printf "%s " "$@")\""
 	if [[ "$1" = "--silent" ]]; then
-		$WINE "${@:2}" && rwineserver --wait
+		"$WINE" "${@:2}" && rwineserver --silent
 	else
-		$WINE "$@" && rwineserver --wait; [[ "$?" = "0" ]] || {
+		"$WINE" "$@" && rwineserver --wait; [[ "$?" = "0" ]] || {
 			spawndialog error "wine closed unsuccessfully.\nSee terminal for details. (exit code $?)"
-			exit $?
 	}
 	fi
-}
-rwineboot () {
-	printf '%b\n' " > Calling wineboot..."
-	$winebootbin; [[ "$?" = "0" ]] || {
-		spawndialog error "wineboot closed unsuccessfully.\nSee terminal for details. (exit code $?)"
-		exit $?
-	}
 }
 
 rwineserver () {
 	printf '%b\n' "> rwineserver: calling wineserver with arguments \"$(printf "%s " "$@")\""
-	$WINESERVER "$@"; [[ "$?" = "0" ]] || {
-		spawndialog error "wineserver closed unsuccessfully.\nSee terminal for details. (exit code $?)"
-		exit $?
-	}
+	if [[ "$1" = "--wait" ]]; then
+		"$WINESERVER" "$@" | $(zenity\
+					--title="$rlwversionstring" \
+					--window-icon="$RBXICON" \
+					--width=480 \
+					--progress \
+					--auto-kill \
+					--auto-close \
+					--pulsate \
+					--text="Waiting for wine to close...")
+		return "$?"
+	else
+		"$WINESERVER" "$@"
+		return "$?"
+	fi
 }
 
 wineinitialize

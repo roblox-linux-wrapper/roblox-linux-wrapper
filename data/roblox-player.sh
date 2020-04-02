@@ -15,4 +15,4 @@ else
     exit 1
 fi
 
-WINEDLLOVERRIDES="winhttp.dll=b,n;wininet.dll=n,b;d3d11.dll=" rwine "$(find "$HOME/.local/share/wineprefixes/roblox-wine" -name RobloxPlayerLauncher.exe)" "$1"
+rwine "$(find "$HOME/.local/share/wineprefixes/roblox-wine" -name RobloxPlayerLauncher.exe)" "$1"
