@@ -40,7 +40,7 @@ roblox-install () {
 						spawndialog error "An error occurred during protocol installation.\nSee terminal for more details (exit code $?)"
 					}
 				fi
-				wget http://roblox.com/install/setup.ashx -O /tmp/RobloxPlayerLauncher.exe
+				wget https://setup.rbxcdn.com/RobloxPlayerLauncher.exe -O /tmp/RobloxPlayerLauncher.exe
 				chmod +x /tmp/RobloxPlayerLauncher.exe
 				WINEDLLOVERRIDES="winemenubuilder.exe=" rwine /tmp/RobloxPlayerLauncher.exe
 			else
