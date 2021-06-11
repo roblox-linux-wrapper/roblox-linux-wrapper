@@ -2,6 +2,8 @@
 
 This is because the game uses VMProtect anti cheat, which Wine causes it to detect tampering. No ETA for a fix is available. The only way for this to be fixed is if Wine upstream is able to support VMProtect to a high enough degree, or if Roblox themselves release a Linux build. The script itself will still install Roblox on Linux, but do not expect to be able to play online.
 
+There is a potential fix for this mentioned in [this issue](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/issues/187#issuecomment-859934169), which has been merged upstream. A future Wine update may resolve this issue.
+
 <hr>
 
 ## Information
