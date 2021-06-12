@@ -125,7 +125,6 @@ rwineserver () {
 	fi	
 		
 
-"It will disappear in about 10 seconds" 10
 		return "$?"
 	else
 		"$WINESERVER" "$@"
