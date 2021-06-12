@@ -70,7 +70,7 @@ Often times, a Roblox update breaks compatibility with the Roblox Linux Wrapper.
 * git
 * wget
 * wine or wine-staging (whichever works best for you)
-* zenity
+* zenity/kdialog
 
 ## Licensing and copyright
 
