@@ -44,7 +44,11 @@ winechooser () {
 			FALSE 'Browse for Wine binaries...')
 	case $sel in
 		'Browse for Wine binaries...')
-			BIN=$(zenity --title "Select folder containing wine binaries (usually named bin)" --file-selection --directory)
+			if command -v zenity >/dev/null 2>&1 ; then
+			BIN=$(zenity --title "Please select the folder containing the wine binaries (usually named bin)" --file-selection --directory)
+			else
+			BIN=$(kdialog  --title "Please select the folder containing the wine binaries (usually named bin)" --getexistingdirectory .)
+			fi	
 			WINE="$BIN"/wine
 			WINESERVER="$BIN"/wineserver;;
 		'Automatic detection (via $PATH)')
