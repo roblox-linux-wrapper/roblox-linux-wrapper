@@ -76,12 +76,16 @@ winechooser () {
 }
 
 spawndialog () {
-	zenity \
-		--no-wrap \
-		--window-icon="$RBXICON" \
-		--title="$rlwversionstring" \
-		--"$1" \
-		--text="$2" 2&> /dev/null
+	if command -v zenity >/dev/null 2>&1 ; then
+		zenity \
+			--no-wrap \
+			--window-icon="$RBXICON" \
+			--title="$rlwversionstring" \
+			--"$1" \
+			--text="$2" 2&> /dev/null
+	else
+		 kdialog  --$1 "$2"  --title "$rlwversionstring" 2&> /dev/null
+	fi
 }
 
 rwine () {
