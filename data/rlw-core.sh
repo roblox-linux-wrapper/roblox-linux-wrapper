@@ -106,6 +106,7 @@ rwine () {
 rwineserver () {
 	printf '%b\n' "> rwineserver: calling wineserver with arguments \"$(printf "%s " "$@")\""
 	if [[ "$1" = "--wait" ]]; then
+	if command -v zenity >/dev/null 2>&1 ; then
 		"$WINESERVER" "$@" | $(zenity\
 					--title="$rlwversionstring" \
 					--window-icon="$RBXICON" \
@@ -115,6 +116,12 @@ rwineserver () {
 					--auto-close \
 					--pulsate \
 					--text="Waiting for wine to close...")
+	else
+ 		"$WINESERVER" "$@" | $(kdialog --title "$rlwversionstring" --passivepopup "Waiting for wine to close..." 10)
+	fi	
+		
+
+"It will disappear in about 10 seconds" 10
 		return "$?"
 	else
 		"$WINESERVER" "$@"
