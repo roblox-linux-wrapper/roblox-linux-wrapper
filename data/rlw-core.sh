@@ -92,7 +92,7 @@ spawndialog () {
 			--"$1" \
 			--text="$2" 2&> /dev/null
 	else
-		 kdialog  --$1 "$2"  --title "$rlwversionstring" 2&> /dev/null
+		 kdialog  --"$1" "$2"  --title "$rlwversionstring" 2&> /dev/null
 	fi
 }
 
