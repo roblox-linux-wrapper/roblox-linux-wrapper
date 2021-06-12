@@ -118,10 +118,7 @@ main () {
 		FALSE 'Reinstall Roblox' \
 		FALSE 'Uninstall Roblox' \
 		FALSE 'Visit the GitHub page' 2>/dev/null )
-	 else
-	 sel=$(kdialog --title "$rlwversionstring" --radiolist 'What option would you like:' 1 'Select Wine Release' off 2 'Kill all Roblox processes' off 3 'Reinstall Roblox' off 4 'Uninstall Roblox' off 5 'Visit the GitHub page' off 2 >/dev/null )
-	 fi
-	
+			
 	case $sel in
 	'Select Wine Release')
 		printf '%b\n' "> rwineserver: killing wineserver"
@@ -155,7 +152,55 @@ main () {
 	'Visit the GitHub page')
 		xdg-open https://github.com/roblox-linux-wrapper/roblox-linux-wrapper
 		main;;
-	esac
+	 esac
+	 else
+	 sel=$(kdialog --title "$rlwversionstring" --menu 'What option would you like:' 1 'Select Wine Release' 2 'Kill all Roblox processes' 3 'Reinstall Roblox' 4 'Uninstall Roblox'  5 'Visit the GitHub page'  2 >/dev/null )
+		case "$sel" in
+			1)
+				printf '%b\n' "> rwineserver: killing wineserver"
+		rwineserver -k
+		winechooser
+		main;;
+			2)
+			rwine winecfg
+		main;;
+			3)
+				spawndialog question 'This will forcefully close any game open. Are you sure?'
+		if [[ $? -eq 0 ]]; then
+			rwineserver -k
+			if [[ $? -eq 0 ]]; then
+				spawndialog info "Closed successfully."
+			else
+				spawndialog error "Could not close due to an error.\nThe game may already have been shut down."
+			fi
+		fi
+		main;;
+		4)	spawndialog question 'Are you sure you would like to reinstall?'
+		if [[ "$?" = "0" ]]; then
+			roblox-install uninstall; winechooser; roblox-install install; main
+		else
+			main
+		fi;;
+		main;;
+		5)	spawndialog question 'Are you sure you would like to reinstall?'
+		if [[ "$?" = "0" ]]; then
+			roblox-install uninstall
+		else
+			main
+		fi;;
+		main;;
+		6)
+		roblox-install uninstall
+		exit;;
+				7)
+		xdg-open https://github.com/roblox-linux-wrapper/roblox-linux-wrapper
+		main;;
+			*)
+		main;;
+		esac;
+esac;
+	fi
+
 }
 
 WRAPPER_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
