@@ -180,14 +180,14 @@ main () {
 			roblox-install uninstall; winechooser; roblox-install install; main
 		else
 			main
-		fi;;
+		fi
 		main;;
 		5)	spawndialog question 'Are you sure you would like to reinstall?'
 		if [[ "$?" = "0" ]]; then
 			roblox-install uninstall
 		else
 			main
-		fi;;
+		fi
 		main;;
 		6)
 		roblox-install uninstall
@@ -197,8 +197,8 @@ main () {
 		main;;
 			*)
 		main;;
-		esac;
-esac;
+	
+esac
 	fi
 
 }
