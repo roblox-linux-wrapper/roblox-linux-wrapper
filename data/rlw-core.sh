@@ -26,6 +26,7 @@ wineinitialize () {
 }
 
 winechooser () {
+	if command -v zenity >/dev/null 2>&1 ; then
 	sel=$(zenity \
 			--title "Wine Release Selection" \
 			--width=480 \
@@ -42,6 +43,9 @@ winechooser () {
 			FALSE '/usr/bin/wine-development' \
 			FALSE '/opt/cxoffice/bin/wine' \
 			FALSE 'Browse for Wine binaries...')
+	else
+	 sel=$(kdialog --title "Wine Release Selection" --radiolist 'Select the version of Wine you want to use:' 1 'Automatic detection (via $PATH)' on 2 '/usr/bin/wine' off 3 '/opt/wine-staging/bin/wine' off 4 '/usr/bin/wine-development' off 5 '/opt/cxoffice/bin/wine' off  6  'Browse for Wine binaries...' off)
+	fi
 	case $sel in
 		'Browse for Wine binaries...')
 			if command -v zenity >/dev/null 2>&1 ; then
