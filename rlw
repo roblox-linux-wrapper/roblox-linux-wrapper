@@ -14,6 +14,35 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+if command -v git >/dev/null 2>&1 ; then
+    echo "Dependency git is installed."
+else
+    echo "Dependency git is not installed. Please install it using your package manager"
+fi
+
+if command -v wget >/dev/null 2>&1 ; then
+    echo "Dependency wget is installed."
+else
+    echo "Dependency wget is not installed. Please install it using your package manager"
+fi
+
+if command -v wine >/dev/null 2>&1 ; then
+    echo "Dependency wine is installed."
+else
+    echo "Dependency wine is not installed. Please install it using your package manager"
+fi
+
+if command -v zenity >/dev/null 2>&1 ; then
+    echo "Dependency zenity is installed."
+else
+   if command -v kdialog >/dev/null 2>&1 ; then
+    echo "Dependency zenity is not installed. Using kdialog fallback."
+   else
+    echo "Dependency kdialog/zenity is not installed. Please install it using your package manager"
+   fi
+fi
+
+
 roblox-install () {
 	case $@ in
 	install)
