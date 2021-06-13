@@ -54,7 +54,7 @@ roblox-install () {
 			if command -v zenity >/dev/null 2>&1 ; then
 			spawndialog question 'A working Roblox wineprefix was not found.\nWould you like to install one?'
 		else
-		      	kdialog --title="$rlwversionstring" --warningyesno 'A working Roblox wineprefix was not found.\nWould you like to install one?'
+		      	kdialog --icon $RBXICON --title="$rlwversionstring" --warningyesno 'A working Roblox wineprefix was not found.\nWould you like to install one?'
 		fi
 	
 			
@@ -90,7 +90,7 @@ roblox-install () {
 	if command -v zenity >/dev/null 2>&1 ; then
 			spawndialog question 'This will remove Roblox entirely. Are you sure?'
 		else
-		      	kdialog --title="$rlwversionstring" --warningyesno 'This will remove Roblox entirely. Are you sure?'
+		      	kdialog --icon $RBXICON --title="$rlwversionstring" --warningyesno 'This will remove Roblox entirely. Are you sure?'
 		fi
 	
 		if [[ "$?" = "0" ]]; then
@@ -152,7 +152,7 @@ main () {
 		if command -v zenity >/dev/null 2>&1 ; then
 			spawndialog question 'This will forcefully close any game open. Are you sure?'	
 		else
-		      	kdialog --title="$rlwversionstring" --warningyesno  "This will forcefully close any game open. Are you sure?"
+		      	kdialog --icon $RBXICON --title="$rlwversionstring" --warningyesno  "This will forcefully close any game open. Are you sure?"
 		fi
 		if [[ $? -eq 0 ]]; then
 			rwineserver -k
@@ -172,7 +172,7 @@ main () {
 		if command -v zenity >/dev/null 2>&1 ; then
 			spawndialog question 'Are you sure you would like to reinstall?'
 		else
-		      	kdialog --title="$rlwversionstring" --warningyesno  "Are you sure you would like to reinstall?"
+		      	kdialog --icon $RBXICON--title="$rlwversionstring" --warningyesno  "Are you sure you would like to reinstall?"
 		fi
 		
 		if [[ "$?" = "0" ]]; then
@@ -188,7 +188,7 @@ main () {
 		main;;
 	 esac
 	 else
-	sel=$(kdialog --title "$rlwversionstring" --menu "What option would you like:" 1 "Select Wine Release" 2 "Wine Configuration" 3 "Kill all Roblox processes" 4 "Reinstall Roblox" 5 "Uninstall Roblox" 6 "Visit the GitHub page" --default "Select Wine Release");
+	sel=$(kdialog --icon $RBXICON --title "$rlwversionstring" --menu "What option would you like:" 1 "Select Wine Release" 2 "Wine Configuration" 3 "Kill all Roblox processes" 4 "Reinstall Roblox" 5 "Uninstall Roblox" 6 "Visit the GitHub page" --default "Select Wine Release");
 
 			case "$sel" in
 				1)
@@ -203,7 +203,7 @@ main () {
 					if command -v zenity >/dev/null 2>&1 ; then
 						spawndialog question 'This will forcefully close any game open. Are you sure?'	
 					else
-		      				kdialog --title="$rlwversionstring" --warningyesno  "This will forcefully close any game open. Are you sure?"
+		      				kdialog --icon $RBXICON --title="$rlwversionstring" --warningyesno  "This will forcefully close any game open. Are you sure?"
 					fi
 					if [[ $? -eq 0 ]]; then
 						rwineserver -k
@@ -224,7 +224,7 @@ main () {
 					if command -v zenity >/dev/null 2>&1 ; then
 			spawndialog question 'Are you sure you would like to reinstall?'
 		else
-		      	kdialog --title="$rlwversionstring" --warningyesno  "Are you sure you would like to reinstall?"
+		      	kdialog --icon $RBXICON --title="$rlwversionstring" --warningyesno  "Are you sure you would like to reinstall?"
 		fi
 		
 		if [[ "$?" = "0" ]]; then
@@ -266,7 +266,7 @@ else
 			--error \
 			--text="Missing rlw-core: try reinstalling rlw using the main script. If this problem presists, please report an issue to our GitHub page.\n" 2&> /dev/null	
 	else
-		 kdialog  --error "Missing rlw-core: try reinstalling rlw using the main script. If this problem presists, please report an issue to our GitHub page.\n"  --title "Roblox Linux Wrapper" 2&> /dev/null
+		 kdialog --icon $RBXICON --error "Missing rlw-core: try reinstalling rlw using the main script. If this problem presists, please report an issue to our GitHub page.\n"  --title "Roblox Linux Wrapper" 2&> /dev/null
 	fi
     exit 1
 fi
