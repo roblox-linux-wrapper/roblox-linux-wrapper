@@ -3,6 +3,7 @@
 export WINEARCH=win32
 export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
 export PULSE_LATENCY_MSEC=60 # Workaround fix for crackling sound (variable used by wine)
+RBXICON="roblox"
 
 wineinitialize () {
 	# Evaluate the Wine path selection, and base the wineserver
@@ -66,7 +67,7 @@ winechooser () {
 	esac
 	
 	else
-	 sel=$(kdialog --title "Wine Release Selection" --menu "Select the version of Wine you want to use:" 1 "Automatic detection (via $PATH)" 2 "/usr/bin/wine"  3 "/opt/wine-staging/bin/wine"  4 "/usr/bin/wine-development" 5 "/opt/cxoffice/bin/wine" 6 "Browse for Wine binaries..." --default "Automatic detection (via $PATH)")
+	 sel=$(kdialog --icon $RBXICON --title "Wine Release Selection" --menu "Select the version of Wine you want to use:" 1 "Automatic detection (via $PATH)" 2 "/usr/bin/wine"  3 "/opt/wine-staging/bin/wine"  4 "/usr/bin/wine-development" 5 "/opt/cxoffice/bin/wine" 6 "Browse for Wine binaries..." --default "Automatic detection (via $PATH)")
 			case "$sel" in
 				1)
 					# Here, we will literally save '$(which wine)' as the path
@@ -92,7 +93,7 @@ winechooser () {
 				    BIN="/opt/cxoffice/bin/win"
 					;;
 				6)
-			     	BIN=$(kdialog  --title "Please select the folder containing the wine binaries (usually named bin)" --getexistingdirectory *)
+			     	BIN=$(kdialog  --icon $RBXICON --title "Please select the folder containing the wine binaries (usually named bin)" --getexistingdirectory *)
 					;;
 				*)
 					winechooser;;
@@ -124,7 +125,7 @@ spawndialog () {
 			--"$1" \
 			--text="$2" 2&> /dev/null
 	else
-		 kdialog  --"$1" "$2"  --title "$rlwversionstring" 2&> /dev/null
+		 kdialog  --"$1" "$2"  --icon $RBXICON --title "$rlwversionstring" 2&> /dev/null
 	fi
 }
 
@@ -153,7 +154,7 @@ rwineserver () {
 					--pulsate \
 					--text="Waiting for wine to close...")
 	else
- 		"$WINESERVER" "$@" | $(kdialog --title "$rlwversionstring" --passivepopup "Waiting for wine to close..." 10)
+ 		"$WINESERVER" "$@" | $(kdialog --icon $RBXICON --title "$rlwversionstring" --passivepopup "Waiting for wine to close..." 10)
 	fi	
 		
 
