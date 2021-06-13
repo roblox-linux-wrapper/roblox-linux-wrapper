@@ -47,7 +47,13 @@ roblox-install () {
 	case $@ in
 	install)
 		if [[ ! -d "$WINEPREFIX/drive_c" ]]; then
+			if command -v zenity >/dev/null 2>&1 ; then
 			spawndialog question 'A working Roblox wineprefix was not found.\nWould you like to install one?'
+		else
+		      	kdialog --title="$rlwversionstring" --warningyesnoB 'A working Roblox wineprefix was not found.\nWould you like to install one?'
+		fi
+	
+			
 			if [[ $? = "0" ]]; then
 				rm -rf "$WINEPREFIX"
 				# Make sure our directories really exist
@@ -77,7 +83,12 @@ roblox-install () {
 			fi
 		fi;;
 	uninstall)
-		spawndialog question 'This will remove Roblox entirely. Are you sure?'
+	if command -v zenity >/dev/null 2>&1 ; then
+			spawndialog question 'This will remove Roblox entirely. Are you sure?'
+		else
+		      	kdialog --title="$rlwversionstring" --warningyesno 'This will remove Roblox entirely. Are you sure?'
+		fi
+	
 		if [[ "$?" = "0" ]]; then
 			xdg-desktop-menu uninstall "roblox.desktop"
 			rm -f "$HOME/.local/share/applications/roblox-player.desktop"
@@ -89,7 +100,12 @@ roblox-install () {
 			rm -rf "$WINEPREFIX"
 			text='Roblox has been uninstalled successfully.'
 			[[ "$WRAPPER_DIR" == /usr/* ]] && text+="\nTo uninstall Roblox Linux Wrapper and not just the Roblox Wineprefix, please use your package manager."
-			spawndialog info "$text"
+				if command -v zenity >/dev/null 2>&1 ; then
+				spawndialog info "$text"
+				else
+		  	        spawndialog msgbox "$text"
+				fi
+			
 		fi;;
 	*)
 		spawndialog error 'How did you get here?';;
@@ -129,18 +145,32 @@ main () {
 		rwine winecfg
 		main;;
 	'Kill all Roblox processes')
-		spawndialog question 'This will forcefully close any game open. Are you sure?'
+		if command -v zenity >/dev/null 2>&1 ; then
+			spawndialog question 'This will forcefully close any game open. Are you sure?'	
+		else
+		      	kdialog --title="$rlwversionstring" --warningyesno  "This will forcefully close any game open. Are you sure?"
+		fi
 		if [[ $? -eq 0 ]]; then
 			rwineserver -k
 			if [[ $? -eq 0 ]]; then
+				
+				if command -v zenity >/dev/null 2>&1 ; then
 				spawndialog info "Closed successfully."
+				else
+		  	        spawndialog msgbox "Closed successfully."
+				fi
 			else
 				spawndialog error "Could not close due to an error.\nThe game may already have been shut down."
 			fi
 		fi
 		main;;
 	'Reinstall Roblox')
-		spawndialog question 'Are you sure you would like to reinstall?'
+		if command -v zenity >/dev/null 2>&1 ; then
+			spawndialog question 'Are you sure you would like to reinstall?'
+		else
+		      	kdialog --title="$rlwversionstring" --warningyesno  "Are you sure you would like to reinstall?"
+		fi
+		
 		if [[ "$?" = "0" ]]; then
 			roblox-install uninstall; winechooser; roblox-install install; main
 		else
@@ -166,24 +196,38 @@ main () {
 					rwine winecfg
 					main;;
 				3)
-					spawndialog question 'This will forcefully close any game open. Are you sure?'
+					if command -v zenity >/dev/null 2>&1 ; then
+						spawndialog question 'This will forcefully close any game open. Are you sure?'	
+					else
+		      				kdialog --title="$rlwversionstring" --warningyesno  "This will forcefully close any game open. Are you sure?"
+					fi
 					if [[ $? -eq 0 ]]; then
 						rwineserver -k
 						if [[ $? -eq 0 ]]; then
-							spawndialog info "Closed successfully."
+				
+						if command -v zenity >/dev/null 2>&1 ; then
+						spawndialog info "Closed successfully."
 						else
-							spawndialog error "Could not close due to an error.\nThe game may already have been shut down."
+		  	    		    spawndialog msgbox "Closed successfully."
+						fi
+						else
+						spawndialog error "Could not close due to an error.\nThe game may already have been shut down."
 						fi
 					fi
 					main;;
 			
 				4)
-					spawndialog question 'Are you sure you would like to reinstall?'
-					if [[ "$?" = "0" ]]; then
-						roblox-install uninstall; winechooser; roblox-install install; main
-					else
-						main
-					fi;;
+					if command -v zenity >/dev/null 2>&1 ; then
+			spawndialog question 'Are you sure you would like to reinstall?'
+		else
+		      	kdialog --title="$rlwversionstring" --warningyesno  "Are you sure you would like to reinstall?"
+		fi
+		
+		if [[ "$?" = "0" ]]; then
+			roblox-install uninstall; winechooser; roblox-install install; main
+		else
+			main
+		fi;;
 				5)
 					roblox-install uninstall
 					exit;;
