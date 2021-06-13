@@ -66,7 +66,7 @@ winechooser () {
 	esac
 	
 	else
-	 sel=$	kdialog --title "$rlwversionstring" --menu "Select the version of Wine you want to use:" 1 "Automatic detection (via $PATH)" 2 "/usr/bin/wine"  3 "/opt/wine-staging/bin/wine"  4 "/usr/bin/wine-development" 5 "/opt/cxoffice/bin/wine" 6 "Browse for Wine binaries..." --default "Automatic detection (via $PATH)")
+	 sel=$(kdialog --title "$rlwversionstring" --menu "Select the version of Wine you want to use:" 1 "Automatic detection (via $PATH)" 2 "/usr/bin/wine"  3 "/opt/wine-staging/bin/wine"  4 "/usr/bin/wine-development" 5 "/opt/cxoffice/bin/wine" 6 "Browse for Wine binaries..." --default "Automatic detection (via $PATH)")
 			case "$sel" in
 				1)
 					# Here, we will literally save '$(which wine)' as the path
