@@ -92,7 +92,7 @@ winechooser () {
 				    BIN="/opt/cxoffice/bin/win"
 					;;
 				6)
-			     	BIN=$(kdialog  --title "Please select the folder containing the wine binaries (usually named bin)" --getexistingdirectory .)
+			     	BIN=$(kdialog  --title "Please select the folder containing the wine binaries (usually named bin)" --getexistingdirectory *)
 					;;
 				*)
 					winechooser;;
