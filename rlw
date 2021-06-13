@@ -50,7 +50,7 @@ roblox-install () {
 			if command -v zenity >/dev/null 2>&1 ; then
 			spawndialog question 'A working Roblox wineprefix was not found.\nWould you like to install one?'
 		else
-		      	kdialog --title="$rlwversionstring" --warningyesnoB 'A working Roblox wineprefix was not found.\nWould you like to install one?'
+		      	kdialog --title="$rlwversionstring" --warningyesno 'A working Roblox wineprefix was not found.\nWould you like to install one?'
 		fi
 	
 			
