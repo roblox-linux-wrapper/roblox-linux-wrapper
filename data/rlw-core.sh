@@ -43,16 +43,11 @@ winechooser () {
 			FALSE '/usr/bin/wine-development' \
 			FALSE '/opt/cxoffice/bin/wine' \
 			FALSE 'Browse for Wine binaries...')
-	else
-	 sel=$(kdialog --title "Wine Release Selection" --radiolist 'Select the version of Wine you want to use:' 1 'Automatic detection (via $PATH)' on 2 '/usr/bin/wine' off 3 '/opt/wine-staging/bin/wine' off 4 '/usr/bin/wine-development' off 5 '/opt/cxoffice/bin/wine' off  6  'Browse for Wine binaries...' off)
-	fi
 	case $sel in
 		'Browse for Wine binaries...')
-			if command -v zenity >/dev/null 2>&1 ; then
+
 			BIN=$(zenity --title "Please select the folder containing the wine binaries (usually named bin)" --file-selection --directory)
-			else
-			BIN=$(kdialog  --title "Please select the folder containing the wine binaries (usually named bin)" --getexistingdirectory .)
-			fi	
+		
 			WINE="$BIN"/wine
 			WINESERVER="$BIN"/wineserver;;
 		'Automatic detection (via $PATH)')
@@ -69,6 +64,43 @@ winechooser () {
 		*)
 			WINE="$sel"
 	esac
+	
+	else
+	 sel=$(kdialog --title="$rlwversionstring"  --menu 'Select the version of Wine you want to use:' 1 'Automatic detection (via $PATH)'  2 '/usr/bin/wine'  3 '/opt/wine-staging/bin/wine'  4 '/usr/bin/wine-development'  5 '/opt/cxoffice/bin/wine'   6  'Browse for Wine binaries...' )
+	
+			case "$sel" in
+				1)
+					# Here, we will literally save '$(which wine)' as the path
+					# so it changes dynamically and isn't immediately evaluated.
+					WINE="$(which wine)"
+					WINESERVER="$(which wineserver)"
+					for x in "$WINE" "$WINESERVER"; do
+						if [[ ! -x "$x" ]]; then
+							spawndialog error "Missing dependencies! Please install wine somewhere in \"$PATH\", or select a custom path instead.\nDetails: Could not find $(basename \"$x\") at \"$x\".\nAre you sure a copy is installed there?"
+					exit 1
+					fi
+					done;;
+				2)
+					BIN="/usr/bin/wine"
+					;;
+				3)
+					BIN="/opt/wine-staging/bin/wine"
+					;;
+				4)
+					BIN="/usr/bin/wine-development"
+					;;
+				5)
+				    BIN="/opt/cxoffice/bin/win"
+					;;
+				6)
+			     	BIN=$(kdialog  --title "Please select the folder containing the wine binaries (usually named bin)" --getexistingdirectory .)
+					;;
+				*)
+					winechooser;;
+			esac;
+		
+	fi
+	
 	if [[ ! -x "$WINE" ]]; then
 		printf "%b\n" "Clearing Wine choice..."
 		rm -f "$HOME/.rlw/wine_choice"
@@ -82,6 +114,7 @@ winechooser () {
 	fi
 	wineinitialize
 }
+
 
 spawndialog () {
 	if command -v zenity >/dev/null 2>&1 ; then
