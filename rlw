@@ -154,7 +154,7 @@ main () {
 		main;;
 	 esac
 	 else
-	sel=$(kdialog --menu "CHOOSE ONE:" 1 "Select Wine Release" 2 "Wine Configuration" 3 "Kill all Roblox processes" 4 "Reinstall Roblox" 5 "Uninstall Roblox" 6 "Visit the GitHub page" --default "Select Wine Release");
+	sel=$(kdialog --title "$rlwversionstring" --menu "What option would you like:" 1 "Select Wine Release" 2 "Wine Configuration" 3 "Kill all Roblox processes" 4 "Reinstall Roblox" 5 "Uninstall Roblox" 6 "Visit the GitHub page" --default "Select Wine Release");
 
 			case "$sel" in
 				1)
@@ -191,8 +191,7 @@ main () {
 					xdg-open https://github.com/roblox-linux-wrapper/roblox-linux-wrapper
 					main;;
 				*)
-					spawndialog error "How did you even get here?";
-					main;;
+					exit;;
 			esac;
 	fi
 
