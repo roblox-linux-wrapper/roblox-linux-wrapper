@@ -15,4 +15,4 @@ else
     exit 1
 fi
 
-rwine "$WINEPREFIX/drive_c/Program Files/Roblox/Versions/RobloxStudioLauncherBeta.exe" "$1"
+rwine "$WINEPREFIX/drive_c/users/$USER/AppData/Local/Roblox/Versions/RobloxStudioLauncherBeta.exe" "$1"
