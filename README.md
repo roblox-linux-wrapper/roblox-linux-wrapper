@@ -1,13 +1,3 @@
-### As of March of 2020, this script does *not* work with the latest versions of Roblox Player
-
-~~This is because the game uses VMProtect anti cheat, which Wine causes it to detect tampering. No ETA for a fix is available. The only way for this to be fixed is if Wine upstream is able to support VMProtect to a high enough degree, or if Roblox themselves release a Linux build.~~ The script itself will still install Roblox on Linux, but do not expect to be able to play online.
-
-As of November, VMProtect is no longer the problem. The game launches and is playable for a few seconds before the client is kicked. Wine currently cannot solve the challenge packet sent by the server as an anticheat measure. The possibility of a fix still comes down to Wine's capability to handle this particular anticheat measure in the future, or the Roblox devs providing official support. 
-
-There is a potential fix for this mentioned in [this issue](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/issues/187#issuecomment-859934169), which has been merged upstream. A future Wine update may resolve this issue.
-
-<hr>
-
 ## Information
 This script is neither created nor officially supported by Roblox. It is unofficial and may be unstable. Use at your own risk. To install wine, please [see the official WineHQ documentation](https://www.winehq.org/download/) on how to install the appropriate version of Wine for your system. This program does not install Wine for you.
 
