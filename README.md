@@ -9,7 +9,7 @@ If you plan on reporting issues, please read [CONTRIBUTING.md](https://github.co
 
 ### Prerequisites
 
-You should have Wine installed already. Install the appropriate version of `wine` from [this page](https://wiki.winehq.org/Download). I recommend wine-staging as it has the latest fixes and highest probability of working.
+You should have Wine installed already. Install the appropriate version of `wine` from [this page](https://wiki.winehq.org/Download). I recommend wine-staging as it has the latest fixes and highest probability of working. Also make sure to install `git` for ease of installation.
 
 ### source (via `git clone`)
 
