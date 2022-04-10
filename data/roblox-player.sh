@@ -15,4 +15,4 @@ else
     exit 1
 fi
 
-rwine "$(find "$HOME/.local/share/wineprefixes/roblox-wine" -name RobloxPlayerLauncher.exe -print -quit)" "$1"
+rwine "$(find "$WINEPREFIX" -name RobloxPlayerLauncher.exe -print -quit)" "$1"
