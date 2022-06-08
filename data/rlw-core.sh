@@ -37,7 +37,7 @@ winechooser () {
 			--column '' \
 			--column 'Options' \
 			TRUE 'Std roblox wine' \
-			FALSE 'Automatic detection (via $PATH)' \
+			FALSE 'Automatic detection' \
 			FALSE 'Browse for Wine binaries...')
 	case $sel in
 		'Browse for Wine binaries...')
@@ -50,7 +50,7 @@ winechooser () {
 			tar -xf wine.tar.xz -C $HOME/.winexe/
 			WINE=$HOME/.winexe/bin/wine
 			WINESERVER=$HOME/.winexe/bin/wineserver
-		'Automatic detection (via $PATH)')
+		'Automatic detection')
 			WINE="$(which wine)"
 			WINESERVER="$(which wineserver)"
 			for x in "$WINE" "$WINESERVER"; do
