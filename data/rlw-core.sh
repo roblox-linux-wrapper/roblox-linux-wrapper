@@ -48,7 +48,7 @@ winechooser () {
 			# so it changes dynamically and isn't immediately evaluated.
 			mkdir $HOME/.winexe
 			wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr' -O wine.tar.xz
-			tar -C $HOME/.winexe/ -xf $HOME/.winexe/wine.tar.xz 
+			tar -C $HOME/.winexe/ -xf ../wine.tar.xz
 			WINE=$HOME/.winexe/bin/wine
 			WINESERVER=$HOME/.winexe/bin/wineserver
 			for x in "$WINE" "$WINESERVER"; do
