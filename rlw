@@ -51,6 +51,7 @@ roblox-install () {
 		spawndialog question 'This will remove Roblox entirely. Are you sure?'
 		if [[ "$?" = "0" ]]; then
 			xdg-desktop-menu uninstall "roblox.desktop"
+			rm -rf "$HOME/.winexe"
 			rm -f "$HOME/.local/share/applications/roblox-player.desktop"
 			rm -f "$HOME/.local/share/applications/roblox-studio.desktop"
 			rm -rf "$HOME/.local/share/icons/roblox.svg"
