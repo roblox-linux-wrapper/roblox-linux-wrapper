@@ -45,16 +45,14 @@ winechooser () {
 			WINE="$BIN"/wine
 			WINESERVER="$BIN"/wineserver;;
 		'Std roblox wine')
-			# Here, we will literally save '$(which wine)' as the path
-			# so it changes dynamically and isn't immediately evaluated.
 			mkdir $HOME/.winexe
 			wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr' -O wine.tar.xz
 			tar -xf wine.tar.xz -C $HOME/.winexe/
 			WINE=$HOME/.winexe/bin/wine
 			WINESERVER=$HOME/.winexe/bin/wineserver
 		'Automatic detection (via $PATH)')
-			WINE=$(which wine)
-			WINESERVER=$(which wineserver)
+			WINE="$(which wine)"
+			WINESERVER="$(which wineserver)"
 			for x in "$WINE" "$WINESERVER"; do
 				if [[ ! -x "$x" ]]; then
 					spawndialog error "Missing dependencies! Please install wine somewhere in \"$PATH\", or select a custom path instead.\nDetails: Could not find $(basename \"$x\") at \"$x\".\nAre you sure a copy is installed there?"
