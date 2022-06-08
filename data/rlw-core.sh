@@ -37,6 +37,7 @@ winechooser () {
 			--column '' \
 			--column 'Options' \
 			TRUE 'Std roblox wine' \
+			FALSE 'Automatic detection (via $PATH)' \
 			FALSE 'Browse for Wine binaries...')
 	case $sel in
 		'Browse for Wine binaries...')
@@ -51,6 +52,9 @@ winechooser () {
 			tar -xf wine.tar.xz -C $HOME/.winexe/
 			WINE=$HOME/.winexe/bin/wine
 			WINESERVER=$HOME/.winexe/bin/wineserver
+		'Automatic detection (via $PATH)')
+			WINE=$(which wine)
+			WINESERVER=$(which wineserver)
 			for x in "$WINE" "$WINESERVER"; do
 				if [[ ! -x "$x" ]]; then
 					spawndialog error "Missing dependencies! Please install wine somewhere in \"$PATH\", or select a custom path instead.\nDetails: Could not find $(basename \"$x\") at \"$x\".\nAre you sure a copy is installed there?"
