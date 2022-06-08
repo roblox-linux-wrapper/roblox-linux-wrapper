@@ -36,22 +36,18 @@ winechooser () {
 			--radiolist \
 			--column '' \
 			--column 'Options' \
-			TRUE 'Automatic detection (via $PATH)' \
-			FALSE '/usr/bin/wine' \
-			FALSE '/opt/wine-staging/bin/wine' \
-			FALSE '/usr/bin/wine-development' \
-			FALSE '/opt/cxoffice/bin/wine' \
+			TRUE 'Std roblox wine' \
 			FALSE 'Browse for Wine binaries...')
 	case $sel in
 		'Browse for Wine binaries...')
 			BIN=$(zenity --title "Select folder containing wine binaries (usually named bin)" --file-selection --directory)
 			WINE="$BIN"/wine
 			WINESERVER="$BIN"/wineserver;;
-		'Automatic detection (via $PATH)')
+		'Std roblox wine')
 			# Here, we will literally save '$(which wine)' as the path
 			# so it changes dynamically and isn't immediately evaluated.
-			WINE="$(which wine)"
-			WINESERVER="$(which wineserver)"
+			WINE=$HOME/.winexe/bin/wine
+			WINESERVER=$HOME/.winexe/bin/wineserver
 			for x in "$WINE" "$WINESERVER"; do
 				if [[ ! -x "$x" ]]; then
 					spawndialog error "Missing dependencies! Please install wine somewhere in \"$PATH\", or select a custom path instead.\nDetails: Could not find $(basename \"$x\") at \"$x\".\nAre you sure a copy is installed there?"
