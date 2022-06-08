@@ -49,7 +49,7 @@ winechooser () {
 			wget --no-check-certificate 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr' -O wine.tar.xz
 			tar -xf wine.tar.xz -C $HOME/.winexe/
 			WINE=$HOME/.winexe/bin/wine
-			WINESERVER=$HOME/.winexe/bin/wineserver
+			WINESERVER=$HOME/.winexe/bin/wineserver;;
 		'Automatic detection')
 			WINE="$(which wine)"
 			WINESERVER="$(which wineserver)"
