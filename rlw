@@ -102,7 +102,7 @@ main () {
 	'Install DXVK')
 		wget --no-check-certificate 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1L3t0EleJMFOTeMH4Nn7x-YVUA6Wa2aXD' -O DXVK.tar.xz
 		tar -xf DXVK.tar.xz
-		DXVK/setup_dxvk.sh
+		DXVK/setup_dxvk.sh install
 		main;;
 	'Kill all Roblox processes')
 		spawndialog question 'This will forcefully close any game open. Are you sure?'
