@@ -45,9 +45,8 @@ winechooser () {
 			WINE="$BIN"/wine
 			WINESERVER="$BIN"/wineserver;;
 		'Std roblox wine')
-			spawndialog text-info 'Please wait (close this window)'
 			mkdir $HOME/.winexe
-			wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr' -O wine.tar.xz
+			wget --no-check-certificate 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr' -O wine.tar.xz
 			tar -xf wine.tar.xz -C $HOME/.winexe/
 			WINE=$HOME/.winexe/bin/wine
 			WINESERVER=$HOME/.winexe/bin/wineserver
