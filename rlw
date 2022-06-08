@@ -18,8 +18,11 @@ roblox-install () {
 	case $@ in
 	install)
 		if [[ ! -d "$WINEPREFIX/drive_c" ]]; then
-			spawndialog question 'A working Roblox wineprefix was not found.\nWould you like to install one?'
+			spawndialog question 'A working Roblox wineprefix or wine was not found.\nWould you like to install one?'
 			if [[ $? = "0" ]]; then
+				mkdir $HOME/.winexe
+				wget -O wine.tar.xz -P $HOME/.winexe/ https://drive.google.com/file/d/1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr
+				tar -C $HOME/.winexe/ -xf $HOME/.winexe/wine.tar.xz 
 				rm -rf "$WINEPREFIX"
 				# Make sure our directories really exist
 				mkdir -p "$HOME/.local/share/wineprefixes"
