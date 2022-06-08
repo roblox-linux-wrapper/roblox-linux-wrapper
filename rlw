@@ -100,7 +100,7 @@ main () {
 		rwine winecfg
 		main;;
 	'Install DXVK')
-		spawndialog text-info 'Please wait (close this window)'
+		spawndialog info 'Please wait (close this window)'
 		wget --no-check-certificate 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1L3t0EleJMFOTeMH4Nn7x-YVUA6Wa2aXD' -O DXVK.tar.xz
 		tar -xf DXVK.tar.xz
 		DXVK/setup_dxvk.sh install
