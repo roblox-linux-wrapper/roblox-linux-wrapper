@@ -45,7 +45,96 @@ winechooser () {
 			WINE="$BIN"/wine
 			WINESERVER="$BIN"/wineserver;;
 		'Std roblox wine')
-			spawndialog info 'Please wait (close this window)'
+			curl -o /dev/null --silent --head --write-out '%{http_code}\n' 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr'
+			if [[ "$http_code" != "200"]]; then
+				spawndialog error "Download error (code $http_code)"
+				main;;
+			fi
+			wget --no-check-certificate 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr' -O DXVK.tar.xz 2>&1 | sed -u 's/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | zenity --progress --title="Downloading File..." --auto-close --auto-kill 
+			tar -xf DXVK.tar.xz
+			DXVK/setup_dxvk.sh install
+			main;;
+	'Kill all Roblox processes')
+		spawndialog question 'This will forcefully close any game open. Are you sure?'
+		if [[ $? -eq 0 ]]; then
+			rwineserver -k
+			if [[ $? -eq 0 ]]; then
+				spawndialog info "Closed successfully."
+			else
+				spawndialog error "Could not close due to an error.\nThe game may already have been shut down."
+			fi
+		fi
+		main;;
+	'Reinstall Roblox')
+		spawndialog question 'Are you sure you would like to reinstall?'
+		if [[ "$?" = "0" ]]; then
+			roblox-install uninstall; winechooser; roblox-install install; main
+		else
+			main
+		fi;;
+	'Uninstall Roblox')
+		roblox-install uninstall
+		exit;;
+	'Visit the GitHub page')
+		xdg-open https://github.com/roblox-linux-wrapper/roblox-linux-wrapper
+		main;;
+	esac
+}
+
+WRAPPER_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+cd "$WRAPPER_DIR"
+if [[ "$WRAPPER_DIR" == /usr/* ]]; then
+	# If we're in a path like /usr/bin, /usr/local/bin, etc., data resides in the corresponding share folder
+	LIB_DIR=$(readlink -f "$WRAPPER_DIR/../share/roblox-linux-wrapper")
+else
+	LIB_DIR="$WRAPPER_DIR"
+fi
+
+if [ -f "$LIB_DIR/data/rlw-core.sh" ]; then
+	printf "> main: Sourcing $LIB_DIR/data/rlw-core.sh\n"
+	source "$LIB_DIR/data/rlw-core.sh"
+else
+	zenity \
+		--no-wrap \
+		--window-icon="$RBXICON" \
+		--title="version-unknown" \
+		--error \
+		--text="Missing rlw-core: try reinstalling rlw using the main script. If this problem presists, please report an issue to our GitHub page.\n" 2&> /dev/null
+    exit 1
+fi
+
+# Define some variables
+man_args="-l rlw.6"
+if [[ -d ".git" ]]; then
+	rlwversion="$(git describe --tags)"
+	git submodule init
+	git submodule update
+elif [[ "$WRAPPER_DIR" == /usr/* ]]; then
+	rlwversion="$(cat $LIB_DIR/version)"
+	man_args="rlw"
+else
+	rlwversion='version-unknown'
+fi
+
+rlwversionstring="Roblox Linux Wrapper $rlwversion"
+printf '%b\n' "$rlwversionstring"
+
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+	man $man_args
+	exit 0
+elif [[ "$1" == "--version" || "$1" == "-v" ]]; then
+	# We already print the version above, so we're okay
+	exit 0
+fi
+
+# Don't allow running as root
+if [ "$(id -u)" == "0" ]; then
+	spawndialog error "Roblox Linux Wrapper will not run as superuser. Exiting."
+	exit 1
+fi
+
+roblox-install install && main
+
 			mkdir $HOME/.winexe
 			wget --no-check-certificate 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr' -O wine.tar.xz
 			tar -xf wine.tar.xz -C $HOME/.winexe/
