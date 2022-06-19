@@ -54,30 +54,18 @@ winechooser () {
 			tar -xf DXVK.tar.xz
 			DXVK/setup_dxvk.sh install
 			main;;
-	'Kill all Roblox processes')
-		spawndialog question 'This will forcefully close any game open. Are you sure?'
-		if [[ $? -eq 0 ]]; then
-			rwineserver -k
-			if [[ $? -eq 0 ]]; then
-				spawndialog info "Closed successfully."
-			else
-				spawndialog error "Could not close due to an error.\nThe game may already have been shut down."
-			fi
-		fi
-		main;;
-	'Reinstall Roblox')
-		spawndialog question 'Are you sure you would like to reinstall?'
-		if [[ "$?" = "0" ]]; then
-			roblox-install uninstall; winechooser; roblox-install install; main
-		else
-			main
-		fi;;
-	'Uninstall Roblox')
-		roblox-install uninstall
-		exit;;
-	'Visit the GitHub page')
-		xdg-open https://github.com/roblox-linux-wrapper/roblox-linux-wrapper
-		main;;
+		'Automatic detection')
+			# Here, we will literally save '$(which wine)' as the path
+			# so it changes dynamically and isn't immediately evaluated.
+			WINE="$(which wine)"
+			WINESERVER="$(which wineserver)"
+			for x in "$WINE" "$WINESERVER"; do
+				if [[ ! -x "$x" ]]; then
+					spawndialog error "Missing dependencies! Please install wine somewhere in \"$PATH\", or select a custom path instead.\nDetails: Could not find $(basename \"$x\") at \"$x\".\nAre you sure a copy is installed there?"
+					exit 1
+				fi
+			done;;
+		*)
 	esac
 }
 
