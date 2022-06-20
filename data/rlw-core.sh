@@ -45,9 +45,9 @@ winechooser () {
 			WINE="$BIN"/wine
 			WINESERVER="$BIN"/wineserver;;
 		'Std roblox wine')
-			curl --silent --connect-timeout 8 --output /dev/null 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr' -I -w "%{http_code}\n"
-			if [[ "$http_code" -ne "200" ]]; then
-				spawndialog error "Download error (code $http_code)"
+			rw=$(curl --write-out '%{http_code}' --silent --output /dev/null 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr')
+			if [[ "$rw" -ne "200" ]]; then
+				spawndialog error "Download error (code $rw)"
 				exit 1
 			fi
 			wget --no-check-certificate 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr' -O WINE.tar.xz 2>&1 | sed -u 's/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | zenity --progress --title="Downloading File..." --auto-close --auto-kill
