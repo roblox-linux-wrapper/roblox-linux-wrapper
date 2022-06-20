@@ -50,10 +50,11 @@ winechooser () {
 				spawndialog error "Download error (code $http_code)"
 				exit 1
 			fi
-			wget --no-check-certificate 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr' -O DXVK.tar.xz 2>&1 | sed -u 's/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | zenity --progress --title="Downloading File..." --auto-close --auto-kill 
-			tar -xf DXVK.tar.xz
-			DXVK/setup_dxvk.sh install
-			main;;
+			wget --no-check-certificate 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr' -O DXVK.tar.xz 2>&1 | sed -u 's/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | zenity --progress --title="Downloading File..." --auto-close --auto-kill
+			mkdir $HOME/.winexe/
+			tar -xf wine.tar.xz -C $HOME/.winexe/
+			WINE=$HOME/.winexe/bin/wine
+			WINESERVER=$HOME/.winexe/bin/wineserver
 		'Automatic detection')
 			# Here, we will literally save '$(which wine)' as the path
 			# so it changes dynamically and isn't immediately evaluated.
