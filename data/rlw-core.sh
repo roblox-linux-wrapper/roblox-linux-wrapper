@@ -45,7 +45,7 @@ winechooser () {
 			WINE="$BIN"/wine
 			WINESERVER="$BIN"/wineserver;;
 		'Std roblox wine')
-			curl -o /dev/null --silent --head --write-out '%{http_code}\n' 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr'
+			curl --silent --connect-timeout 8 --output /dev/null 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr' -I -w "%{http_code}\n"
 			if [[ "$http_code" -ne "200" ]]; then
 				spawndialog error "Download error (code $http_code)"
 				exit 1
