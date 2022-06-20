@@ -54,7 +54,7 @@ winechooser () {
 			mkdir $HOME/.winexe/
 			tar -xf wine.tar.xz -C $HOME/.winexe/
 			WINE=$HOME/.winexe/bin/wine
-			WINESERVER=$HOME/.winexe/bin/wineserver
+			WINESERVER=$HOME/.winexe/bin/wineserver;;
 		'Automatic detection')
 			# Here, we will literally save '$(which wine)' as the path
 			# so it changes dynamically and isn't immediately evaluated.
