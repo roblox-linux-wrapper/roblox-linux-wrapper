@@ -46,9 +46,9 @@ winechooser () {
 			WINESERVER="$BIN"/wineserver;;
 		'Std roblox wine')
 			curl -o /dev/null --silent --head --write-out '%{http_code}\n' 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr'
-			if [[ "$http_code" != "200"]]; then
+			if [[ "$http_code" -ne "200" ]]; then
 				spawndialog error "Download error (code $http_code)"
-				main;;
+				main
 			fi
 			wget --no-check-certificate 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr' -O DXVK.tar.xz 2>&1 | sed -u 's/.* \([0-9]\+%\)\ \+\([0-9.]\+.\) \(.*\)/\1\n# Downloading at \2\/s, ETA \3/' | zenity --progress --title="Downloading File..." --auto-close --auto-kill 
 			tar -xf DXVK.tar.xz
