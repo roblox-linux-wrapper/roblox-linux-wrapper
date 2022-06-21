@@ -46,7 +46,7 @@ winechooser () {
 			WINESERVER="$BIN"/wineserver;;
 		'Std roblox wine')
 			rw=$(curl --write-out '%{http_code}' --silent --output /dev/null 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1q4l4FvUj6bfMZGBEUXnsOPUgBxwUMXTr')
-			if [[ "$rw" -ne "200" ]] || [[ "$rw" -ne "303" ]]; then
+			if [[ "$rw" -ne "200" ]] && [[ "$rw" -ne "303" ]]; then
 				spawndialog error "Download error (code $rw)"
 				exit 1
 			fi
