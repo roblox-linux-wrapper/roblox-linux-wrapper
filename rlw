@@ -101,7 +101,7 @@ main () {
 		main;;
 	'Install DXVK')
 		rd=$(curl --write-out '%{http_code}' --silent --output /dev/null 'https://docs.google.com/uc?export=download&confirm=no_antivirus&id=1L3t0EleJMFOTeMH4Nn7x-YVUA6Wa2aXD')
-		if [[ "$rd" -ne "200" ]] || [[ "$rd" -ne "303" ]]; then
+		if [[ "$rd" -ne "200" ]] && [[ "$rd" -ne "303" ]]; then
 			spawndialog error "Download error (code $rd)"
 			main
 		fi
