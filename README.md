@@ -1,33 +1,16 @@
-## Information
-This script is neither created nor officially supported by Roblox. It is unofficial and may be unstable. Use at your own risk. To install wine, please [see the official WineHQ documentation](https://www.winehq.org/download/) on how to install the appropriate version of Wine for your system. This program does not install Wine for you.
+# Welcome!
+You may have found this project after watching my YouTube video from ~2015 which outlines how to install Roblox Linux Wrapper. While a lot has changed, the overall installation process is still similar. I recommend following these instructions rather than the instructions from the video.
 
+## Installation
+
+Please refer to the [Installation Wiki](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/wiki/Installation)
 
 ## Reporting Issues
 If you plan on reporting issues, please read [CONTRIBUTING.md](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/blob/master/CONTRIBUTING.md) before doing so. Thanks!
 
-## Installation
-
-### Prerequisites
-
-You should have Wine installed already. Install the appropriate version of `wine` from [this page](https://wiki.winehq.org/Download). I recommend wine-staging as it has the latest fixes and highest probability of working. Also make sure to install `git` for ease of installation.
-
-### source (via `git clone`)
-
-To install Roblox on your Linux computer from Git source, run the following commands in a terminal:
-```shell
-git clone https://github.com/roblox-linux-wrapper/roblox-linux-wrapper.git
-roblox-linux-wrapper/rlw
-```
-
-If you are saavy enough, you can also clone to a custom directory of your choice.
-
 ## Updates
 
 Roblox Linux Wrapper is very volatile, and updates are released very often, so please check for updates frequently.
-
-### from Git source
-* Open a terminal, change to the directory you installed.
-* Run `git pull` inside the terminal while in that directory.
 
 ## Diagnosing the game
 Often times, a Roblox update breaks compatibility with the Roblox Linux Wrapper. Many of these changes will require an update to wine, which may come out months after the issue is introduced. In order to circumvent this issue, the wrapper now allows you to choose either wine or wine-staging, to allow you to use the release of wine that works best for you. It will ask you upon launching, and there is also an option labelled "Select Wine Release" in the launcher.
@@ -37,7 +20,7 @@ Often times, a Roblox update breaks compatibility with the Roblox Linux Wrapper.
 ## Questions and Answers
 
 * Q: How do I install this?
-  * A: See the Installation section.
+  * A: See the Installation Wiki.
 
 * Q: It tells me there is a syntax error, or I'm having another problem.
   * A: Download the script again and retry. If the same thing occurs, [open a new issue here](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/issues).
