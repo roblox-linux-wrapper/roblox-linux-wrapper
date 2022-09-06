@@ -39,9 +39,6 @@ Often times, a Roblox update breaks compatibility with the Roblox Linux Wrapper.
 * Q: How do I install this?
   * A: See the Installation section.
 
-* Q: What do I do if the game is very slow?
-  * A: Open Roblox Studio settings, change `graphicsMode` to `OpenGL`.
-
 * Q: It tells me there is a syntax error, or I'm having another problem.
   * A: Download the script again and retry. If the same thing occurs, [open a new issue here](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/issues).
 
