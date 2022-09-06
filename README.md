@@ -6,7 +6,7 @@ You may have found this project after watching my YouTube video from ~2015 which
 Please refer to the [Installation Wiki](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/wiki/Installation)
 
 ## Reporting Issues
-If you plan on reporting issues, please read [CONTRIBUTING.md](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/blob/master/CONTRIBUTING.md) before doing so. Thanks!
+If you plan on reporting issues, please read the [Reporting Issues](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/wiki/Reporting-Issues) page before doing so. Thanks!
 
 ## Updates
 
