@@ -98,15 +98,7 @@ rwine () {
 rwineserver () {
 	printf '%b\n' "> rwineserver: calling wineserver with arguments \"$(printf "%s " "$@")\""
 	if [[ "$1" = "--wait" ]]; then
-		"$WINESERVER" "$@" | $(zenity\
-					--title="$rlwversionstring" \
-					--window-icon="$RBXICON" \
-					--width=480 \
-					--progress \
-					--auto-kill \
-					--auto-close \
-					--pulsate \
-					--text="Waiting for wine to close...")
+		"$WINESERVER" "$@"
 		return "$?"
 	else
 		"$WINESERVER" "$@"
