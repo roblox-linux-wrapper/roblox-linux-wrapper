@@ -8,15 +8,6 @@ Please refer to the [Installation Wiki](https://github.com/roblox-linux-wrapper/
 ## Reporting Issues
 If you plan on reporting issues, please read the [Reporting Issues](https://github.com/roblox-linux-wrapper/roblox-linux-wrapper/wiki/Reporting-Issues) page before doing so. Thanks!
 
-## Updates
-
-Roblox Linux Wrapper is very volatile, and updates are released very often, so please check for updates frequently.
-
-## Diagnosing the game
-Often times, a Roblox update breaks compatibility with the Roblox Linux Wrapper. Many of these changes will require an update to wine, which may come out months after the issue is introduced. In order to circumvent this issue, the wrapper now allows you to choose either wine or wine-staging, to allow you to use the release of wine that works best for you. It will ask you upon launching, and there is also an option labelled "Select Wine Release" in the launcher.
-* If wine works fine, keep using wine.
-* If wine-staging works, keep using it. Do note that wine-staging is pre-release software - you may encounter issues.
-
 ## Questions and Answers
 
 * Q: How do I install this?
@@ -34,13 +25,6 @@ Often times, a Roblox update breaks compatibility with the Roblox Linux Wrapper.
 * Q: It keeps telling me "Missing Dependencies"!
   * A: Then install it! If it tells you "Please install wine", then install Wine. It does not install these dependencies automatically. To install the latest version of Wine, visit https://www.winehq.org/download/.
 
-
-## Required Dependencies
-
-* git
-* wget
-* wine or wine-staging (whichever works best for you)
-* zenity
 
 ## Licensing and copyright
 Roblox Linux Wrapper is licensed under thE GPL v3 license. Please see LICENSE for details.
