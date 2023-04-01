@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Common variables used by all rlw scripts
-export WINEARCH=win32
+export WINEARCH=win64
 export WINEPREFIX="$HOME/.local/share/wineprefixes/roblox-wine"
 export PULSE_LATENCY_MSEC=60 # Workaround fix for crackling sound (variable used by wine)
 
