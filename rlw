@@ -51,6 +51,8 @@ roblox-install () {
 			spawndialog question 'Your current Roblox wineprefix is 32-bit. Roblox requires a 64-bit OS.\nWould you like to reinstall Roblox?'
 			if [[ $? = "0" ]]; then
 				roblox-install uninstall; winechooser; roblox-install install; main
+			else
+				exit 1
 			fi
 		fi;;
 	uninstall)
