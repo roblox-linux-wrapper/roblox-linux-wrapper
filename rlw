@@ -176,4 +176,11 @@ if [ "$(id -u)" == "0" ]; then
 	exit 1
 fi
 
+# Require a 64-bit system
+HOSTARCH="$(uname -m)"
+if [ "$HOSTARCH" != "x86_64" ]; then
+	spawndialog error "Roblox requires a 64-bit operating system. Exiting."
+	exit 1
+fi
+
 roblox-install install && main
