@@ -47,6 +47,12 @@ roblox-install () {
 				exit 1
 			fi
 		fi;;
+		if [[ ! -d "$WINEPREFIX/drive_c/Program Files (x86)" ]]; then
+			spawndialog question 'Your current Roblox wineprefix is 32-bit. Roblox requires a 64-bit OS.\nWould you like to reinstall Roblox?'
+			if [[ $? = "0" ]]; then
+				roblox-install uninstall; winechooser; roblox-install install; main
+			fi
+		fi
 	uninstall)
 		spawndialog question 'This will remove Roblox entirely. Are you sure?'
 		if [[ "$?" = "0" ]]; then
