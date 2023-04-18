@@ -46,6 +46,14 @@ roblox-install () {
 			else
 				exit 1
 			fi
+		fi
+		if [[ ! -d "$WINEPREFIX/drive_c/Program Files (x86)" ]]; then
+			spawndialog question 'Your current Roblox wineprefix is 32-bit. Roblox requires a 64-bit OS.\nWould you like to reinstall Roblox?'
+			if [[ "$?" = "0" ]]; then
+				roblox-install uninstall; winechooser; roblox-install install; main
+			else
+				exit 1
+			fi
 		fi;;
 	uninstall)
 		spawndialog question 'This will remove Roblox entirely. Are you sure?'
@@ -173,6 +181,13 @@ fi
 # Don't allow running as root
 if [ "$(id -u)" == "0" ]; then
 	spawndialog error "Roblox Linux Wrapper will not run as superuser. Exiting."
+	exit 1
+fi
+
+# Require a 64-bit system
+HOSTARCH="$(uname -m)"
+if [ "$HOSTARCH" != "x86_64" ]; then
+	spawndialog error "Roblox requires a 64-bit operating system. Exiting."
 	exit 1
 fi
 
