@@ -1,3 +1,6 @@
+# Roblox is no longer supported on Wine.
+Consider using Waydroid & install the Android version of Roblox.
+
 # Welcome!
 You may have found this project after watching my YouTube video from ~2015 which outlines how to install Roblox Linux Wrapper. While a lot has changed, the overall installation process is still similar. I recommend following these instructions rather than the instructions from the video.
 
