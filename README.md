@@ -35,8 +35,3 @@ Roblox Linux Wrapper is licensed under thE GPL v3 license. Please see LICENSE fo
 
 #### Affiliation Disclaimer
 The red Roblox "R" symbol is property and copyright of 2006-2015 Roblox Corporation. We do not claim any ownership, nor affiliation with Roblox, nor its staff or software. No changes to the core Roblox software are made in this program. No proprietary files are bundled in this software.
-
-## Spare change?
-If you like my work, you can show your support with donations :)
-
-[![PayPal - The safer, easier way to pay online!](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4LPXB3QJWVFQ6)
